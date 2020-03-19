@@ -46,7 +46,8 @@ public class TPSIServer {
 
         public void handle(HttpExchange exchange) throws IOException {
             try {
-                File file = new File("src\\index.html");
+
+                File file = new File(System.getProperty("user.dir") + "/src/index.html");
                 byte[] fileContent = Files.readAllBytes(file.toPath());
 
                 exchange.getResponseHeaders().set("Content-Type", "");
@@ -69,7 +70,7 @@ public class TPSIServer {
                 byte[] array = JsonWriter.formatJson(json).getBytes();
 //                System.out.println(json);
 
-                exchange.getResponseHeaders().set("Content-Type", "text/plain");
+                exchange.getResponseHeaders().set("Content-Type", "application/json");
                 exchange.sendResponseHeaders(200, array.length);
 
                 OutputStream os = exchange.getResponseBody();
@@ -154,19 +155,19 @@ public class TPSIServer {
             String out = "NOT LOGGED IN";
             String auth = exchange.getRequestHeaders().getFirst("Authorization");
 
-                String[] parts = auth.split("\\s");
-                if (parts[0].equals("Basic") && parts.length > 1) {
-                    Base64.Decoder decoder = Base64.getDecoder();
-                    String decoded = new String(decoder.decode(parts[1]));
-                    String[] credentials = decoded.split(":");
+            String[] parts = auth.split("\\s");
+            if (parts[0].equals("Basic") && parts.length > 1) {
+                Base64.Decoder decoder = Base64.getDecoder();
+                String decoded = new String(decoder.decode(parts[1]));
+                String[] credentials = decoded.split(":");
 
-                    if (credentials.length == 2) {
-                        if (credentials[0].equals(login) && credentials[1].equals(password)) {
-                            rc = 200;
-                            out = "OK, LOGGED IN";
-                        }
+                if (credentials.length == 2) {
+                    if (credentials[0].equals(login) && credentials[1].equals(password)) {
+                        rc = 200;
+                        out = "OK, LOGGED IN";
                     }
                 }
+            }
 
             System.out.println("work well");
             exchange.getResponseHeaders().set("Content-Type", "text/plain");

@@ -1,7 +1,10 @@
-import com.cedarsoftware.util.io.JsonWriter;
-import com.sun.net.httpserver.*;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,7 +32,7 @@ public class BServer {
     static class EchoHandler implements HttpHandler {
         public void handle(HttpExchange exchange) throws IOException {
             try {
-                File file = new File("src\\index.html");
+                File file = new File(System.getProperty("user.dir") + "/src/index.html");
                 byte[] fileContent = Files.readAllBytes(file.toPath());
                 exchange.getResponseHeaders().set("Content-Type", "");
                 exchange.sendResponseHeaders(200, fileContent.length);

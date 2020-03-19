@@ -107,9 +107,7 @@ public class Main {
                                 .append("</html>");
 
                         System.out.println(builder.toString());
-
-
-                        // if mime not null
+                        
                         exchange.getResponseHeaders().set("Content-Type", "text/html");
                         exchange.sendResponseHeaders(200, builder.toString().getBytes().length);
                         OutputStream os = exchange.getResponseBody();

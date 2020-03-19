@@ -10,16 +10,20 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * examples sites:
+ * http://open-up.eu/en
+ * http://weevil.info/
+ * http://africhthy.org/en - in proxylist to block
+ */
 public class ProxyServer {
 
-    private static String proxylistFile = "proxyfile.txt";
+    private static String proxylistFile = "proxylist.txt";
 
     public static void main(String[] args) throws Exception {
         int port = 8000;
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/", new ProxyHandler());
-
-        ArrayList<String> proxylist = readList();
 
         System.out.println("Starting server on port: " + port);
         server.start();
@@ -27,22 +31,40 @@ public class ProxyServer {
 
 
     static class ProxyHandler implements HttpHandler {
+        private ArrayList<String> proxylist;
+
+        // simple constructor
+        public ProxyHandler() throws FileNotFoundException {
+            proxylist = readList();
+            System.out.println("Proxy List: " + proxylist);
+        }
+
         public void handle(HttpExchange exchange) throws IOException {
             try {
+                System.out.println("--- handle()");
                 /* REQUEST */
                 // get request info
                 String method = exchange.getRequestMethod();
                 InputStream bodyInputStream = exchange.getRequestBody();
                 Set<Map.Entry<String, List<String>>> headers = exchange.getRequestHeaders().entrySet();
-                URL url = exchange.getRequestURI().toURL();
+                URL url = new URL(exchange.getRequestURI().toString()); //.toURL();
 
                 // create logger
                 Logger logger = Logger.getLogger("ProLogger");
                 logger.info(exchange.getRequestMethod() + " " + exchange.getRequestURI().toString());
 
+                // check if in the forbidden list
+                for (String website : proxylist) {
+                    if (url.toString().toLowerCase().contains(website)) {
+                        errorMessage(exchange, 403);
+                        throw new IllegalAccessException();
+                    }
+                }
+
                 // httpURLConnection connection
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod(method);
+
                 // necessary to disable follow redirects?
                 connection.setInstanceFollowRedirects(false);
                 HttpURLConnection.setFollowRedirects(false);
@@ -63,7 +85,6 @@ public class ProxyServer {
                     os.write(bytes);
                 }
 
-
                 /* RESPONSE */
                 // get responce info
                 int codeCon = connection.getResponseCode();
@@ -81,7 +102,7 @@ public class ProxyServer {
                 // Add statistics
 //                addStatistics(new Statistic(url.getAuthority(), 0, response.length, 1));
 
-                // set new headers
+                // set new headers resolving transfer-encodinig problems
                 for (Map.Entry<String, List<String>> header : headersCon) {
                     if (header.getKey() != null && !header.getKey().toLowerCase().equals("transfer-encoding")) {
                         headersResponse.add(header.getKey(), String.join(", ", header.getValue()));
@@ -95,9 +116,9 @@ public class ProxyServer {
                 os.close();
 
 
-            } catch (IOException e) { // 403 error
+            } catch (IOException | IllegalAccessException e) { // 403 error
                 System.out.println(e);
-                errorMessage(exchange, 403);
+//                errorMessage(exchange, 403);
             }
 
         }
@@ -106,7 +127,7 @@ public class ProxyServer {
         static public void errorMessage(HttpExchange exchange, int code) throws IOException {
             try {
                 System.out.println("ERROR " + code);
-                String error = "Forbidden \n[invalid or illegal path]";
+                String error = "Forbidden \n[invalid / illegal path or site is on forbidden proxy list]";
 //                exchange.getResponseHeaders().set("Content-Type", "text/plain");
                 exchange.sendResponseHeaders(code, error.getBytes().length);
                 OutputStream os = exchange.getResponseBody();
@@ -120,7 +141,7 @@ public class ProxyServer {
     }
 
 
-    private static ArrayList<String> readList() throws Exception {
+    private static ArrayList<String> readList() throws FileNotFoundException {
         ArrayList<String> proxylist = new ArrayList<>();
         Scanner scanner = new Scanner(new File(proxylistFile));
         while (scanner.hasNext()) {

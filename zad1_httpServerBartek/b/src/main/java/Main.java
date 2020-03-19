@@ -6,18 +6,19 @@ import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.file.Files;
 
-// TODO: 18.03.2020
-// handle ../..
-// path attacks
+/**
+ * to add params: Edit Configuration -> Program Arguments -> i.e "/home/user/Documents/"
+ * default directory is set in defaultPath variable
+ */
 
 public class Main {
-    private static String path = "src/";
-    private static String defaultPath = "src/";
+    private static String path = "/home/";
+    private static String defaultPath = "/home/bartek/Documents/adblock/easylistpolish/";
+    private static String canonical = "";
 
     public static void main(String[] args) throws Exception {
 
         if (args.length > 0) {
-//            path = args[0];
             defaultPath = args[0];
         }
         int port = 8000;
@@ -25,7 +26,7 @@ public class Main {
         server.createContext("/", new ContentHandler());
 
         System.out.println("Starting server on port: " + port);
-        System.out.println("default path: " + defaultPath);
+        System.out.println("Default path: " + defaultPath);
         server.start();
     }
 
@@ -34,45 +35,55 @@ public class Main {
         public void handle(HttpExchange exchange) throws IOException {
             try {
                 StringBuilder builder = new StringBuilder();
-                String fromURI = exchange.getRequestURI().toString();
-                System.out.println("from URL: " + fromURI);
+                // get path from URI
+                String fromURI = exchange.getRequestURI().toString().replaceAll("%20", " ");
+//                System.out.println("from URL: " + fromURI);
 
-                if (!fromURI.substring(1).equals("")) {
-                        path = fromURI;
-                } else {
-                    path = defaultPath;
-                }
+                // if path is smth else than just "/"
+                if (!fromURI.substring(1).equals("")) path = fromURI;
+                else path = defaultPath;
+
 
                 File file = new File(path);
 
-                System.out.println("path after modifications: " + path);
-                System.out.println("filepath: " + file.getPath());
+//                System.out.println("path after modifications: " + path);
+//                System.out.println("filepath: " + file.getPath());
+
                 // path traversal
                 boolean correctPath = false;
                 try {
-                    String canonical = file.getCanonicalPath() + "/";
-                    System.out.println("cannon: " + canonical);
-                    System.out.println("defaul: " + defaultPath);
+                    canonical = file.getCanonicalPath();
+                    if (!canonical.endsWith("/")) canonical += "/";
+
+                    System.out.println("canonical: \t" + canonical);
+                    System.out.println("default: \t" + defaultPath);
+
                     correctPath = canonical.startsWith(defaultPath);
                 } catch (IOException ignored) {
                 }
 
-                // Return 403 error
-                if (!correctPath) {
-                    System.out.println("PATH TRAVERSAL");
+                // get mime type
+                String mimeType = null;
+                try {
+                    mimeType = Files.probeContentType(file.toPath());
+                } catch (IOException ignored) {
+                    errorMessage(exchange, 404);
+                }
+
+                // 403 error if path traversal attack
+                if (!file.canRead() ) {
+                    errorMessage(exchange, 404);
+                }
+                else if (!correctPath) {
+                    System.out.println("PATH TRAVERSAL!");
                     errorMessage(exchange, 403);
                 } else {
 
-                    String mimeType = null;
-                    try {
-                        mimeType = Files.probeContentType(file.toPath());
-                    } catch (IOException ignored) {
-                    }
-                    System.out.println("file: " + file.toPath());
-                    System.out.println("mime: " + mimeType);
+//                    System.out.println("file: " + file.toPath());
+//                    System.out.println("mime: " + mimeType);
 
-                    if (file.isDirectory() && file.canRead()) {
-                        System.out.println("directory");
+                    if (file.isDirectory()) {
+//                        System.out.println("directory");
                         builder.append("<!DOCTYPE html>")
                                 .append("<html>")
                                 .append("<head>")
@@ -90,45 +101,50 @@ public class Main {
 
 
                         for (File f : file.listFiles()) {
-//                        System.out.println("filename: " + f.getName());
-                            builder.append("<li>")
-                                    .append("<a href=\"")
-                                    .append(path.startsWith("/") ? "" : "/")
-                                    .append(path)
-                                    .append(path.endsWith("/") ? "" : "/")
-                                    .append(f.getName())
-                                    .append("\">")
-                                    .append(f.getName())
-                                    .append("</a>")
-                                    .append("</li>");
+                            if (!f.isHidden()) { // dont list hidden files
+                                builder.append("<li>")
+                                        .append("<a href=\"")
+                                        .append(path.startsWith("/") ? "" : "/")
+                                        .append(path)
+                                        .append(path.endsWith("/") ? "" : "/")
+                                        .append(f.getName())
+                                        .append("\">")
+                                        .append(f.getName())
+                                        .append("</a>")
+                                        .append("</li>")
+                                ;
+                            }
                         }
                         builder.append("</ul>")
                                 .append("</body>")
                                 .append("</html>");
 
-                        System.out.println(builder.toString());
-                        
+//                        System.out.println(builder.toString());
+
                         exchange.getResponseHeaders().set("Content-Type", "text/html");
                         exchange.sendResponseHeaders(200, builder.toString().getBytes().length);
                         OutputStream os = exchange.getResponseBody();
                         os.write(builder.toString().getBytes());
                         os.close();
 
-                    } else if (file.isFile() && file.canRead()) {
-                        System.out.println("file");
-                        System.out.println(mimeType);
+                    } else if (file.isFile()) {
+//                        System.out.println("file");
+
                         byte[] bytes = new byte[(int) file.length()];
                         if (bytes != null) {
+
                             FileInputStream fileInputStream = new FileInputStream(file);
                             BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
-                            bufferedInputStream.read(bytes, 0, bytes.length);
 
-                            exchange.getResponseHeaders().set("Content-Type", mimeType);
+                            bufferedInputStream.read(bytes, 0, bytes.length);
+                            if (mimeType != null) exchange.getResponseHeaders().set("Content-Type", mimeType);
+
                             exchange.sendResponseHeaders(200, file.length());
 
                             OutputStream os = exchange.getResponseBody();
                             os.write(bytes, 0, bytes.length);
                             os.close();
+
                         } else {
                             errorMessage(exchange, 404);
                         }
@@ -147,7 +163,7 @@ public class Main {
 
     static public void errorMessage(HttpExchange exchange, int code) throws IOException {
         try {
-            System.out.println("ERROR");
+            System.out.println("ERROR " + code);
             String error = "Not Found \n[invalid or illegal path]";
             exchange.getResponseHeaders().set("Content-Type", "text/plain");
             exchange.sendResponseHeaders(code, error.getBytes().length);

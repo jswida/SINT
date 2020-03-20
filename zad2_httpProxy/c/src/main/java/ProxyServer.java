@@ -1,5 +1,6 @@
 import com.cedarsoftware.util.io.JsonWriter;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
 import com.sun.net.httpserver.*;
 
@@ -11,6 +12,7 @@ import java.nio.file.Files;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * examples sites:
@@ -29,6 +31,22 @@ public class ProxyServer {
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         setStats();
         server.createContext("/", new ProxyHandler());
+
+        // save when application is closing
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                System.out.println("ShutdownHook is running");
+                try {
+                    saveStats();
+                    System.out.println("Stats saved");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (CsvValidationException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        });
 
         System.out.println("Starting server on port: " + port);
         server.start();
@@ -108,7 +126,7 @@ public class ProxyServer {
                     if (connection.getErrorStream() != null) responseCon = connection.getErrorStream().readAllBytes();
                 }
 
-                Stats newstat2 = new Stats(url.getAuthority(), 0,  responseCon.length, 1);
+                Stats newstat2 = new Stats(url.getAuthority(), 0, responseCon.length, 1);
                 addStats(newstat2);
 
                 // set new headers resolving transfer-encodinig problems
@@ -121,7 +139,7 @@ public class ProxyServer {
                 /* SEND RESPONSE */
                 exchange.sendResponseHeaders(codeCon, responseCon.length);
                 OutputStream os = exchange.getResponseBody();
-                if (responseCon.length > 0) os.write(responseCon);
+                if (responseCon.length >= 0) os.write(responseCon);
                 os.close();
 
 
@@ -189,6 +207,51 @@ public class ProxyServer {
 
     public static void addStats(Stats stats) {
         ProxyServer.stats.add(stats);
+    }
+
+    private static void saveStats() throws IOException, CsvValidationException {
+        String[] next;
+
+        File file = new File(statslistFile);
+        FileWriter fileWriter = new FileWriter(file);
+        CSVWriter writer = new CSVWriter(fileWriter);
+
+        String[] header = {"domain", "sent", "received", "requests"};
+        writer.writeNext(header, false);
+
+        Map<String, List<Stats>> collect = ProxyServer.getStats()
+                .stream()
+                .collect(
+                        Collectors.groupingBy(
+                                Stats::getWebsite, Collectors.toList()
+                        )
+                );
+
+        for (Map.Entry<String, List<Stats>> entries : collect.entrySet()) {
+            ArrayList<String> response = new ArrayList<>();
+            int receivedBytes = 0;
+            int sentBytes = 0;
+            int requests = 0;
+
+            for (Stats s : entries.getValue()) {
+                receivedBytes += s.getReceived();
+                sentBytes += s.getSent();
+                requests += s.getRequest();
+            }
+
+            // make response
+            Stats statistic = entries.getValue().get(0);
+            response.add(statistic.getWebsite());
+            response.add(String.valueOf(sentBytes));
+            response.add(String.valueOf(receivedBytes));
+            response.add(String.valueOf(requests));
+
+            // write to csv
+            writer.writeNext(response.toArray(new String[0]), false);
+        }
+
+        writer.close();
+
     }
 
 }

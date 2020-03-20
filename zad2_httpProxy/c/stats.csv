@@ -1,1 +1,5 @@
-website,sent,received,request
+domain,sent,received,requests
+www.open-up.eu,8,8,6
+www.weevil.info,4,0,0
+open-up.eu,48,48,10261
+weevil.info,42,0,0

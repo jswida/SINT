@@ -1,4 +1,6 @@
 import com.cedarsoftware.util.io.JsonWriter;
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
 import com.sun.net.httpserver.*;
 
 import java.io.*;
@@ -19,10 +21,13 @@ import java.util.logging.Logger;
 public class ProxyServer {
 
     private static String proxylistFile = "proxylist.txt";
+    private static String statslistFile = "stats.csv";
+    private static HashSet<Stats> stats = new HashSet<>();
 
     public static void main(String[] args) throws Exception {
         int port = 8000;
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
+        setStats();
         server.createContext("/", new ProxyHandler());
 
         System.out.println("Starting server on port: " + port);
@@ -35,7 +40,7 @@ public class ProxyServer {
 
         // simple constructor
         public ProxyHandler() throws FileNotFoundException {
-            proxylist = readList();
+            this.proxylist = readList();
             System.out.println("Proxy List: " + proxylist);
         }
 
@@ -74,6 +79,7 @@ public class ProxyServer {
                     connection.addRequestProperty(header.getKey(), String.join(", ", header.getValue()));
                 }
 
+                int bytes_length = 0;
                 // if method is post or put
                 if (method.startsWith("P")) {
                     connection.setDoOutput(true);
@@ -81,9 +87,12 @@ public class ProxyServer {
                     byte[] bytes = bodyInputStream.readAllBytes();
 //                    BufferedInputStream bufferedInputStream = new BufferedInputStream(bodyInputStream);
 //                    bufferedInputStream.read(bytes, 0, bytes.length);
-//                    transferedBytes = bytes.length;
+                    bytes_length = bytes.length;
                     os.write(bytes);
                 }
+
+                Stats newstat = new Stats(url.getAuthority(), bytes_length, 0, 1);
+                addStats(newstat);
 
                 /* RESPONSE */
                 // get responce info
@@ -99,8 +108,8 @@ public class ProxyServer {
                     if (connection.getErrorStream() != null) responseCon = connection.getErrorStream().readAllBytes();
                 }
 
-                // Add statistics
-//                addStatistics(new Statistic(url.getAuthority(), 0, response.length, 1));
+                Stats newstat2 = new Stats(url.getAuthority(), 0,  responseCon.length, 1);
+                addStats(newstat2);
 
                 // set new headers resolving transfer-encodinig problems
                 for (Map.Entry<String, List<String>> header : headersCon) {
@@ -151,5 +160,35 @@ public class ProxyServer {
         return proxylist;
     }
 
+    public static String getProxylistFile() {
+        return proxylistFile;
+    }
+
+    public static void setProxylistFile(String proxylistFile) {
+        ProxyServer.proxylistFile = proxylistFile;
+    }
+
+    private static void setStats() throws IOException, CsvValidationException {
+        String[] next;
+
+        File file = new File(statslistFile);
+        FileReader fileReader = new FileReader(file);
+        CSVReader reader = new CSVReader(fileReader);
+
+        reader.readNext();
+        while ((next = reader.readNext()) != null) {
+            Stats stat = new Stats(next[0], Integer.parseInt(next[2]), Integer.parseInt(next[3]), Integer.parseInt(next[1]));
+            addStats(stat);
+        }
+
+    }
+
+    public static HashSet<Stats> getStats() {
+        return stats;
+    }
+
+    public static void addStats(Stats stats) {
+        ProxyServer.stats.add(stats);
+    }
 
 }

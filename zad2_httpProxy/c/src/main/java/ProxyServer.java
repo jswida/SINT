@@ -40,6 +40,7 @@ public class ProxyServer {
                     saveStats();
                     System.out.println("Stats saved");
                 } catch (IOException e) {
+                    System.out.println("Stats NOT saved");
                     e.printStackTrace();
                 } catch (CsvValidationException e) {
                     e.printStackTrace();
@@ -64,7 +65,7 @@ public class ProxyServer {
 
         public void handle(HttpExchange exchange) throws IOException {
             try {
-                System.out.println("--- handle()");
+                System.out.println("handle() ---");
                 /* REQUEST */
                 // get request info
                 String method = exchange.getRequestMethod();
@@ -113,13 +114,14 @@ public class ProxyServer {
                 addStats(newstat);
 
                 /* RESPONSE */
-                // get responce info
+                // get response info
                 int codeCon = connection.getResponseCode();
-                Headers headersResponse = exchange.getResponseHeaders();
+
+//                Headers headersResponse = exchange.getResponseHeaders();
                 Set<Map.Entry<String, List<String>>> headersCon = connection.getHeaderFields().entrySet();
                 byte[] responseCon = {};
 
-                // get resposne
+                // get response
                 try {
                     responseCon = connection.getInputStream().readAllBytes();
                 } catch (Exception e) {
@@ -132,20 +134,25 @@ public class ProxyServer {
                 // set new headers resolving transfer-encodinig problems
                 for (Map.Entry<String, List<String>> header : headersCon) {
                     if (header.getKey() != null && !header.getKey().toLowerCase().equals("transfer-encoding")) {
-                        headersResponse.add(header.getKey(), String.join(", ", header.getValue()));
+                        exchange.getResponseHeaders().add(header.getKey(), String.join(", ", header.getValue()));
                     }
                 }
 
                 /* SEND RESPONSE */
-                exchange.sendResponseHeaders(codeCon, responseCon.length);
-                OutputStream os = exchange.getResponseBody();
-                if (responseCon.length >= 0) os.write(responseCon);
-                os.close();
+                // code 304 == Not Modified
+                if (codeCon == 304) exchange.sendResponseHeaders(codeCon, -1);
+                else {
+                    exchange.sendResponseHeaders(codeCon, responseCon.length);
+                    OutputStream os = exchange.getResponseBody();
+                    if (responseCon.length > 0) os.write(responseCon);
+                    os.close();
+                }
 
+                System.out.println("--- handle()");
 
             } catch (IOException | IllegalAccessException e) { // 403 error
+                System.out.println("handle() exception");
                 System.out.println(e);
-//                errorMessage(exchange, 403);
             }
 
         }
@@ -154,7 +161,7 @@ public class ProxyServer {
         static public void errorMessage(HttpExchange exchange, int code) throws IOException {
             try {
                 System.out.println("ERROR " + code);
-                String error = "Forbidden \n[invalid / illegal path or site is on forbidden proxy list]";
+                String error = "Forbidden \n[site is on forbidden proxy list or invalid / illegal path]";
 //                exchange.getResponseHeaders().set("Content-Type", "text/plain");
                 exchange.sendResponseHeaders(code, error.getBytes().length);
                 OutputStream os = exchange.getResponseBody();
@@ -162,6 +169,7 @@ public class ProxyServer {
                 os.close();
 
             } catch (IOException e) {
+                System.out.println("Problem with generating error message");
                 System.out.println(e);
             }
         }

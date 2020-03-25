@@ -9,7 +9,12 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
+
 public class TPSIServer {
+    private static String LOGIN = "student";
+    private static String PASS = "student";
+
     public static void main(String[] args) throws Exception {
         int port = 8000;
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
@@ -23,7 +28,7 @@ public class TPSIServer {
         context.setAuthenticator(new BasicAuthenticator("auth2") {
             @Override
             public boolean checkCredentials(String login, String password) {
-                return login.equals("student") && password.equals("student");
+                return login.equals(LOGIN) && password.equals(PASS);
             }
         });
 
@@ -160,9 +165,6 @@ public class TPSIServer {
 
     static class BasicAuthenticationHandler implements HttpHandler {
         public void handle(HttpExchange exchange) throws IOException {
-            System.out.println("auth/");
-            String login = "student";
-            String password = "student";
             int rc = 401;
             String out = "NOT LOGGED IN";
             String auth = exchange.getRequestHeaders().getFirst("Authorization");
@@ -175,7 +177,7 @@ public class TPSIServer {
                     String[] credentials = decoded.split(":");
 
                     if (credentials.length == 2) {
-                        if (credentials[0].equals(login) && credentials[1].equals(password)) {
+                        if (credentials[0].equals(LOGIN) && credentials[1].equals(PASS)) {
                             rc = 200;
                             out = "OK, LOGGED IN";
                         }
@@ -184,6 +186,7 @@ public class TPSIServer {
             }
             else {
                 rc = 401;
+                out = "EMPTY AUTH HEADER, NOT LOGGED IN";
             }
 
             exchange.getResponseHeaders().set("Content-Type", "text/plain");

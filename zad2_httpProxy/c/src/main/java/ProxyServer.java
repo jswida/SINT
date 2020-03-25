@@ -138,6 +138,9 @@ public class ProxyServer {
                     }
                 }
 
+                exchange.getResponseHeaders().add("Via", String.join(", ", exchange.getProtocol(), "localhost"));
+
+
                 /* SEND RESPONSE */
                 // code 304 == Not Modified
                 if (codeCon == 304) exchange.sendResponseHeaders(codeCon, -1);

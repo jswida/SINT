@@ -133,7 +133,18 @@ public class TPSIServer {
                 int x = ran.nextInt(1000) + 100;
                 String cookie = String.valueOf(x);
 
-                exchange.getResponseHeaders().set("Set-Cookie", cookie);
+                String domain = exchange.getRequestHeaders().getFirst("Host");
+                System.out.println(domain);
+
+                exchange.getResponseHeaders().add("Content-Type", "text/plain");
+//                exchange.getResponseHeaders().set("Set-Cookie", cookie);
+                exchange.getResponseHeaders().add("Set-Cookie", "CID=" + cookie + "; Domain=localhost;" + "Path=/");
+                exchange.getResponseHeaders().add("Set-Cookie", "Echo=" + cookie + "; Domain=localhost;" + "Path=/echo");
+                exchange.getResponseHeaders().add("Set-Cookie", "InvalidDomain=cookie; domain=google.pl");
+                exchange.getResponseHeaders().add("Set-Cookie", "ValidDomain=cookie" + "; domain=" + domain);
+
+
+
                 exchange.sendResponseHeaders(200, cookie.getBytes().length);
 
                 OutputStream os = exchange.getResponseBody();
@@ -149,34 +160,38 @@ public class TPSIServer {
 
     static class BasicAuthenticationHandler implements HttpHandler {
         public void handle(HttpExchange exchange) throws IOException {
+            System.out.println("auth/");
             String login = "student";
             String password = "student";
             int rc = 401;
             String out = "NOT LOGGED IN";
             String auth = exchange.getRequestHeaders().getFirst("Authorization");
 
-            String[] parts = auth.split("\\s");
-            if (parts[0].equals("Basic") && parts.length > 1) {
-                Base64.Decoder decoder = Base64.getDecoder();
-                String decoded = new String(decoder.decode(parts[1]));
-                String[] credentials = decoded.split(":");
+            if (auth != null) {
+                String[] parts = auth.split("\\s");
+                if (parts[0].equals("Basic") && parts.length > 1) {
+                    Base64.Decoder decoder = Base64.getDecoder();
+                    String decoded = new String(decoder.decode(parts[1]));
+                    String[] credentials = decoded.split(":");
 
-                if (credentials.length == 2) {
-                    if (credentials[0].equals(login) && credentials[1].equals(password)) {
-                        rc = 200;
-                        out = "OK, LOGGED IN";
+                    if (credentials.length == 2) {
+                        if (credentials[0].equals(login) && credentials[1].equals(password)) {
+                            rc = 200;
+                            out = "OK, LOGGED IN";
+                        }
                     }
                 }
             }
+            else {
+                rc = 401;
+            }
 
-            System.out.println("work well");
             exchange.getResponseHeaders().set("Content-Type", "text/plain");
             exchange.getResponseHeaders().set("WWW-Authenticate", "Basic realm=MyDomain");
             exchange.sendResponseHeaders(rc, out.getBytes().length);
             OutputStream os = exchange.getResponseBody();
             os.write(out.getBytes());
             os.close();
-            System.out.println("finished");
         }
     }
 

@@ -7,17 +7,20 @@ import java.net.InetSocketAddress;
 import java.nio.file.Files;
 
 /**
- * to add params: Edit Configuration -> Program Arguments -> i.e "/home/user/Documents/"
- * default directory is set in defaultPath variable
+ * tested on ubuntu 18.04
+ * ONLY ABSOLUTE PATH IN PARAMS
+ *
  */
 
 public class Main {
-    private static String path = "/home/";
-    private static String defaultPath = "/home/bartek/Documents/adblock/easylistpolish/";
+    // set for canonical path check in ubuntu
+    private static String path = "/";
+    private static String defaultPath =  System.getProperty("user.dir");
     private static String canonical = "";
 
     public static void main(String[] args) throws Exception {
 
+        // ONLY ABSOLUTE PATH IN PARAMS
         if (args.length > 0) {
             defaultPath = args[0];
         }
@@ -39,12 +42,12 @@ public class Main {
                 String fromURI = exchange.getRequestURI().toString().replaceAll("%20", " ");
 //                System.out.println("from URL: " + fromURI);
 
-                // if path is smth else than just "/"
+                // if path from URI is smth else than just "/"
                 if (!fromURI.substring(1).equals("")) path = fromURI;
-                else path = defaultPath;
+                //else path = defaultPath;
 
 
-                File file = new File(path);
+                File file = new File(defaultPath, path);
 
 //                System.out.println("path after modifications: " + path);
 //                System.out.println("filepath: " + file.getPath());

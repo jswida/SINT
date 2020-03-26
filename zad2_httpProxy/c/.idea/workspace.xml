@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="6c78256b-6df4-41cf-8667-6da695fb0582" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/stats.csv" beforeDir="false" afterPath="$PROJECT_DIR$/stats.csv" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="1YvYOvdID5nSf25OpNX8VnjrSTt" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1583223784809" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="C:\Users\Bartek\OneDrive\01_STUDIA\SEM-mgr_I\SystemyInternetowe\si_1\a1\src" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Bartek\OneDrive\01_STUDIA\SEM-mgr_I\SystemyInternetowe\si_1\a1\src" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.ProxyServer">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="C" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ProxyServer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ProxyServer" />
+      <module name="C" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.Main" />
+      <item itemvalue="Application.ProxyServer" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.ProxyServer" />
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6c78256b-6df4-41cf-8667-6da695fb0582" name="Default Changelist" comment="" />
+      <created>1583220584581</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1583220584581</updated>
+      <workItem from="1583220588362" duration="3151000" />
+      <workItem from="1583824510022" duration="5184000" />
+      <workItem from="1583850622646" duration="2173000" />
+      <workItem from="1584516442469" duration="1842000" />
+      <workItem from="1584561208590" duration="40000" />
+      <workItem from="1584626878808" duration="10249000" />
+      <workItem from="1584721986907" duration="774000" />
+      <workItem from="1584722783500" duration="2882000" />
+      <workItem from="1584963974849" duration="3187000" />
+      <workItem from="1585066353824" duration="593000" />
+      <workItem from="1585120403092" duration="23000" />
+      <workItem from="1585127227829" duration="1779000" />
+      <workItem from="1585207787264" duration="39000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="503" y="122" key="#Project_Structure" timestamp="1584722758735">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="361" y="75" key="#Project_Structure/0.0.1536.834@0.0.1536.834" timestamp="1583824876329" />
+    <state x="503" y="122" key="#Project_Structure/67.27.1853.1053@67.27.1853.1053" timestamp="1584722758735" />
+    <state x="451" y="270" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1584652623674">
+      <screen x="67" y="27" width="1853" height="1173" />
+    </state>
+    <state x="451" y="270" key="#com.intellij.execution.impl.EditConfigurationsDialog/67.27.1853.1173@67.27.1853.1173" timestamp="1584652623674" />
+    <state x="801" y="271" width="374" height="562" key="#com.intellij.ide.util.MemberChooser" timestamp="1584722971991">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="801" y="271" width="374" height="562" key="#com.intellij.ide.util.MemberChooser/67.27.1853.1053@67.27.1853.1053" timestamp="1584722971991" />
+    <state x="400" y="106" key="#com.intellij.ide.util.frameworkSupport.AddFrameworkSupportDialog" timestamp="1583824570193">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="400" y="106" key="#com.intellij.ide.util.frameworkSupport.AddFrameworkSupportDialog/0.0.1536.834@0.0.1536.834" timestamp="1583824570193" />
+    <state x="729" y="269" width="424" height="484" key="FileChooserDialogImpl" timestamp="1584517579430">
+      <screen x="67" y="27" width="1853" height="1173" />
+    </state>
+    <state x="549" y="172" key="FileChooserDialogImpl/0.0.1536.834@0.0.1536.834" timestamp="1583852802382" />
+    <state x="729" y="269" width="424" height="484" key="FileChooserDialogImpl/67.27.1853.1173@67.27.1853.1173" timestamp="1584517579430" />
+    <state width="1013" height="283" key="GridCell.Tab.0.bottom" timestamp="1585129936592">
+      <screen x="67" y="27" width="3773" height="1173" />
+    </state>
+    <state width="1493" height="163" key="GridCell.Tab.0.bottom/0.0.1536.834@0.0.1536.834" timestamp="1583852804045" />
+    <state width="881" height="248" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1585066947434" />
+    <state width="1252" height="284" key="GridCell.Tab.0.bottom/67.27.1853.1173@67.27.1853.1173" timestamp="1584969541891" />
+    <state width="1013" height="283" key="GridCell.Tab.0.bottom/67.27.3773.1173@67.27.3773.1173" timestamp="1585129936592" />
+    <state width="1013" height="283" key="GridCell.Tab.0.center" timestamp="1585129936591">
+      <screen x="67" y="27" width="3773" height="1173" />
+    </state>
+    <state width="1493" height="163" key="GridCell.Tab.0.center/0.0.1536.834@0.0.1536.834" timestamp="1583852804044" />
+    <state width="881" height="248" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1585066947434" />
+    <state width="1252" height="284" key="GridCell.Tab.0.center/67.27.1853.1173@67.27.1853.1173" timestamp="1584969541890" />
+    <state width="1013" height="283" key="GridCell.Tab.0.center/67.27.3773.1173@67.27.3773.1173" timestamp="1585129936591" />
+    <state width="1013" height="283" key="GridCell.Tab.0.left" timestamp="1585129936591">
+      <screen x="67" y="27" width="3773" height="1173" />
+    </state>
+    <state width="1493" height="163" key="GridCell.Tab.0.left/0.0.1536.834@0.0.1536.834" timestamp="1583852804044" />
+    <state width="881" height="248" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1585066947433" />
+    <state width="1252" height="284" key="GridCell.Tab.0.left/67.27.1853.1173@67.27.1853.1173" timestamp="1584969541890" />
+    <state width="1013" height="283" key="GridCell.Tab.0.left/67.27.3773.1173@67.27.3773.1173" timestamp="1585129936591" />
+    <state width="1013" height="283" key="GridCell.Tab.0.right" timestamp="1585129936592">
+      <screen x="67" y="27" width="3773" height="1173" />
+    </state>
+    <state width="1493" height="163" key="GridCell.Tab.0.right/0.0.1536.834@0.0.1536.834" timestamp="1583852804045" />
+    <state width="881" height="248" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1585066947434" />
+    <state width="1252" height="284" key="GridCell.Tab.0.right/67.27.1853.1173@67.27.1853.1173" timestamp="1584969541890" />
+    <state width="1013" height="283" key="GridCell.Tab.0.right/67.27.3773.1173@67.27.3773.1173" timestamp="1585129936592" />
+    <state x="526" y="210" width="924" height="684" key="Maven.ArtifactSearchDialog" timestamp="1584723148426">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="526" y="210" width="924" height="684" key="Maven.ArtifactSearchDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1584723148426" />
+    <state x="249" y="0" key="SettingsEditor" timestamp="1583824943196">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="249" y="0" key="SettingsEditor/0.0.1536.834@0.0.1536.834" timestamp="1583824943196" />
+    <state x="649" y="440" key="com.intellij.ide.util.TipDialog" timestamp="1584516443525">
+      <screen x="67" y="27" width="1853" height="1173" />
+    </state>
+    <state x="649" y="440" key="com.intellij.ide.util.TipDialog/67.27.1853.1173@67.27.1853.1173" timestamp="1584516443525" />
+    <state x="538" y="215" width="1372" height="796" key="new project wizard" timestamp="1585207826310">
+      <screen x="67" y="27" width="1853" height="1173" />
+    </state>
+    <state x="538" y="215" width="1372" height="796" key="new project wizard/67.27.1853.1173@67.27.1853.1173" timestamp="1585207826310" />
+  </component>
+</project>

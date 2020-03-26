@@ -50,4 +50,14 @@ public class Grade {
     public void setSubject(Subject subject) {
         this.subject = subject;
     }
+
+    @Override
+    public String toString() {
+        return "Grade{" +
+                "id=" + id +
+                ", value=" + value +
+                ", date=" + date +
+                ", subject=" + subject +
+                '}';
+    }
 }

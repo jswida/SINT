@@ -41,4 +41,13 @@ public class Subject {
     public void setLecturer(String lecturer) {
         this.lecturer = lecturer;
     }
+
+    @Override
+    public String toString() {
+        return "Subject{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", lecturer='" + lecturer + '\'' +
+                '}';
+    }
 }

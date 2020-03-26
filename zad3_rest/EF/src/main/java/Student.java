@@ -59,4 +59,19 @@ public class Student {
     public void setGrades(Set<Grade> grades) {
         this.grades = grades;
     }
+
+    public void setGrade(Grade grade) {
+        this.grades.add(grade);
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "index=" + index +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", birthDate=" + birthDate +
+                ", grades=" + grades +
+                '}';
+    }
 }

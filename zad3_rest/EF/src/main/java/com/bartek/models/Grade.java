@@ -1,3 +1,5 @@
+package com.bartek.models;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
@@ -53,7 +55,7 @@ public class Grade {
 
     @Override
     public String toString() {
-        return "Grade{" +
+        return "com.bartek.models.Grade{" +
                 "id=" + id +
                 ", value=" + value +
                 ", date=" + date +

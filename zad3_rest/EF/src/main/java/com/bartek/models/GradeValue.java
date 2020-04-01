@@ -1,3 +1,4 @@
+package com.bartek.models;
 
 public enum GradeValue {
     TWO(2.0),

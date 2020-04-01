@@ -1,9 +1,11 @@
+package com.bartek.models;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.*;
 
 @XmlRootElement
 public class Student {
-    private int index;
+    private Long index; // ID
     private String name;
     private String surname;
     private Date birthDate;
@@ -12,20 +14,20 @@ public class Student {
     public Student() {
     }
 
-    public Student(int index, String name, String surname, Date birthDate, Set<Grade> grades) {
-        this.index = index;
+    public Student(Long id, String name, String surname, Date birthDate, Set<Grade> grades) {
+        this.index = id;
         this.name = name;
         this.surname = surname;
         this.birthDate = birthDate;
         this.grades = grades;
     }
 
-    public int getIndex() {
+    public Long getId() {
         return index;
     }
 
-    public void setIndex(int index) {
-        this.index = index;
+    public void setId(Long id) {
+        this.index = id;
     }
 
     public String getName() {
@@ -66,7 +68,7 @@ public class Student {
 
     @Override
     public String toString() {
-        return "Student{" +
+        return "com.bartek.models.Student{" +
                 "index=" + index +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +

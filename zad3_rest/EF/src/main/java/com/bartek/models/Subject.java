@@ -1,3 +1,5 @@
+package com.bartek.models;
+
 import javax.annotation.Generated;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -44,7 +46,7 @@ public class Subject {
 
     @Override
     public String toString() {
-        return "Subject{" +
+        return "com.bartek.models.Subject{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", lecturer='" + lecturer + '\'' +

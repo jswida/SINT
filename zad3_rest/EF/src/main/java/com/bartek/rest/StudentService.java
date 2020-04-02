@@ -6,18 +6,20 @@ import com.bartek.models.Student;
 import com.bartek.models.Subject;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Path("/students")
 public class StudentService {
 
+
     @GET
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Set<Student> getAllStudents(){
         return Storage.getStudents();
     }
+
 
     @GET
     @Path("/{id}")
@@ -28,6 +30,7 @@ public class StudentService {
         else throw new NotFoundException();
     }
 
+
     @GET
     @Path("/{id}/grades")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -36,6 +39,7 @@ public class StudentService {
         if (student != null) return student.getGrades();
         else throw new NotFoundException();
     }
+
 
     @GET
     @Path("/{id}/grades/{gradeId}")
@@ -50,6 +54,7 @@ public class StudentService {
         else throw new NotFoundException();
     }
 
+
     @GET
     @Path("/{id}/subjects")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -58,34 +63,39 @@ public class StudentService {
         if (student != null) {
             Set<Subject> studentSubjects = new HashSet<Subject>();
             for (Grade grade : student.getGrades()){
-                studentSubjects.add(grade.getSubject());
+                Subject subject = Storage.getSubjects().stream().filter(s -> s.getId().equals(grade.getSubjectId())).findFirst().orElse(null);
+                if (subject != null) studentSubjects.add(subject);
             }
             return studentSubjects;
         }
         else throw new NotFoundException();
     }
 
-    @GET
-    @Path("/{id}/subjects/{subjectId}")
-    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Subject getStudentSubjectById(@PathParam("id") long id, @PathParam("subjectId") long subjectId){
-        Student student = Storage.getStudents().stream().filter(s -> s.getId() == id).findFirst().orElse(null);
-        if (student != null) {
-            Set<Subject> studentSubjects = new HashSet<Subject>();
-            for (Grade grade : student.getGrades()){
-                studentSubjects.add(grade.getSubject());
-            }
-            Subject subject = studentSubjects.stream().filter(s -> s.getId() == subjectId).findFirst().orElse(null);
-            if (subject != null) return subject;
-            else throw new NotFoundException();
-        }
-        else throw new NotFoundException();
-    }
 
     @DELETE
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public void deleteStudent(@PathParam("id") long id){
+    public Response deleteStudent(@PathParam("id") long id) throws NotFoundException{
+
+        System.out.println("delete @");
         Storage.delete(Student.class, id);
+        return Response.noContent().build();
     }
+
+
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+//    @RolesAllowed("admin")
+    public Response postNewStudent(Student ns, @Context UriInfo uriInfo) throws BadRequestException {
+        Student student = Storage.addStudent(ns);
+//        student.clearLinks();
+
+        UriBuilder builder = uriInfo.getAbsolutePathBuilder();
+        builder.path(Long.toString(student.getId()));
+        return Response.created(builder.build()).entity(student).build();
+    }
+
+
+
 }

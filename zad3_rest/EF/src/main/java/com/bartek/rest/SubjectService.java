@@ -7,7 +7,7 @@ import com.bartek.models.Student;
 import com.bartek.models.Subject;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.*;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -15,6 +15,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class SubjectService {
 
     @GET
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Set<Subject> getAllSubjects(){
         return Storage.getSubjects();
     }
@@ -38,4 +39,14 @@ public class SubjectService {
         Storage.delete(Subject.class, id);
     }
 
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response postNewSubject(Subject ns, @Context UriInfo uriInfo) throws BadRequestException {
+        Subject subject = Storage.addSubject(ns);
+
+        UriBuilder builder = uriInfo.getAbsolutePathBuilder();
+        builder.path(Long.toString(subject.getId()));
+        return Response.created(builder.build()).entity(subject).build();
+    }
 }

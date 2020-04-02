@@ -18,9 +18,7 @@ import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
 
 //TODO
-// 1. referencja na obiekt przedmiotu to tylko id? chyba tak --> zmienic metody DELETE wtedy
 // 2. dodać put - każdy parametr
-// 3. dodać post - jako jeden obiekt
 // 4. przetestować w postmanie
 
 public class Main {

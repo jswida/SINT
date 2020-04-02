@@ -9,18 +9,19 @@ public class Grade {
     private Long id;
     private GradeValue value;
     private Date date;
-    private Subject subject;
+    private Long subjectId;
 
     public Grade( ) {
     }
 
-    public Grade(Long id, GradeValue value, Date date, Subject subject) {
+
+    public Grade(Long id, GradeValue value, Date date, Long subjectId) {
         this.id = id;
         this.value = value;
         this.date = date;
-        this.subject = subject;
+        this.subjectId = subjectId;
     }
-
+    
     public Long getId() {
         return id;
     }
@@ -45,21 +46,22 @@ public class Grade {
         this.date = date;
     }
 
-    public Subject getSubject() {
-        return subject;
+
+    public Long getSubjectId() {
+        return subjectId;
     }
 
-    public void setSubject(Subject subject) {
-        this.subject = subject;
+    public void setSubjectId(Long subjectId) {
+        this.subjectId = subjectId;
     }
 
     @Override
     public String toString() {
-        return "com.bartek.models.Grade{" +
+        return "Grade{" +
                 "id=" + id +
                 ", value=" + value +
                 ", date=" + date +
-                ", subject=" + subject +
+                ", subjectId=" + subjectId +
                 '}';
     }
 }

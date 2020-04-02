@@ -5,6 +5,7 @@ import com.bartek.models.GradeValue;
 import com.bartek.models.Student;
 import com.bartek.models.Subject;
 
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import java.security.SecureRandom;
 import java.util.Date;
@@ -26,6 +27,7 @@ public class Storage {
     }
 
     public static void delete(Class<?> object, Long id){
+
         // student
         if (object == Student.class){
             Student student = students.stream().filter(s -> s.getId().equals(id)).findFirst().orElse(null);
@@ -48,7 +50,7 @@ public class Storage {
             Subject subject = subjects.stream().filter(s -> s.getId().equals(id)).findFirst().orElse(null);
             if (subject != null) {
                 for (Grade grade : grades) {
-                    if (grade.getSubject().getId().equals(id)) {
+                    if (grade.getSubjectId().equals(id)) {
                         delete(Grade.class, grade.getId());
                     }
                 }
@@ -56,6 +58,58 @@ public class Storage {
             }
             else throw new NotFoundException();
         }
+    }
+
+    public static Student addStudent(Student ns) {
+        if (ns.getName() != null && ns.getSurname() != null && ns.getBirthDate() != null ){
+            Student student = new Student();
+            student.setId(studentID);
+            student.setName(ns.getName());
+            student.setSurname(ns.getSurname());
+            student.setBirthDate(ns.getBirthDate());
+//            if (ns.getGrades() != null){
+//                student.setGrades(ns.getGrades());
+//            }
+//            else {
+            student.setGrades(new HashSet<>());
+
+            studentID++;
+            students.add(student);
+            return student;
+        }
+        else throw new BadRequestException();
+    }
+
+    public static Grade addGrade(Grade ng){
+        if (ng.getValue() != null && ng.getDate() != null && ng.getSubjectId() != null){
+            Subject subject = subjects.stream().filter(s -> s.getId().equals(ng.getSubjectId())).findFirst().orElse(null);
+            if (subject != null){
+                Grade grade = new Grade(gradeID, ng.getValue(), ng.getDate(), ng.getSubjectId());
+                gradeID++;
+                grades.add(grade);
+                return grade;
+            }
+            else throw new BadRequestException();
+        }
+        else throw new BadRequestException();
+    }
+
+    public static Grade addGradeToStudent(Grade ng, Long gradeStudentId){
+        Grade grade = addGrade(ng);
+        Student student = students.stream().filter(s -> s.getId().equals(gradeStudentId)).findFirst().orElse(null);
+        student.getGrades().add(grade);
+        return grade;
+
+    }
+
+    public static Subject addSubject(Subject ns){
+        if(ns.getName() != null && ns.getLecturer() != null){
+            Subject subject = new Subject(subjectID, ns.getName(), ns.getLecturer());
+            subjectID++;
+            subjects.add(subject);
+            return  subject;
+        }
+        else throw new BadRequestException();
     }
 
 
@@ -101,7 +155,7 @@ public class Storage {
         grade.setId(gradeID);
         grade.setValue(randomEnum(GradeValue.class));
         grade.setDate(new Date());
-        grade.setSubject(subject);
+        grade.setSubjectId(subject.getId());
         gradeID++;
         return grade;
     }

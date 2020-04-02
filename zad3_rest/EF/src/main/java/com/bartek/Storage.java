@@ -7,6 +7,7 @@ import com.bartek.models.Subject;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
+import java.nio.channels.NotYetBoundException;
 import java.security.SecureRandom;
 import java.util.Date;
 import java.util.HashSet;
@@ -26,27 +27,26 @@ public class Storage {
         generateSomeObjects();
     }
 
-    public static void delete(Class<?> object, Long id){
+    public static void delete(Class<?> object, Long id) {
 
         // student
-        if (object == Student.class){
+        if (object == Student.class) {
             Student student = students.stream().filter(s -> s.getId().equals(id)).findFirst().orElse(null);
             if (student != null) students.remove(student);
             else throw new NotFoundException();
         }
         // grade
-        else if (object == Grade.class){
+        else if (object == Grade.class) {
             Grade grade = grades.stream().filter(s -> s.getId().equals(id)).findFirst().orElse(null);
             if (grade != null) {
-                for (Student student : students){
+                for (Student student : students) {
                     student.getGrades().remove(grade); // does it work ?
                 }
                 grades.remove(grade);
-            }
-            else throw new NotFoundException();
+            } else throw new NotFoundException();
         }
         // subject
-        else if (object == Subject.class){
+        else if (object == Subject.class) {
             Subject subject = subjects.stream().filter(s -> s.getId().equals(id)).findFirst().orElse(null);
             if (subject != null) {
                 for (Grade grade : grades) {
@@ -55,13 +55,12 @@ public class Storage {
                     }
                 }
                 subjects.remove(subject);
-            }
-            else throw new NotFoundException();
+            } else throw new NotFoundException();
         }
     }
 
     public static Student addStudent(Student ns) {
-        if (ns.getName() != null && ns.getSurname() != null && ns.getBirthDate() != null ){
+        if (ns.getName() != null && ns.getSurname() != null && ns.getBirthDate() != null) {
             Student student = new Student();
             student.setId(studentID);
             student.setName(ns.getName());
@@ -76,25 +75,22 @@ public class Storage {
             studentID++;
             students.add(student);
             return student;
-        }
-        else throw new BadRequestException();
+        } else throw new BadRequestException();
     }
 
-    public static Grade addGrade(Grade ng){
-        if (ng.getValue() != null && ng.getDate() != null && ng.getSubjectId() != null){
+    public static Grade addGrade(Grade ng) {
+        if (ng.getValue() != null && ng.getDate() != null && ng.getSubjectId() != null) {
             Subject subject = subjects.stream().filter(s -> s.getId().equals(ng.getSubjectId())).findFirst().orElse(null);
-            if (subject != null){
+            if (subject != null) {
                 Grade grade = new Grade(gradeID, ng.getValue(), ng.getDate(), ng.getSubjectId());
                 gradeID++;
                 grades.add(grade);
                 return grade;
-            }
-            else throw new BadRequestException();
-        }
-        else throw new BadRequestException();
+            } else throw new BadRequestException();
+        } else throw new BadRequestException();
     }
 
-    public static Grade addGradeToStudent(Grade ng, Long gradeStudentId){
+    public static Grade addGradeToStudent(Grade ng, Long gradeStudentId) {
         Grade grade = addGrade(ng);
         Student student = students.stream().filter(s -> s.getId().equals(gradeStudentId)).findFirst().orElse(null);
         student.getGrades().add(grade);
@@ -102,18 +98,73 @@ public class Storage {
 
     }
 
-    public static Subject addSubject(Subject ns){
-        if(ns.getName() != null && ns.getLecturer() != null){
+    public static Subject addSubject(Subject ns) {
+        if (ns.getName() != null && ns.getLecturer() != null) {
             Subject subject = new Subject(subjectID, ns.getName(), ns.getLecturer());
             subjectID++;
             subjects.add(subject);
-            return  subject;
-        }
-        else throw new BadRequestException();
+            return subject;
+        } else throw new BadRequestException();
     }
 
+    public static Student updateStudent(Long updatedStudentId, Student newStudent){
+        Student student = students.stream().filter(s -> s.getId().equals(updatedStudentId)).findFirst().orElse(null);
+        if (student != null){
+            if (newStudent.getName() != null){
+                student.setName(newStudent.getName());
+            }
+            if (newStudent.getSurname() != null){
+                student.setSurname(newStudent.getSurname());
+            }
+            if (newStudent.getBirthDate() != null){
+                student.setBirthDate(newStudent.getBirthDate());
+            }
+            if (newStudent.getGrades() != null){
+                Set<Grade> newGrades = newStudent.getGrades();
+                for (Grade grade : newGrades){
+                    if (grade != null) {
+                        student.getGrades().add(grade);
+                    }
+                }
+            }
+            return student;
+        }
+        else throw new NotFoundException();
+    }
 
-    public static void generateSomeObjects(){
+    public static Grade updateGrade(Long updatedGradeId, Grade newGrade) {
+        Grade grade = grades.stream().filter(s -> s.getId().equals(updatedGradeId)).findFirst().orElse(null);
+        if (grade != null) {
+            if (newGrade.getValue() != null) {
+                grade.setValue(newGrade.getValue());
+            }
+            if (newGrade.getDate() != null) {
+                grade.setDate(newGrade.getDate());
+            }
+            if (newGrade.getSubjectId() != null){
+                Subject subject = subjects.stream().filter(s -> s.getId().equals(newGrade.getSubjectId())).findFirst().orElse(null);
+                if (subject != null) {
+                    grade.setSubjectId(newGrade.getSubjectId());
+                }
+            }
+            return grade;
+        } else throw new NotFoundException();
+    }
+
+    public static Subject updateSubject(Long updatedSubjectId, Subject newSubject) {
+        Subject subject = subjects.stream().filter(s -> s.getId().equals(updatedSubjectId)).findFirst().orElse(null);
+        if (subject != null) {
+            if (newSubject.getName() != null) {
+                subject.setName(newSubject.getName());
+            }
+            if (newSubject.getLecturer() != null) {
+                subject.setLecturer(newSubject.getLecturer());
+            }
+            return subject;
+        } else throw new NotFoundException();
+    }
+
+    public static void generateSomeObjects() {
         Subject subject1 = generateSubject("SINT");
         Grade grade1 = generateGrade(subject1);
 
@@ -150,7 +201,7 @@ public class Storage {
 
     }
 
-    public static Grade generateGrade(Subject subject){
+    public static Grade generateGrade(Subject subject) {
         Grade grade = new Grade();
         grade.setId(gradeID);
         grade.setValue(randomEnum(GradeValue.class));
@@ -160,7 +211,7 @@ public class Storage {
         return grade;
     }
 
-    public static Subject generateSubject(String name){
+    public static Subject generateSubject(String name) {
         Subject subject = new Subject();
         subject.setId(subjectID);
         subject.setName(name);
@@ -169,7 +220,7 @@ public class Storage {
         return subject;
     }
 
-    public static Student generateStudent(String name, String surname){
+    public static Student generateStudent(String name, String surname) {
         Student student = new Student();
         student.setId(studentID);
         student.setBirthDate(new Date());
@@ -179,7 +230,7 @@ public class Storage {
         return student;
     }
 
-    public static <T extends Enum<?>> T randomEnum(Class<T> clazz){
+    public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
         int x = random.nextInt(clazz.getEnumConstants().length);
         return clazz.getEnumConstants()[x];
     }

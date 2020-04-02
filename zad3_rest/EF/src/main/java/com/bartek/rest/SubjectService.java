@@ -49,4 +49,15 @@ public class SubjectService {
         builder.path(Long.toString(subject.getId()));
         return Response.created(builder.build()).entity(subject).build();
     }
+
+    @PUT
+    @Path("/{id}")
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+//    @RolesAllowed({"admin", "supervisor"})
+    public Response updateSubject(@PathParam("id") Long updatedSubjectId, Subject newSubject) throws NotFoundException {
+        Subject subject = Storage.updateSubject(updatedSubjectId, newSubject);
+//        course.clearLinks();
+        return Response.ok(subject).build();
+    }
 }

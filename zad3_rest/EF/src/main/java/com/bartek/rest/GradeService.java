@@ -77,4 +77,15 @@ public class GradeService {
         builder.path(Long.toString(grade.getId()));
         return Response.created(builder.build()).entity(grade).build();
     }
+
+    @PUT
+    @Path("/{id}")
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+//    @RolesAllowed({"admin", "supervisor"})
+    public Response updateGrade(@PathParam("id") Long updatedGradeId, Grade newGrade) throws NotFoundException {
+        Grade grade = Storage.updateGrade(updatedGradeId, newGrade);
+//        course.clearLinks();
+        return Response.ok(grade).build();
+    }
 }

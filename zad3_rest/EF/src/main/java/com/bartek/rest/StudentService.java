@@ -96,6 +96,15 @@ public class StudentService {
         return Response.created(builder.build()).entity(student).build();
     }
 
-
+    @PUT
+    @Path("/{id}")
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+//    @RolesAllowed({"admin", "supervisor"})
+    public Response updateStudent(@PathParam("id") Long updateStudentId, Student newStudent) throws NotFoundException {
+        Student student = Storage.updateStudent(updateStudentId, newStudent);
+//        course.clearLinks();
+        return Response.ok(student).build();
+    }
 
 }

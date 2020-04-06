@@ -1,0 +1,644 @@
+{
+	"id": "5458b3f7-433f-4ab0-847e-a718fa11c2dc",
+	"name": "HTTP proxy",
+	"timestamp": "2020-04-06T07:03:02.951Z",
+	"collection_id": "7d697596-c704-4cae-a108-40387ff2aa91",
+	"folder_id": 0,
+	"environment_id": "487f7ce3-3e3f-4c3d-b38b-377e1bf73f8b",
+	"totalPass": 176,
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "0083812e-da43-4975-aedb-881a8870ff6c",
+			"name": "Reset",
+			"url": "http://www.cs.put.poznan.pl",
+			"time": 48,
+			"responseCode": {
+				"code": 301,
+				"name": "Moved Permanently"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				48
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+			"name": "Download website",
+			"time": 21,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Non-error response": true,
+				"Response code with and without proxy should equal": true,
+				"Response size with and without proxy should equal": true,
+				"Response Content-type with and without proxy should equal": true,
+				"Response with proxy has Via header": true
+			},
+			"testPassFailCounts": {
+				"Non-error response": {
+					"pass": 33,
+					"fail": 0
+				},
+				"Response code with and without proxy should equal": {
+					"pass": 33,
+					"fail": 0
+				},
+				"Response size with and without proxy should equal": {
+					"pass": 33,
+					"fail": 0
+				},
+				"Response Content-type with and without proxy should equal": {
+					"pass": 33,
+					"fail": 0
+				},
+				"Response with proxy has Via header": {
+					"pass": 33,
+					"fail": 0
+				}
+			},
+			"times": [
+				46,
+				368,
+				16,
+				16,
+				18,
+				18,
+				15,
+				38,
+				13,
+				19,
+				72,
+				58,
+				38,
+				22,
+				90,
+				17,
+				13,
+				23,
+				19,
+				24,
+				34,
+				15,
+				11,
+				14,
+				13,
+				34,
+				17,
+				15,
+				18,
+				15,
+				17,
+				16,
+				21
+			],
+			"allTests": [
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				},
+				{
+					"Non-error response": true,
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response with proxy has Via header": true
+				}
+			]
+		},
+		{
+			"id": "09517e6a-15f4-4c43-b142-09dd430b7f0d",
+			"name": "POST payload",
+			"url": "http://www.cs.put.poznan.pl/tpawlak/files/TPSI/post.php",
+			"time": 29,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response code with and without proxy should equal": true,
+				"Response size with and without proxy should equal": true,
+				"Response Content-type with and without proxy should equal": true,
+				"Response contains POST body": true
+			},
+			"testPassFailCounts": {
+				"Response code with and without proxy should equal": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response size with and without proxy should equal": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response Content-type with and without proxy should equal": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response contains POST body": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				29
+			],
+			"allTests": [
+				{
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Response contains POST body": true
+				}
+			]
+		},
+		{
+			"id": "9112c8d9-49c8-4e57-81d1-a28e9a1e485d",
+			"name": "Not found response",
+			"url": "http://www.cs.put.poznan.pl/tpawlak/files/TPSI/nonexistentfile.txt",
+			"time": 13,
+			"responseCode": {
+				"code": 404,
+				"name": "Not Found"
+			},
+			"tests": {
+				"Response code with and without proxy should equal": true,
+				"Response size with and without proxy should equal": true,
+				"Response Content-type with and without proxy should equal": true,
+				"Status is 404": true,
+				"Response body is larger than 100 bytes and 100 characters.": true
+			},
+			"testPassFailCounts": {
+				"Response code with and without proxy should equal": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response size with and without proxy should equal": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response Content-type with and without proxy should equal": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status is 404": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response body is larger than 100 bytes and 100 characters.": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				13
+			],
+			"allTests": [
+				{
+					"Response code with and without proxy should equal": true,
+					"Response size with and without proxy should equal": true,
+					"Response Content-type with and without proxy should equal": true,
+					"Status is 404": true,
+					"Response body is larger than 100 bytes and 100 characters.": true
+				}
+			]
+		},
+		{
+			"id": "729af9be-361a-474c-aa7b-98e504b01dcb",
+			"name": "Forbidden request",
+			"url": "http://libra.cs.put.poznan.pl/",
+			"time": 60,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status is 403": true
+			},
+			"testPassFailCounts": {
+				"Status is 403": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				60
+			],
+			"allTests": [
+				{
+					"Status is 403": true
+				}
+			]
+		},
+		{
+			"id": "c7535782-c436-4da2-868f-21f2cbdadc04",
+			"name": "Forbidden request subresource",
+			"url": "http://libra.cs.put.poznan.pl/index.htm",
+			"time": 12,
+			"responseCode": {
+				"code": 404,
+				"name": "Not Found"
+			},
+			"tests": {
+				"Status is 403": true
+			},
+			"testPassFailCounts": {
+				"Status is 403": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				12
+			],
+			"allTests": [
+				{
+					"Status is 403": true
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 1345,
+	"collection": {
+		"requests": [
+			{
+				"id": "0083812e-da43-4975-aedb-881a8870ff6c",
+				"method": "HEAD"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "0b28b087-44cc-4481-a000-30d9f32aa356",
+				"method": "GET"
+			},
+			{
+				"id": "09517e6a-15f4-4c43-b142-09dd430b7f0d",
+				"method": "POST"
+			},
+			{
+				"id": "9112c8d9-49c8-4e57-81d1-a28e9a1e485d",
+				"method": "GET"
+			},
+			{
+				"id": "729af9be-361a-474c-aa7b-98e504b01dcb",
+				"method": "GET"
+			},
+			{
+				"id": "c7535782-c436-4da2-868f-21f2cbdadc04",
+				"method": "GET"
+			}
+		]
+	}
+}

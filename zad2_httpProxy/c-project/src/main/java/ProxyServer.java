@@ -104,8 +104,6 @@ public class ProxyServer {
                     connection.setDoOutput(true);
                     OutputStream os = connection.getOutputStream();
                     byte[] bytes = bodyInputStream.readAllBytes();
-//                    BufferedInputStream bufferedInputStream = new BufferedInputStream(bodyInputStream);
-//                    bufferedInputStream.read(bytes, 0, bytes.length);
                     bytes_length = bytes.length;
                     os.write(bytes);
                 }

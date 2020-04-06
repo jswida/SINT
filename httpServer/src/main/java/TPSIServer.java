@@ -35,7 +35,7 @@ public class TPSIServer {
             //A1 EXERCISES
             try {
                 String response = "Hello World!";
-                byte[] array = Files.readAllBytes(Paths.get("src/index.html"));
+                byte[] array = Files.readAllBytes(Paths.get("index.html"));
                 exchange.getResponseHeaders().set("Content-Type", "text/html");
                 exchange.sendResponseHeaders(200, array.length);
                 OutputStream os = exchange.getResponseBody();

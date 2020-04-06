@@ -52,7 +52,7 @@ public class TPSIServer {
         public void handle(HttpExchange exchange) throws IOException {
             try {
 
-                File file = new File(System.getProperty("user.dir") + "/src/index.html");
+                File file = new File(System.getProperty("user.dir") + "/index.html");
                 byte[] fileContent = Files.readAllBytes(file.toPath());
 
                 exchange.getResponseHeaders().set("Content-Type", "");

@@ -1,0 +1,508 @@
+{
+	"id": "ceca1346-fe13-4475-90d1-4b90f1b94023",
+	"name": "HTTP basics",
+	"timestamp": "2020-04-06T06:37:26.393Z",
+	"collection_id": "961e1013-4b15-48b2-870e-18395f193c10",
+	"folder_id": "29f3474d-61b4-438a-a6e3-461c65d24e5e",
+	"environment_id": "487f7ce3-3e3f-4c3d-b38b-377e1bf73f8b",
+	"totalPass": 44,
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "63691290-b930-4a56-b449-b5d29d365a0c",
+			"name": "Reset",
+			"url": "http://localhost:8000/",
+			"time": 11,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				11
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "a30f269c-04ac-4dba-a696-89904a858a43",
+			"name": "Echo",
+			"url": "http://localhost:8000/echo",
+			"time": 4,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Content-Type is application/json": true,
+				"The user-agent header is included in the response body": true,
+				"Pretty-print is enabled": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Content-Type is application/json": {
+					"pass": 1,
+					"fail": 0
+				},
+				"The user-agent header is included in the response body": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Pretty-print is enabled": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				4
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Content-Type is application/json": true,
+					"The user-agent header is included in the response body": true,
+					"Pretty-print is enabled": true
+				}
+			]
+		},
+		{
+			"id": "696603bc-32f1-4342-9720-c46d4b7a420e",
+			"name": "Redirect",
+			"time": 4,
+			"responseCode": {
+				"code": 308,
+				"name": "Resume Incomplete"
+			},
+			"tests": {
+				"The response code is 308": true,
+				"Location header is set": true
+			},
+			"testPassFailCounts": {
+				"The response code is 301": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Location header is set": {
+					"pass": 5,
+					"fail": 0
+				},
+				"The response code is 302": {
+					"pass": 1,
+					"fail": 0
+				},
+				"The response code is 303": {
+					"pass": 1,
+					"fail": 0
+				},
+				"The response code is 307": {
+					"pass": 1,
+					"fail": 0
+				},
+				"The response code is 308": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				4,
+				4,
+				3,
+				5,
+				4
+			],
+			"allTests": [
+				{
+					"The response code is 301": true,
+					"Location header is set": true
+				},
+				{
+					"The response code is 302": true,
+					"Location header is set": true
+				},
+				{
+					"The response code is 303": true,
+					"Location header is set": true
+				},
+				{
+					"The response code is 307": true,
+					"Location header is set": true
+				},
+				{
+					"The response code is 308": true,
+					"Location header is set": true
+				}
+			]
+		},
+		{
+			"id": "d285dcbc-85ea-4ac0-b352-c9bf0ff24066",
+			"name": "Cookies",
+			"url": "http://localhost:8000/cookies",
+			"time": 4,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"At least one cookie was sent": true,
+				"A cookie without domain was sent": true,
+				"A cookie without path was sent": true,
+				"A cookie with valid domain was sent": true,
+				"A cookie with invalid domain was sent": true,
+				"A cookie is set for path /echo": true
+			},
+			"testPassFailCounts": {
+				"At least one cookie was sent": {
+					"pass": 1,
+					"fail": 0
+				},
+				"A cookie without domain was sent": {
+					"pass": 1,
+					"fail": 0
+				},
+				"A cookie without path was sent": {
+					"pass": 1,
+					"fail": 0
+				},
+				"A cookie with valid domain was sent": {
+					"pass": 1,
+					"fail": 0
+				},
+				"A cookie with invalid domain was sent": {
+					"pass": 1,
+					"fail": 0
+				},
+				"A cookie is set for path /echo": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				4
+			],
+			"allTests": [
+				{
+					"At least one cookie was sent": true,
+					"A cookie without domain was sent": true,
+					"A cookie without path was sent": true,
+					"A cookie with valid domain was sent": true,
+					"A cookie with invalid domain was sent": true,
+					"A cookie is set for path /echo": true
+				}
+			]
+		},
+		{
+			"id": "cd384e9e-980d-4237-bf33-8edc97ddb5af",
+			"name": "Authorized",
+			"time": 3,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Non-empty login and password": true,
+				"Response is OK": true
+			},
+			"testPassFailCounts": {
+				"Non-empty login and password": {
+					"pass": 2,
+					"fail": 0
+				},
+				"Response is OK": {
+					"pass": 2,
+					"fail": 0
+				}
+			},
+			"times": [
+				4,
+				3
+			],
+			"allTests": [
+				{
+					"Non-empty login and password": true,
+					"Response is OK": true
+				},
+				{
+					"Non-empty login and password": true,
+					"Response is OK": true
+				}
+			]
+		},
+		{
+			"id": "2390616d-acc1-4b27-9dca-370c22f3623b",
+			"name": "No credentials",
+			"time": 2,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Response is 401": true,
+				"Response has WWW-Authentice header set to Basic": true
+			},
+			"testPassFailCounts": {
+				"Response is 401": {
+					"pass": 2,
+					"fail": 0
+				},
+				"Response has WWW-Authentice header set to Basic": {
+					"pass": 2,
+					"fail": 0
+				}
+			},
+			"times": [
+				7,
+				2
+			],
+			"allTests": [
+				{
+					"Response is 401": true,
+					"Response has WWW-Authentice header set to Basic": true
+				},
+				{
+					"Response is 401": true,
+					"Response has WWW-Authentice header set to Basic": true
+				}
+			]
+		},
+		{
+			"id": "0cb49187-a415-4c31-96f0-3b63042a961d",
+			"name": "Invalid credentials",
+			"time": 6,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Response is 401": true,
+				"Response has WWW-Authentice header set to Basic": true
+			},
+			"testPassFailCounts": {
+				"Response is 401": {
+					"pass": 2,
+					"fail": 0
+				},
+				"Response has WWW-Authentice header set to Basic": {
+					"pass": 2,
+					"fail": 0
+				}
+			},
+			"times": [
+				2,
+				6
+			],
+			"allTests": [
+				{
+					"Response is 401": true,
+					"Response has WWW-Authentice header set to Basic": true
+				},
+				{
+					"Response is 401": true,
+					"Response has WWW-Authentice header set to Basic": true
+				}
+			]
+		},
+		{
+			"id": "615dff5b-12da-4443-9efb-0c0c31897f39",
+			"name": "Invalid password",
+			"time": 3,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Response is 401": true,
+				"Response has WWW-Authentice header set to Basic": true
+			},
+			"testPassFailCounts": {
+				"Response is 401": {
+					"pass": 2,
+					"fail": 0
+				},
+				"Response has WWW-Authentice header set to Basic": {
+					"pass": 2,
+					"fail": 0
+				}
+			},
+			"times": [
+				3,
+				3
+			],
+			"allTests": [
+				{
+					"Response is 401": true,
+					"Response has WWW-Authentice header set to Basic": true
+				},
+				{
+					"Response is 401": true,
+					"Response has WWW-Authentice header set to Basic": true
+				}
+			]
+		},
+		{
+			"id": "11df6502-acbc-4852-86a8-2b4edbda3fcc",
+			"name": "Invalid auth method",
+			"time": 2,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Response is 401": true,
+				"Response has WWW-Authentice header set to Basic": true
+			},
+			"testPassFailCounts": {
+				"Response is 401": {
+					"pass": 2,
+					"fail": 0
+				},
+				"Response has WWW-Authentice header set to Basic": {
+					"pass": 2,
+					"fail": 0
+				}
+			},
+			"times": [
+				4,
+				2
+			],
+			"allTests": [
+				{
+					"Response is 401": true,
+					"Response has WWW-Authentice header set to Basic": true
+				},
+				{
+					"Response is 401": true,
+					"Response has WWW-Authentice header set to Basic": true
+				}
+			]
+		},
+		{
+			"id": "3851b4d7-39b3-4052-b05e-fc8886b0ac65",
+			"name": "Empty credentials",
+			"time": 3,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Response is 401": true,
+				"Response has WWW-Authentice header set to Basic": true
+			},
+			"testPassFailCounts": {
+				"Response is 401": {
+					"pass": 2,
+					"fail": 0
+				},
+				"Response has WWW-Authentice header set to Basic": {
+					"pass": 2,
+					"fail": 0
+				}
+			},
+			"times": [
+				3,
+				3
+			],
+			"allTests": [
+				{
+					"Response is 401": true,
+					"Response has WWW-Authentice header set to Basic": true
+				},
+				{
+					"Response is 401": true,
+					"Response has WWW-Authentice header set to Basic": true
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 81,
+	"collection": {
+		"requests": [
+			{
+				"id": "63691290-b930-4a56-b449-b5d29d365a0c",
+				"method": "HEAD"
+			},
+			{
+				"id": "a30f269c-04ac-4dba-a696-89904a858a43",
+				"method": "GET"
+			},
+			{
+				"id": "696603bc-32f1-4342-9720-c46d4b7a420e",
+				"method": "GET"
+			},
+			{
+				"id": "696603bc-32f1-4342-9720-c46d4b7a420e",
+				"method": "GET"
+			},
+			{
+				"id": "696603bc-32f1-4342-9720-c46d4b7a420e",
+				"method": "GET"
+			},
+			{
+				"id": "696603bc-32f1-4342-9720-c46d4b7a420e",
+				"method": "GET"
+			},
+			{
+				"id": "696603bc-32f1-4342-9720-c46d4b7a420e",
+				"method": "GET"
+			},
+			{
+				"id": "d285dcbc-85ea-4ac0-b352-c9bf0ff24066",
+				"method": "GET"
+			},
+			{
+				"id": "cd384e9e-980d-4237-bf33-8edc97ddb5af",
+				"method": "GET"
+			},
+			{
+				"id": "cd384e9e-980d-4237-bf33-8edc97ddb5af",
+				"method": "GET"
+			},
+			{
+				"id": "2390616d-acc1-4b27-9dca-370c22f3623b",
+				"method": "GET"
+			},
+			{
+				"id": "2390616d-acc1-4b27-9dca-370c22f3623b",
+				"method": "GET"
+			},
+			{
+				"id": "0cb49187-a415-4c31-96f0-3b63042a961d",
+				"method": "GET"
+			},
+			{
+				"id": "0cb49187-a415-4c31-96f0-3b63042a961d",
+				"method": "GET"
+			},
+			{
+				"id": "615dff5b-12da-4443-9efb-0c0c31897f39",
+				"method": "GET"
+			},
+			{
+				"id": "615dff5b-12da-4443-9efb-0c0c31897f39",
+				"method": "GET"
+			},
+			{
+				"id": "11df6502-acbc-4852-86a8-2b4edbda3fcc",
+				"method": "GET"
+			},
+			{
+				"id": "11df6502-acbc-4852-86a8-2b4edbda3fcc",
+				"method": "GET"
+			},
+			{
+				"id": "3851b4d7-39b3-4052-b05e-fc8886b0ac65",
+				"method": "GET"
+			},
+			{
+				"id": "3851b4d7-39b3-4052-b05e-fc8886b0ac65",
+				"method": "GET"
+			}
+		]
+	}
+}

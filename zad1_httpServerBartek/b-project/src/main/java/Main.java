@@ -4,6 +4,8 @@ import com.sun.net.httpserver.HttpServer;
 
 import java.io.*;
 import java.net.InetSocketAddress;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 
 /**
@@ -40,7 +42,9 @@ public class Main {
                 StringBuilder builder = new StringBuilder();
                 // get path from URI
                 String fromURI = exchange.getRequestURI().toString().replaceAll("%20", " ");
-//                System.out.println("from URL: " + fromURI);
+                fromURI = URLDecoder.decode(fromURI, "UTF-8");
+
+                System.out.println("from URL: " + fromURI);
 
                 // if path from URI is smth else than just "/"
                 if (!fromURI.substring(1).equals("")) path = fromURI;

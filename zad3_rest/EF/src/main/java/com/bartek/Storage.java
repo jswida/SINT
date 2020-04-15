@@ -31,7 +31,7 @@ public class Storage {
 
         // student
         if (object == Student.class) {
-            Student student = students.stream().filter(s -> s.getId().equals(id)).findFirst().orElse(null);
+            Student student = students.stream().filter(s -> s.getIndex().equals(id)).findFirst().orElse(null);
             if (student != null) students.remove(student);
             else throw new NotFoundException();
         }
@@ -60,12 +60,12 @@ public class Storage {
     }
 
     public static Student addStudent(Student ns) {
-        if (ns.getName() != null && ns.getSurname() != null && ns.getBirthDate() != null) {
+        if (ns.getFirstName() != null && ns.getLastName() != null && ns.getBrithday() != null) {
             Student student = new Student();
-            student.setId(studentID);
-            student.setName(ns.getName());
-            student.setSurname(ns.getSurname());
-            student.setBirthDate(ns.getBirthDate());
+            student.setIndex(studentID);
+            student.setName(ns.getFirstName());
+            student.setSurname(ns.getLastName());
+            student.setBirthDate(ns.getBrithday());
 //            if (ns.getGrades() != null){
 //                student.setGrades(ns.getGrades());
 //            }
@@ -92,7 +92,7 @@ public class Storage {
 
     public static Grade addGradeToStudent(Grade ng, Long gradeStudentId) {
         Grade grade = addGrade(ng);
-        Student student = students.stream().filter(s -> s.getId().equals(gradeStudentId)).findFirst().orElse(null);
+        Student student = students.stream().filter(s -> s.getIndex().equals(gradeStudentId)).findFirst().orElse(null);
         student.getGrades().add(grade);
         return grade;
 
@@ -108,18 +108,23 @@ public class Storage {
     }
 
     public static Student updateStudent(Long updatedStudentId, Student newStudent){
-        Student student = students.stream().filter(s -> s.getId().equals(updatedStudentId)).findFirst().orElse(null);
+        Student student = students.stream().filter(s -> s.getIndex().equals(updatedStudentId)).findFirst().orElse(null);
+        System.out.println("print: " + + updatedStudentId + newStudent.toString());
         if (student != null){
-            if (newStudent.getName() != null){
-                student.setName(newStudent.getName());
+
+            if (newStudent.getFirstName() != null && newStudent.getFirstName().length() > 0){
+                student.setName(newStudent.getFirstName());
             }
-            if (newStudent.getSurname() != null){
-                student.setSurname(newStudent.getSurname());
+
+            if (newStudent.getLastName() != null && newStudent.getLastName().length() > 0){
+                student.setSurname(newStudent.getLastName());
             }
-            if (newStudent.getBirthDate() != null){
-                student.setBirthDate(newStudent.getBirthDate());
+
+            if (newStudent.getBrithday() != null && newStudent.getBrithday().toString().length() > 0){
+                student.setBirthDate(newStudent.getBrithday());
             }
-            if (newStudent.getGrades() != null){
+
+            if (newStudent.getGrades() != null ){
                 Set<Grade> newGrades = newStudent.getGrades();
                 for (Grade grade : newGrades){
                     if (grade != null) {
@@ -129,19 +134,20 @@ public class Storage {
             }
             return student;
         }
+
         else throw new NotFoundException();
     }
 
     public static Grade updateGrade(Long updatedGradeId, Grade newGrade) {
         Grade grade = grades.stream().filter(s -> s.getId().equals(updatedGradeId)).findFirst().orElse(null);
         if (grade != null) {
-            if (newGrade.getValue() != null) {
+            if (newGrade.getValue() != null && newGrade.getValue().toString().length() > 0) {
                 grade.setValue(newGrade.getValue());
             }
-            if (newGrade.getDate() != null) {
+            if (newGrade.getDate() != null && newGrade.getDate().toString().length() > 0) {
                 grade.setDate(newGrade.getDate());
             }
-            if (newGrade.getSubjectId() != null){
+            if (newGrade.getSubjectId() != null && newGrade.getSubjectId() >= 0){
                 Subject subject = subjects.stream().filter(s -> s.getId().equals(newGrade.getSubjectId())).findFirst().orElse(null);
                 if (subject != null) {
                     grade.setSubjectId(newGrade.getSubjectId());
@@ -154,10 +160,10 @@ public class Storage {
     public static Subject updateSubject(Long updatedSubjectId, Subject newSubject) {
         Subject subject = subjects.stream().filter(s -> s.getId().equals(updatedSubjectId)).findFirst().orElse(null);
         if (subject != null) {
-            if (newSubject.getName() != null) {
+            if (newSubject.getName() != null && newSubject.getName().length() > 0) {
                 subject.setName(newSubject.getName());
             }
-            if (newSubject.getLecturer() != null) {
+            if (newSubject.getLecturer() != null && newSubject.getLecturer().length() > 0) {
                 subject.setLecturer(newSubject.getLecturer());
             }
             return subject;
@@ -222,7 +228,7 @@ public class Storage {
 
     public static Student generateStudent(String name, String surname) {
         Student student = new Student();
-        student.setId(studentID);
+        student.setIndex(studentID);
         student.setBirthDate(new Date());
         student.setName(name);
         student.setSurname(surname);

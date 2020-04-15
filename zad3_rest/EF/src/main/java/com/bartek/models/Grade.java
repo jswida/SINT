@@ -1,9 +1,12 @@
 package com.bartek.models;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
 @XmlRootElement
+//@XmlAccessorType(XmlAccessType.FIELD)
 public class Grade {
 
     private Long id;

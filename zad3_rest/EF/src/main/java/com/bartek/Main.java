@@ -1,9 +1,5 @@
 package com.bartek;
 
-import com.bartek.models.Grade;
-import com.bartek.models.GradeValue;
-import com.bartek.models.Student;
-import com.bartek.models.Subject;
 import com.bartek.rest.GradeService;
 import com.bartek.rest.StudentService;
 import com.bartek.rest.SubjectService;
@@ -13,13 +9,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 
 import java.io.IOException;
 import java.net.URI;
-import java.security.SecureRandom;
-import java.util.Date;
-import java.util.concurrent.ThreadLocalRandom;
 
-//TODO
-// 2. dodać put - każdy parametr
-// 4. przetestować w postmanie
 
 public class Main {
     // Base URI the Grizzly HTTP server will listen on

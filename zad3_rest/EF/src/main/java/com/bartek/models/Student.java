@@ -1,59 +1,68 @@
 package com.bartek.models;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 import java.util.*;
 
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Student {
-    private Long index; // ID
-    private String name;
-    private String surname;
-    private Date birthDate;
+    @XmlElement
+    private Long index; // index
+    @XmlElement
+    private String firstName;
+    @XmlElement
+    private String lastName;
+    @XmlElement
+    private Date birthday;
+    @XmlTransient
     private Set<Grade> grades = new HashSet<>();
 
     public Student() {
     }
 
-    public Student(Long id, String name, String surname, Date birthDate, Set<Grade> grades) {
-        this.index = id;
-        this.name = name;
-        this.surname = surname;
-        this.birthDate = birthDate;
+    public Student(Long index, String firstName, String lastName, Date birthday, Set<Grade> grades) {
+        this.index = index;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthday = birthday;
         this.grades = grades;
     }
 
-    public Long getId() {
+
+    public Long getIndex() {
         return index;
     }
 
-    public void setId(Long id) {
-        this.index = id;
+    public void setIndex(Long index) {
+        this.index = index;
     }
 
-    public String getName() {
-        return name;
+
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getSurname() {
-        return surname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setSurname(String lastName) {
+        this.lastName = lastName;
     }
 
-    public Date getBirthDate() {
-        return birthDate;
+    public Date getBrithday() {
+        return birthday;
     }
 
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
+    public void setBirthDate(Date birthday) {
+        this.birthday = birthday;
     }
 
+    @XmlTransient
     public Set<Grade> getGrades() {
         return grades;
     }
@@ -70,9 +79,9 @@ public class Student {
     public String toString() {
         return "com.bartek.models.Student{" +
                 "index=" + index +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", birthDate=" + birthDate +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", birthday=" + birthday +
                 ", grades=" + grades +
                 '}';
     }

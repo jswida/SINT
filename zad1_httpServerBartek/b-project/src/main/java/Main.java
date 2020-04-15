@@ -15,7 +15,7 @@ import java.nio.file.Files;
  */
 
 public class Main {
-    // set for canonical path check in ubuntu
+ // set for canonical path check in ubuntu
     private static String path = "/";
     private static String defaultPath =  System.getProperty("user.dir");
     private static String canonical = "";

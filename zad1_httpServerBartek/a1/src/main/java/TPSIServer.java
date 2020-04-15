@@ -9,7 +9,12 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
+
 public class TPSIServer {
+    private static String LOGIN = "student";
+    private static String PASS = "student";
+
     public static void main(String[] args) throws Exception {
         int port = 8000;
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
@@ -23,7 +28,7 @@ public class TPSIServer {
         context.setAuthenticator(new BasicAuthenticator("auth2") {
             @Override
             public boolean checkCredentials(String login, String password) {
-                return login.equals("student") && password.equals("student");
+                return login.equals(LOGIN) && password.equals(PASS);
             }
         });
 
@@ -46,7 +51,8 @@ public class TPSIServer {
 
         public void handle(HttpExchange exchange) throws IOException {
             try {
-                File file = new File("src\\index.html");
+
+                File file = new File(System.getProperty("user.dir") + "/index.html");
                 byte[] fileContent = Files.readAllBytes(file.toPath());
 
                 exchange.getResponseHeaders().set("Content-Type", "");
@@ -69,7 +75,7 @@ public class TPSIServer {
                 byte[] array = JsonWriter.formatJson(json).getBytes();
 //                System.out.println(json);
 
-                exchange.getResponseHeaders().set("Content-Type", "text/plain");
+                exchange.getResponseHeaders().set("Content-Type", "application/json");
                 exchange.sendResponseHeaders(200, array.length);
 
                 OutputStream os = exchange.getResponseBody();
@@ -132,7 +138,18 @@ public class TPSIServer {
                 int x = ran.nextInt(1000) + 100;
                 String cookie = String.valueOf(x);
 
-                exchange.getResponseHeaders().set("Set-Cookie", cookie);
+                String domain = exchange.getRequestHeaders().getFirst("Host");
+                System.out.println(domain);
+
+                exchange.getResponseHeaders().add("Content-Type", "text/plain");
+//                exchange.getResponseHeaders().set("Set-Cookie", cookie);
+                exchange.getResponseHeaders().add("Set-Cookie", "CID=" + cookie + "; Domain=localhost;" + "Path=/");
+                exchange.getResponseHeaders().add("Set-Cookie", "Echo=" + cookie + "; Domain=localhost;" + "Path=/echo");
+                exchange.getResponseHeaders().add("Set-Cookie", "InvalidDomain=cookie; domain=google.pl");
+                exchange.getResponseHeaders().add("Set-Cookie", "ValidDomain=cookie" + "; domain=" + domain);
+
+
+
                 exchange.sendResponseHeaders(200, cookie.getBytes().length);
 
                 OutputStream os = exchange.getResponseBody();
@@ -148,12 +165,11 @@ public class TPSIServer {
 
     static class BasicAuthenticationHandler implements HttpHandler {
         public void handle(HttpExchange exchange) throws IOException {
-            String login = "student";
-            String password = "student";
             int rc = 401;
             String out = "NOT LOGGED IN";
             String auth = exchange.getRequestHeaders().getFirst("Authorization");
 
+            if (auth != null) {
                 String[] parts = auth.split("\\s");
                 if (parts[0].equals("Basic") && parts.length > 1) {
                     Base64.Decoder decoder = Base64.getDecoder();
@@ -161,21 +177,24 @@ public class TPSIServer {
                     String[] credentials = decoded.split(":");
 
                     if (credentials.length == 2) {
-                        if (credentials[0].equals(login) && credentials[1].equals(password)) {
+                        if (credentials[0].equals(LOGIN) && credentials[1].equals(PASS)) {
                             rc = 200;
                             out = "OK, LOGGED IN";
                         }
                     }
                 }
+            }
+            else {
+                rc = 401;
+                out = "EMPTY AUTH HEADER, NOT LOGGED IN";
+            }
 
-            System.out.println("work well");
             exchange.getResponseHeaders().set("Content-Type", "text/plain");
             exchange.getResponseHeaders().set("WWW-Authenticate", "Basic realm=MyDomain");
             exchange.sendResponseHeaders(rc, out.getBytes().length);
             OutputStream os = exchange.getResponseBody();
             os.write(out.getBytes());
             os.close();
-            System.out.println("finished");
         }
     }
 

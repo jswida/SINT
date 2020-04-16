@@ -1,8 +1,8 @@
 package com.bartek.models;
 
 public enum GradeValue {
+
     TWO(2.0),
-    TWOANDHALF(2.5),
     THREE(3.0),
     THREEANDHALF(3.5),
     FOUR(4.0),
@@ -18,5 +18,9 @@ public enum GradeValue {
 
     public double getValue() {
         return value;
+    }
+
+    public void setValue(double v){
+        this.value = v;
     }
 };

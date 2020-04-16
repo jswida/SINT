@@ -28,20 +28,20 @@ public class GradeService {
         throw new NotFoundException();
     }
 
-    @GET
-    @Path("/{id}/Course")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Course getCourseOfGradeById(@PathParam("id") long id) {
-        for (Grade grade : Storage.getGrades()) {
-            if (grade.getId() == id) {
-                Long CourseId = grade.getCourseId();
-                Course course = Storage.getCourses().stream().filter(s -> s.getId().equals(CourseId)).findFirst().orElse(null);
-                if (course != null) return course;
-                else throw new NotFoundException();
-            }
-        }
-        throw new NotFoundException();
-    }
+//    @GET
+//    @Path("/{id}/Course")
+//    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+//    public Course getCourseOfGradeById(@PathParam("id") long id) {
+//        for (Grade grade : Storage.getGrades()) {
+//            if (grade.getId() == id) {
+//                Long CourseId = grade.getCourse().getId();
+//                Course course = Storage.getCourses().stream().filter(s -> s.getId().equals(CourseId)).findFirst().orElse(null);
+//                if (course != null) return course;
+//                else throw new NotFoundException();
+//            }
+//        }
+//        throw new NotFoundException();
+//    }
 
     @DELETE
     @Path("/{id}")
@@ -63,18 +63,18 @@ public class GradeService {
         return Response.created(builder.build()).entity(grade).build();
     }
 
-    @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/student/{id}")
-    public Response postNewGradeForStudent(Grade ng, @PathParam("id") long id, @Context UriInfo uriInfo) throws BadRequestException {
-        Grade grade = Storage.addGradeToStudent(ng, id);
-//        student.clearLinks();
-
-        UriBuilder builder = uriInfo.getAbsolutePathBuilder();
-        builder.path(Long.toString(grade.getId()));
-        return Response.created(builder.build()).entity(grade).build();
-    }
+//    @POST
+//    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+//    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+//    @Path("/student/{id}")
+//    public Response postNewGradeForStudent(Grade ng, @PathParam("id") long id, @Context UriInfo uriInfo) throws BadRequestException {
+//        Grade grade = Storage.addGradeToStudent(ng, id);
+////        student.clearLinks();
+//
+//        UriBuilder builder = uriInfo.getAbsolutePathBuilder();
+//        builder.path(Long.toString(grade.getId()));
+//        return Response.created(builder.build()).entity(grade).build();
+//    }
 
     @PUT
     @Path("/{id}")

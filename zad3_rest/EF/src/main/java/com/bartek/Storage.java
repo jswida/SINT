@@ -48,7 +48,7 @@ public class Storage {
             Course course = courses.stream().filter(s -> s.getId().equals(id)).findFirst().orElse(null);
             if (course != null) {
                 for (Grade grade : grades) {
-                    if (grade.getCourseId().equals(id)) {
+                    if (grade.getCourse().getId().equals(id)) {
                         delete(Grade.class, grade.getId());
                     }
                 }
@@ -77,10 +77,10 @@ public class Storage {
     }
 
     public static Grade addGrade(Grade ng) {
-        if (ng.getValue() != null && ng.getDate() != null && ng.getCourseId() != null) {
-            Course course = courses.stream().filter(s -> s.getId().equals(ng.getCourseId())).findFirst().orElse(null);
+        if (ng.getValue() != null && ng.getDate() != null && ng.getCourse().getId() != null) {
+            Course course = courses.stream().filter(s -> s.getId().equals(ng.getCourse().getId())).findFirst().orElse(null);
             if (course != null) {
-                Grade grade = new Grade(gradeID, ng.getValue(), ng.getDate(), ng.getCourseId());
+                Grade grade = new Grade(gradeID, ng.getValue(), ng.getDate(), ng.getCourse());
                 gradeID++;
                 grades.add(grade);
                 return grade;
@@ -91,8 +91,10 @@ public class Storage {
     public static Grade addGradeToStudent(Grade ng, Long gradeStudentId) {
         Grade grade = addGrade(ng);
         Student student = students.stream().filter(s -> s.getIndex().equals(gradeStudentId)).findFirst().orElse(null);
-        student.getGrades().add(grade);
-        return grade;
+        if (student != null) {
+            student.getGrades().add(grade);
+            return grade;
+        } else throw new NotFoundException();
 
     }
 
@@ -140,15 +142,16 @@ public class Storage {
         Grade grade = grades.stream().filter(s -> s.getId().equals(updatedGradeId)).findFirst().orElse(null);
         if (grade != null) {
             if (newGrade.getValue() != null && newGrade.getValue().toString().length() > 0) {
-                grade.setValue(newGrade.getValue());
+                grade.getValue().setValue(newGrade.getValue().getValue());
+//                grade.setValue(newGrade.getValue());
             }
             if (newGrade.getDate() != null && newGrade.getDate().toString().length() > 0) {
                 grade.setDate(newGrade.getDate());
             }
-            if (newGrade.getCourseId() != null && newGrade.getCourseId() >= 0){
-                Course course = courses.stream().filter(s -> s.getId().equals(newGrade.getCourseId())).findFirst().orElse(null);
+            if (newGrade.getCourse().getId() != null && newGrade.getCourse().getId() >= 0){
+                Course course = courses.stream().filter(s -> s.getId().equals(newGrade.getCourse().getId())).findFirst().orElse(null);
                 if (course != null) {
-                    grade.setCourseId(newGrade.getCourseId());
+                    grade.setCourse(newGrade.getCourse());
                 }
             }
             return grade;
@@ -210,7 +213,7 @@ public class Storage {
         grade.setId(gradeID);
         grade.setValue(randomEnum(GradeValue.class));
         grade.setDate(new Date());
-        grade.setCourseId(course.getId());
+        grade.setCourse(course);
         gradeID++;
         return grade;
     }

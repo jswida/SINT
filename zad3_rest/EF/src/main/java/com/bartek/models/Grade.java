@@ -16,17 +16,17 @@ public class Grade {
     @XmlElement
     private Date date;
     @XmlElement
-    private Long CourseId;
+    private Course course;
 
     public Grade( ) {
     }
 
 
-    public Grade(Long id, GradeValue value, Date date, Long CourseId) {
+    public Grade(Long id, GradeValue value, Date date, Course course) {
         this.id = id;
         this.value = value;
         this.date = date;
-        this.CourseId = CourseId;
+        this.course = course;
     }
     
     public Long getId() {
@@ -53,13 +53,12 @@ public class Grade {
         this.date = date;
     }
 
-
-    public Long getCourseId() {
-        return CourseId;
+    public Course getCourse() {
+        return course;
     }
 
-    public void setCourseId(Long CourseId) {
-        this.CourseId = CourseId;
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     @Override
@@ -68,7 +67,7 @@ public class Grade {
                 "id=" + id +
                 ", value=" + value +
                 ", date=" + date +
-                ", CourseId=" + CourseId +
+                ", course=" + course +
                 '}';
     }
 }

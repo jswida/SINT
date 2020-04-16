@@ -3,7 +3,7 @@ package com.bartek.rest;
 import com.bartek.Storage;
 import com.bartek.models.Grade;
 import com.bartek.models.Student;
-import com.bartek.models.Subject;
+import com.bartek.models.Course;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -56,17 +56,17 @@ public class StudentService {
 
 
     @GET
-    @Path("/{id}/subjects")
+    @Path("/{id}/courses")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Set<Subject> getStudentSubjects(@PathParam("id") long id){
+    public Set<Course> getStudentCourses(@PathParam("id") long id){
         Student student = Storage.getStudents().stream().filter(s -> s.getIndex() == id).findFirst().orElse(null);
         if (student != null) {
-            Set<Subject> studentSubjects = new HashSet<Subject>();
+            Set<Course> studentCourses = new HashSet<Course>();
             for (Grade grade : student.getGrades()){
-                Subject subject = Storage.getSubjects().stream().filter(s -> s.getId().equals(grade.getSubjectId())).findFirst().orElse(null);
-                if (subject != null) studentSubjects.add(subject);
+                Course course = Storage.getCourses().stream().filter(s -> s.getId().equals(grade.getCourseId())).findFirst().orElse(null);
+                if (course != null) studentCourses.add(course);
             }
-            return studentSubjects;
+            return studentCourses;
         }
         else throw new NotFoundException();
     }
@@ -86,23 +86,30 @@ public class StudentService {
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-//    @RolesAllowed("admin")
     public Response postNewStudent(Student ns, @Context UriInfo uriInfo) throws BadRequestException {
-        Student student = Storage.addStudent(ns);
+        System.out.println(ns.toString());
+        if (ns.getFirstName().length() > 0 && ns.getLastName().length() > 0 && ns.getBrithday().toString().length() > 0) {
+            Student student = Storage.addStudent(ns);
+            UriBuilder builder = uriInfo.getAbsolutePathBuilder();
+            builder.path(Long.toString(student.getIndex()));
+            return Response.created(builder.build()).entity(student).build();
+        }
+        else{
+            return Response.noContent().status(400).build();
+        }
+
+
 //        student.clearLinks();
 
-        UriBuilder builder = uriInfo.getAbsolutePathBuilder();
-        builder.path(Long.toString(student.getIndex()));
-        return Response.created(builder.build()).entity(student).build();
+
     }
 
     @PUT
     @Path("/{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-//    @RolesAllowed({"admin", "supervisor"})
     public Response updateStudent(@PathParam("id") Long updateStudentId, Student newStudent) throws NotFoundException {
-        Student student = Storage.getStudents().stream().filter(s -> s.getIndex() == updateStudentId).findFirst().orElse(null);
+        Student student = Storage.getStudents().stream().filter(s -> s.getIndex().equals(updateStudentId)).findFirst().orElse(null);
         if(newStudent.getFirstName() != null && newStudent.getLastName() != null && newStudent.getBrithday() != null) {
             student = Storage.updateStudent(updateStudentId, newStudent);
 //        course.clearLinks();

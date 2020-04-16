@@ -3,25 +3,23 @@ package com.bartek;
 import com.bartek.models.Grade;
 import com.bartek.models.GradeValue;
 import com.bartek.models.Student;
-import com.bartek.models.Subject;
+import com.bartek.models.Course;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
-import java.nio.channels.NotYetBoundException;
 import java.security.SecureRandom;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class Storage {
     private static final SecureRandom random = new SecureRandom();
     private static Set<Student> students;
     private static Set<Grade> grades;
-    private static Set<Subject> subjects;
+    private static Set<Course> courses;
     private static Long studentID = 0L;
     private static Long gradeID = 0L;
-    private static Long subjectID = 0L;
+    private static Long CourseID = 0L;
 
     public Storage() {
         generateSomeObjects();
@@ -45,16 +43,16 @@ public class Storage {
                 grades.remove(grade);
             } else throw new NotFoundException();
         }
-        // subject
-        else if (object == Subject.class) {
-            Subject subject = subjects.stream().filter(s -> s.getId().equals(id)).findFirst().orElse(null);
-            if (subject != null) {
+        // Course
+        else if (object == Course.class) {
+            Course course = courses.stream().filter(s -> s.getId().equals(id)).findFirst().orElse(null);
+            if (course != null) {
                 for (Grade grade : grades) {
-                    if (grade.getSubjectId().equals(id)) {
+                    if (grade.getCourseId().equals(id)) {
                         delete(Grade.class, grade.getId());
                     }
                 }
-                subjects.remove(subject);
+                courses.remove(course);
             } else throw new NotFoundException();
         }
     }
@@ -79,10 +77,10 @@ public class Storage {
     }
 
     public static Grade addGrade(Grade ng) {
-        if (ng.getValue() != null && ng.getDate() != null && ng.getSubjectId() != null) {
-            Subject subject = subjects.stream().filter(s -> s.getId().equals(ng.getSubjectId())).findFirst().orElse(null);
-            if (subject != null) {
-                Grade grade = new Grade(gradeID, ng.getValue(), ng.getDate(), ng.getSubjectId());
+        if (ng.getValue() != null && ng.getDate() != null && ng.getCourseId() != null) {
+            Course course = courses.stream().filter(s -> s.getId().equals(ng.getCourseId())).findFirst().orElse(null);
+            if (course != null) {
+                Grade grade = new Grade(gradeID, ng.getValue(), ng.getDate(), ng.getCourseId());
                 gradeID++;
                 grades.add(grade);
                 return grade;
@@ -98,12 +96,12 @@ public class Storage {
 
     }
 
-    public static Subject addSubject(Subject ns) {
+    public static Course addCourse(Course ns) {
         if (ns.getName() != null && ns.getLecturer() != null) {
-            Subject subject = new Subject(subjectID, ns.getName(), ns.getLecturer());
-            subjectID++;
-            subjects.add(subject);
-            return subject;
+            Course course = new Course(CourseID, ns.getName(), ns.getLecturer());
+            CourseID++;
+            courses.add(course);
+            return course;
         } else throw new BadRequestException();
     }
 
@@ -147,38 +145,38 @@ public class Storage {
             if (newGrade.getDate() != null && newGrade.getDate().toString().length() > 0) {
                 grade.setDate(newGrade.getDate());
             }
-            if (newGrade.getSubjectId() != null && newGrade.getSubjectId() >= 0){
-                Subject subject = subjects.stream().filter(s -> s.getId().equals(newGrade.getSubjectId())).findFirst().orElse(null);
-                if (subject != null) {
-                    grade.setSubjectId(newGrade.getSubjectId());
+            if (newGrade.getCourseId() != null && newGrade.getCourseId() >= 0){
+                Course course = courses.stream().filter(s -> s.getId().equals(newGrade.getCourseId())).findFirst().orElse(null);
+                if (course != null) {
+                    grade.setCourseId(newGrade.getCourseId());
                 }
             }
             return grade;
         } else throw new NotFoundException();
     }
 
-    public static Subject updateSubject(Long updatedSubjectId, Subject newSubject) {
-        Subject subject = subjects.stream().filter(s -> s.getId().equals(updatedSubjectId)).findFirst().orElse(null);
-        if (subject != null) {
-            if (newSubject.getName() != null && newSubject.getName().length() > 0) {
-                subject.setName(newSubject.getName());
+    public static Course updateCourse(Long updatedCourseId, Course newCourse) {
+        Course course = courses.stream().filter(s -> s.getId().equals(updatedCourseId)).findFirst().orElse(null);
+        if (course != null) {
+            if (newCourse.getName() != null && newCourse.getName().length() > 0) {
+                course.setName(newCourse.getName());
             }
-            if (newSubject.getLecturer() != null && newSubject.getLecturer().length() > 0) {
-                subject.setLecturer(newSubject.getLecturer());
+            if (newCourse.getLecturer() != null && newCourse.getLecturer().length() > 0) {
+                course.setLecturer(newCourse.getLecturer());
             }
-            return subject;
+            return course;
         } else throw new NotFoundException();
     }
 
     public static void generateSomeObjects() {
-        Subject subject1 = generateSubject("SINT");
-        Grade grade1 = generateGrade(subject1);
+        Course course1 = generateCourse("SINT");
+        Grade grade1 = generateGrade(course1);
 
-        Subject subject2 = generateSubject("AEM");
-        Grade grade2 = generateGrade(subject2);
+        Course course2 = generateCourse("AEM");
+        Grade grade2 = generateGrade(course2);
 
-        Subject subject3 = generateSubject("PIRO");
-        Grade grade3 = generateGrade(subject3);
+        Course course3 = generateCourse("PIRO");
+        Grade grade3 = generateGrade(course3);
 
         Student student1 = generateStudent("John", "Doe");
         Student student2 = generateStudent("Merry", "Does");
@@ -191,7 +189,7 @@ public class Storage {
 
         students = new HashSet<>();
         grades = new HashSet<>();
-        subjects = new HashSet<>();
+        courses = new HashSet<>();
 
         students.add(student1);
         students.add(student2);
@@ -201,29 +199,29 @@ public class Storage {
         grades.add(grade2);
         grades.add(grade3);
 
-        subjects.add(subject1);
-        subjects.add(subject2);
-        subjects.add(subject3);
+        courses.add(course1);
+        courses.add(course2);
+        courses.add(course3);
 
     }
 
-    public static Grade generateGrade(Subject subject) {
+    public static Grade generateGrade(Course course) {
         Grade grade = new Grade();
         grade.setId(gradeID);
         grade.setValue(randomEnum(GradeValue.class));
         grade.setDate(new Date());
-        grade.setSubjectId(subject.getId());
+        grade.setCourseId(course.getId());
         gradeID++;
         return grade;
     }
 
-    public static Subject generateSubject(String name) {
-        Subject subject = new Subject();
-        subject.setId(subjectID);
-        subject.setName(name);
-        subject.setLecturer("Jan Kowalski");
-        subjectID++;
-        return subject;
+    public static Course generateCourse(String name) {
+        Course course = new Course();
+        course.setId(CourseID);
+        course.setName(name);
+        course.setLecturer("Jan Kowalski");
+        CourseID++;
+        return course;
     }
 
     public static Student generateStudent(String name, String surname) {
@@ -257,12 +255,12 @@ public class Storage {
         Storage.grades = grades;
     }
 
-    public static Set<Subject> getSubjects() {
-        return subjects;
+    public static Set<Course> getCourses() {
+        return courses;
     }
 
-    public static void setSubjects(Set<Subject> subjects) {
-        Storage.subjects = subjects;
+    public static void setCourses(Set<Course> courses) {
+        Storage.courses = courses;
     }
 
     public static Long getStudentID() {
@@ -281,11 +279,11 @@ public class Storage {
         Storage.gradeID = gradeID;
     }
 
-    public static Long getSubjectID() {
-        return subjectID;
+    public static Long getCourseID() {
+        return CourseID;
     }
 
-    public static void setSubjectID(Long subjectID) {
-        Storage.subjectID = subjectID;
+    public static void setCourseID(Long CourseID) {
+        Storage.CourseID = CourseID;
     }
 }

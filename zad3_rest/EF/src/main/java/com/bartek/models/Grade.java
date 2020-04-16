@@ -2,27 +2,31 @@ package com.bartek.models;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
 @XmlRootElement
-//@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Grade {
-
+    @XmlElement
     private Long id;
+    @XmlElement
     private GradeValue value;
+    @XmlElement
     private Date date;
-    private Long subjectId;
+    @XmlElement
+    private Long CourseId;
 
     public Grade( ) {
     }
 
 
-    public Grade(Long id, GradeValue value, Date date, Long subjectId) {
+    public Grade(Long id, GradeValue value, Date date, Long CourseId) {
         this.id = id;
         this.value = value;
         this.date = date;
-        this.subjectId = subjectId;
+        this.CourseId = CourseId;
     }
     
     public Long getId() {
@@ -50,12 +54,12 @@ public class Grade {
     }
 
 
-    public Long getSubjectId() {
-        return subjectId;
+    public Long getCourseId() {
+        return CourseId;
     }
 
-    public void setSubjectId(Long subjectId) {
-        this.subjectId = subjectId;
+    public void setCourseId(Long CourseId) {
+        this.CourseId = CourseId;
     }
 
     @Override
@@ -64,7 +68,7 @@ public class Grade {
                 "id=" + id +
                 ", value=" + value +
                 ", date=" + date +
-                ", subjectId=" + subjectId +
+                ", CourseId=" + CourseId +
                 '}';
     }
 }

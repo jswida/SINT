@@ -1,23 +1,22 @@
 package com.bartek.models;
 
 import javax.annotation.Generated;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 
 @XmlRootElement
-//@XmlAccessorType(XmlAccessType.FIELD)
-public class Subject {
-
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Course {
+    @XmlElement
     private Long id;
+    @XmlElement
     private String name;
+    @XmlElement
     private String lecturer;
 
-    public Subject() {
+    public Course() {
     }
 
-    public Subject(Long id, String name, String lecturer) {
+    public Course(Long id, String name, String lecturer) {
         this.id = id;
         this.name = name;
         this.lecturer = lecturer;

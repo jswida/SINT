@@ -2,7 +2,7 @@ package com.bartek;
 
 import com.bartek.rest.GradeService;
 import com.bartek.rest.StudentService;
-import com.bartek.rest.SubjectService;
+import com.bartek.rest.CourseService;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -33,7 +33,7 @@ public class Main {
         final ResourceConfig rc = new ResourceConfig(
                 StudentService.class,
                 GradeService.class,
-                SubjectService.class
+                CourseService.class
         );
 
         // create and start a new instance of grizzly http server

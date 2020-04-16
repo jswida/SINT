@@ -2,8 +2,7 @@ package com.bartek.rest;
 
 import com.bartek.Storage;
 import com.bartek.models.Grade;
-import com.bartek.models.Student;
-import com.bartek.models.Subject;
+import com.bartek.models.Course;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -12,14 +11,14 @@ import java.util.Set;
 @Path("/grades")
 public class GradeService {
     @GET
-    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Set<Grade> getAllGrades() {
         return Storage.getGrades();
     }
 
     @GET
     @Path("/{id}")
-    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Grade getGradeById(@PathParam("id") long id) {
         for (Grade grade : Storage.getGrades()) {
             if (grade.getId() == id) {
@@ -30,14 +29,14 @@ public class GradeService {
     }
 
     @GET
-    @Path("/{id}/subject")
-    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Subject getSubjectOfGradeById(@PathParam("id") long id) {
+    @Path("/{id}/Course")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Course getCourseOfGradeById(@PathParam("id") long id) {
         for (Grade grade : Storage.getGrades()) {
             if (grade.getId() == id) {
-                Long subjectId = grade.getSubjectId();
-                Subject subject = Storage.getSubjects().stream().filter(s -> s.getId().equals(subjectId)).findFirst().orElse(null);
-                if (subject != null) return subject;
+                Long CourseId = grade.getCourseId();
+                Course course = Storage.getCourses().stream().filter(s -> s.getId().equals(CourseId)).findFirst().orElse(null);
+                if (course != null) return course;
                 else throw new NotFoundException();
             }
         }
@@ -46,16 +45,15 @@ public class GradeService {
 
     @DELETE
     @Path("/{id}")
-    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void deleteGrade(@PathParam("id") long id) {
         Storage.delete(Grade.class, id);
     }
 
 
     @POST
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-//    @RolesAllowed("admin")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response postNewGrade(Grade ng, @Context UriInfo uriInfo) throws BadRequestException {
         Grade grade = Storage.addGrade(ng);
 //        student.clearLinks();
@@ -66,8 +64,8 @@ public class GradeService {
     }
 
     @POST
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/student/{id}")
     public Response postNewGradeForStudent(Grade ng, @PathParam("id") long id, @Context UriInfo uriInfo) throws BadRequestException {
         Grade grade = Storage.addGradeToStudent(ng, id);
@@ -80,12 +78,14 @@ public class GradeService {
 
     @PUT
     @Path("/{id}")
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-//    @RolesAllowed({"admin", "supervisor"})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response updateGrade(@PathParam("id") Long updatedGradeId, Grade newGrade) throws NotFoundException {
-        Grade grade = Storage.updateGrade(updatedGradeId, newGrade);
-//        course.clearLinks();
-        return Response.ok(grade).build();
+        Grade grade = Storage.getGrades().stream().filter(s -> s.getId().equals(updatedGradeId)).findFirst().orElse(null);
+        if(newGrade.getDate()!=null && newGrade.getValue()!=null){
+            grade = Storage.updateGrade(updatedGradeId, newGrade);
+            return Response.ok(grade).status(204).build();
+        }
+        return Response.ok(grade).status(400).build();
     }
 }

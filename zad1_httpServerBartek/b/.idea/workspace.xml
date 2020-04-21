@@ -18,6 +18,9 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
   <component name="MavenImportPreferences">
     <option name="importingSettings">
       <MavenImportingSettings>
@@ -33,6 +36,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1583223784809" />
@@ -118,26 +122,30 @@
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state x="400" y="106" key="#com.intellij.ide.util.frameworkSupport.AddFrameworkSupportDialog/0.0.1536.834@0.0.1536.834" timestamp="1583824570193" />
-    <state width="1877" height="250" key="GridCell.Tab.0.bottom" timestamp="1583883959988">
-      <screen x="0" y="0" width="1920" height="1170" />
+    <state width="1807" height="240" key="GridCell.Tab.0.bottom" timestamp="1587457719374">
+      <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state width="1493" height="163" key="GridCell.Tab.0.bottom/0.0.1536.834@0.0.1536.834" timestamp="1583869088226" />
     <state width="1877" height="250" key="GridCell.Tab.0.bottom/0.0.1920.1170@0.0.1920.1170" timestamp="1583883959988" />
-    <state width="1877" height="250" key="GridCell.Tab.0.center" timestamp="1583883959988">
-      <screen x="0" y="0" width="1920" height="1170" />
+    <state width="1807" height="240" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1587457719374" />
+    <state width="1807" height="240" key="GridCell.Tab.0.center" timestamp="1587457719373">
+      <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state width="1493" height="163" key="GridCell.Tab.0.center/0.0.1536.834@0.0.1536.834" timestamp="1583869088226" />
     <state width="1877" height="250" key="GridCell.Tab.0.center/0.0.1920.1170@0.0.1920.1170" timestamp="1583883959988" />
-    <state width="1877" height="250" key="GridCell.Tab.0.left" timestamp="1583883959988">
-      <screen x="0" y="0" width="1920" height="1170" />
+    <state width="1807" height="240" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1587457719373" />
+    <state width="1807" height="240" key="GridCell.Tab.0.left" timestamp="1587457719373">
+      <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state width="1493" height="163" key="GridCell.Tab.0.left/0.0.1536.834@0.0.1536.834" timestamp="1583869088226" />
     <state width="1877" height="250" key="GridCell.Tab.0.left/0.0.1920.1170@0.0.1920.1170" timestamp="1583883959988" />
-    <state width="1877" height="250" key="GridCell.Tab.0.right" timestamp="1583883959988">
-      <screen x="0" y="0" width="1920" height="1170" />
+    <state width="1807" height="240" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1587457719373" />
+    <state width="1807" height="240" key="GridCell.Tab.0.right" timestamp="1587457719374">
+      <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state width="1493" height="163" key="GridCell.Tab.0.right/0.0.1536.834@0.0.1536.834" timestamp="1583869088226" />
     <state width="1877" height="250" key="GridCell.Tab.0.right/0.0.1920.1170@0.0.1920.1170" timestamp="1583883959988" />
+    <state width="1807" height="240" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1587457719374" />
     <state x="299" y="72" key="Maven.ArtifactSearchDialog" timestamp="1583856377014">
       <screen x="0" y="0" width="1536" height="834" />
     </state>

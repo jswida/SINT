@@ -1,0 +1,359 @@
+{
+	"id": "31e3caba-f1e2-4f6c-8830-984d0d52ca48",
+	"name": "HTTP basics",
+	"timestamp": "2020-04-06T06:55:35.202Z",
+	"collection_id": "961e1013-4b15-48b2-870e-18395f193c10",
+	"folder_id": "025fc833-cbea-43fc-8a12-feac60c49e68",
+	"environment_id": "487f7ce3-3e3f-4c3d-b38b-377e1bf73f8b",
+	"totalPass": 22,
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "b61c310c-d019-4873-81c1-d418acae45ae",
+			"name": "Reset",
+			"url": "http://localhost:8000/",
+			"time": 100,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				100
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "7478f19d-e962-4a67-bcc0-e66a07c78704",
+			"name": "Get file or directory",
+			"time": 4,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Response is OK for http://localhost:8000/a1.iml": true
+			},
+			"testPassFailCounts": {
+				"Response is OK for http://localhost:8000/": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Content-type is text/html for the root path": {
+					"pass": 1,
+					"fail": 0
+				},
+				"The root path points at a non-empty directory": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is OK for http://localhost:8000/src": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is OK for http://localhost:8000/src/main": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is OK for http://localhost:8000/src/main/java": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is OK for http://localhost:8000/src/main/java/Main.java": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is OK for http://localhost:8000/src/main/resources": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is OK for http://localhost:8000/src/test": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is OK for http://localhost:8000/src/test/java": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is OK for http://localhost:8000/target": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is OK for http://localhost:8000/target/generated-sources": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is OK for http://localhost:8000/target/generated-sources/annotations": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is OK for http://localhost:8000/target/classes": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is OK for http://localhost:8000/target/classes/Main$ContentHandler.class": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is OK for http://localhost:8000/target/classes/Main.class": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is OK for http://localhost:8000/pom.xml": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is OK for http://localhost:8000/a1.iml": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				5,
+				3,
+				3,
+				4,
+				50,
+				3,
+				4,
+				3,
+				4,
+				4,
+				4,
+				4,
+				3,
+				4,
+				3,
+				4
+			],
+			"allTests": [
+				{
+					"Response is OK for http://localhost:8000/": true,
+					"Content-type is text/html for the root path": true,
+					"The root path points at a non-empty directory": true
+				},
+				{
+					"Response is OK for http://localhost:8000/src": true
+				},
+				{
+					"Response is OK for http://localhost:8000/src/main": true
+				},
+				{
+					"Response is OK for http://localhost:8000/src/main/java": true
+				},
+				{
+					"Response is OK for http://localhost:8000/src/main/java/Main.java": true
+				},
+				{
+					"Response is OK for http://localhost:8000/src/main/resources": true
+				},
+				{
+					"Response is OK for http://localhost:8000/src/test": true
+				},
+				{
+					"Response is OK for http://localhost:8000/src/test/java": true
+				},
+				{
+					"Response is OK for http://localhost:8000/target": true
+				},
+				{
+					"Response is OK for http://localhost:8000/target/generated-sources": true
+				},
+				{
+					"Response is OK for http://localhost:8000/target/generated-sources/annotations": true
+				},
+				{
+					"Response is OK for http://localhost:8000/target/classes": true
+				},
+				{
+					"Response is OK for http://localhost:8000/target/classes/Main$ContentHandler.class": true
+				},
+				{
+					"Response is OK for http://localhost:8000/target/classes/Main.class": true
+				},
+				{
+					"Response is OK for http://localhost:8000/pom.xml": true
+				},
+				{
+					"Response is OK for http://localhost:8000/a1.iml": true
+				}
+			]
+		},
+		{
+			"id": "77c51360-cc86-4e28-a336-baaefeb6c3da",
+			"name": "Get nonexistent file",
+			"url": "http://localhost:8000/realigned_rustic_rubber_gloves_programming.vis/chief_niue.x3dbz",
+			"time": 7,
+			"responseCode": {
+				"code": 404,
+				"name": "Not Found"
+			},
+			"tests": {
+				"Expecting 404": true
+			},
+			"testPassFailCounts": {
+				"Expecting 404": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				7
+			],
+			"allTests": [
+				{
+					"Expecting 404": true
+				}
+			]
+		},
+		{
+			"id": "1ee09ffb-0b84-458f-93d4-e6a401e9f54a",
+			"name": "Path traversal attack",
+			"url": "http://localhost:8000/..",
+			"time": 3,
+			"responseCode": {
+				"code": 403,
+				"name": "Forbidden"
+			},
+			"tests": {
+				"Expecting 403": true
+			},
+			"testPassFailCounts": {
+				"Expecting 403": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				3
+			],
+			"allTests": [
+				{
+					"Expecting 403": true
+				}
+			]
+		},
+		{
+			"id": "84e47fcd-1340-44fb-a5f1-3346d8795560",
+			"name": "Support for ..",
+			"url": "http://localhost:8000/target/../",
+			"time": 12,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"exemplaryTopLevelDirectory exists": true,
+				"Response is OK": true
+			},
+			"testPassFailCounts": {
+				"exemplaryTopLevelDirectory exists": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is OK": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				12
+			],
+			"allTests": [
+				{
+					"exemplaryTopLevelDirectory exists": true,
+					"Response is OK": true
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 227,
+	"collection": {
+		"requests": [
+			{
+				"id": "b61c310c-d019-4873-81c1-d418acae45ae",
+				"method": "HEAD"
+			},
+			{
+				"id": "7478f19d-e962-4a67-bcc0-e66a07c78704",
+				"method": "GET"
+			},
+			{
+				"id": "7478f19d-e962-4a67-bcc0-e66a07c78704",
+				"method": "GET"
+			},
+			{
+				"id": "7478f19d-e962-4a67-bcc0-e66a07c78704",
+				"method": "GET"
+			},
+			{
+				"id": "7478f19d-e962-4a67-bcc0-e66a07c78704",
+				"method": "GET"
+			},
+			{
+				"id": "7478f19d-e962-4a67-bcc0-e66a07c78704",
+				"method": "GET"
+			},
+			{
+				"id": "7478f19d-e962-4a67-bcc0-e66a07c78704",
+				"method": "GET"
+			},
+			{
+				"id": "7478f19d-e962-4a67-bcc0-e66a07c78704",
+				"method": "GET"
+			},
+			{
+				"id": "7478f19d-e962-4a67-bcc0-e66a07c78704",
+				"method": "GET"
+			},
+			{
+				"id": "7478f19d-e962-4a67-bcc0-e66a07c78704",
+				"method": "GET"
+			},
+			{
+				"id": "7478f19d-e962-4a67-bcc0-e66a07c78704",
+				"method": "GET"
+			},
+			{
+				"id": "7478f19d-e962-4a67-bcc0-e66a07c78704",
+				"method": "GET"
+			},
+			{
+				"id": "7478f19d-e962-4a67-bcc0-e66a07c78704",
+				"method": "GET"
+			},
+			{
+				"id": "7478f19d-e962-4a67-bcc0-e66a07c78704",
+				"method": "GET"
+			},
+			{
+				"id": "7478f19d-e962-4a67-bcc0-e66a07c78704",
+				"method": "GET"
+			},
+			{
+				"id": "7478f19d-e962-4a67-bcc0-e66a07c78704",
+				"method": "GET"
+			},
+			{
+				"id": "7478f19d-e962-4a67-bcc0-e66a07c78704",
+				"method": "GET"
+			},
+			{
+				"id": "77c51360-cc86-4e28-a336-baaefeb6c3da",
+				"method": "GET"
+			},
+			{
+				"id": "1ee09ffb-0b84-458f-93d4-e6a401e9f54a",
+				"method": "GET"
+			},
+			{
+				"id": "84e47fcd-1340-44fb-a5f1-3346d8795560",
+				"method": "GET"
+			}
+		]
+	}
+}

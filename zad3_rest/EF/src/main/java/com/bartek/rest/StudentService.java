@@ -8,7 +8,9 @@ import com.bartek.models.Course;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Path("/students")
@@ -75,12 +77,36 @@ public class StudentService {
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response deleteStudent(@PathParam("id") long id) throws NotFoundException {
+        Student student = Storage.getStudents().stream().filter(s -> s.getIndex().equals(id)).findFirst().orElse(null);
+        if (student != null) {
+            Storage.delete(Student.class, id);
+            return Response.noContent().build();
+        }
+        else{
+            return Response.noContent().status(404).build();
+        }
 
-        System.out.println("delete @");
-        Storage.delete(Student.class, id);
-        return Response.noContent().build();
     }
 
+    @DELETE
+    @Path("/{id}/grades/{gradeId}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Response deleteStudent(@PathParam("id") long id, @PathParam("gradeId") long gradeId) throws NotFoundException {
+        Student student = Storage.getStudents().stream().filter(s -> s.getIndex().equals(id)).findFirst().orElse(null);
+        if (student != null) {
+            Grade grade = student.getGrades().stream().filter(s -> s.getId().equals(gradeId)).findFirst().orElse(null);
+            if (grade != null) {
+                Storage.delete(Grade.class, gradeId);
+                return Response.noContent().build();
+            }
+            else{
+                return Response.noContent().status(404).build();
+            }
+        }
+        else{
+            return Response.noContent().status(404).build();
+        }
+    }
 
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -101,8 +127,9 @@ public class StudentService {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/{id}/grades")
     public Response postNewGradeForStudent(Grade ng, @PathParam("id") long id, @Context UriInfo uriInfo) throws BadRequestException {
-        System.out.println(ng.toString());
-        if (ng.getValue().toString().length() > 0 && ng.getDate().toString().length() > 0 && ng.getCourse() != null){
+//        System.out.println(ng.toString());
+        List<Double> gradesList = Arrays.asList(2.0, 3.0, 3.5, 4.0, 4.5, 5.0);
+        if (gradesList.contains(ng.getValue()) && ng.getDate().toString().length() > 0 && ng.getCourse() != null){
             Grade grade = Storage.addGradeToStudent(ng, id);
             UriBuilder builder = uriInfo.getAbsolutePathBuilder();
             builder.path(Long.toString(grade.getId()));
@@ -132,11 +159,13 @@ public class StudentService {
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response updateStudentGradeById(@PathParam("id") long id, @PathParam("gradeId") long gradeId, Grade newGrade) {
+
+        List<Double> gradesList = Arrays.asList(2.0, 3.0, 3.5, 4.0, 4.5, 5.0);
         Student student = Storage.getStudents().stream().filter(s -> s.getIndex().equals(id)).findFirst().orElse(null);
         if (student != null) {
             Grade grade = student.getGrades().stream().filter(s -> s.getId().equals(gradeId)).findFirst().orElse(null);
             if (grade != null) {
-                if (grade.getValue().getValue() >= 2.0 && grade.getValue().getValue() <= 5.0) {
+                if (gradesList.contains(newGrade.getValue())) {
                     grade = Storage.updateGrade(gradeId, newGrade);
                     return Response.ok(grade).status(204).build();
                 } else {

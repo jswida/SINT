@@ -1,9 +1,6 @@
 package com.bartek.models;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 import java.util.Date;
 
 @XmlRootElement
@@ -11,8 +8,10 @@ import java.util.Date;
 public class Grade {
     @XmlElement
     private Long id;
+//    @XmlElement
+//    private GradeValue valueGV;
     @XmlElement
-    private GradeValue value;
+    private double value;
     @XmlElement
     private Date date;
     @XmlElement
@@ -22,13 +21,29 @@ public class Grade {
     }
 
 
-    public Grade(Long id, GradeValue value, Date date, Course course) {
+//    public Grade(Long id, GradeValue valueGV, Date date, Course course) {
+//        this.id = id;
+//        this.valueGV = valueGV;
+//        this.date = date;
+//        this.course = course;
+//    }
+
+    public Grade(Long id, String value, Date date, Course course) {
         this.id = id;
+//        this.valueGV = GradeValue.valueOf(value);
+        this.value = Double.parseDouble(value);
+        this.date = date;
+        this.course = course;
+    }
+
+    public Grade(Long id, double value, Date date, Course course) {
+        this.id = id;
+//        this.valueGV = GradeValue.valueOf(String.valueOf(value));
         this.value = value;
         this.date = date;
         this.course = course;
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -37,12 +52,23 @@ public class Grade {
         this.id = id;
     }
 
-    public GradeValue getValue() {
+//    public GradeValue getValueGV() {
+//        return valueGV;
+//    }
+
+//    @XmlElement(name="value")
+    public double getValue() {
         return value;
     }
 
-    public void setValue(GradeValue value) {
+    public void setValue(double value) {
+//        this.valueGV = GradeValue.valueOf(String.valueOf(value));
         this.value = value;
+    }
+
+    public void setValueGV(GradeValue valueGV) {
+//        this.valueGV = valueGV;
+        this.value = valueGV.getValue();
     }
 
     public Date getDate() {

@@ -76,16 +76,16 @@ public class GradeService {
 //        return Response.created(builder.build()).entity(grade).build();
 //    }
 
-    @PUT
-    @Path("/{id}")
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Response updateGrade(@PathParam("id") Long updatedGradeId, Grade newGrade) throws NotFoundException {
-        Grade grade = Storage.getGrades().stream().filter(s -> s.getId().equals(updatedGradeId)).findFirst().orElse(null);
-        if(newGrade.getDate()!=null && newGrade.getValue()!=null){
-            grade = Storage.updateGrade(updatedGradeId, newGrade);
-            return Response.ok(grade).status(204).build();
-        }
-        return Response.ok(grade).status(400).build();
-    }
+//    @PUT
+//    @Path("/{id}")
+//    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+//    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+//    public Response updateGrade(@PathParam("id") Long updatedGradeId, Grade newGrade) throws NotFoundException {
+//        Grade grade = Storage.getGrades().stream().filter(s -> s.getId().equals(updatedGradeId)).findFirst().orElse(null);
+//        if(newGrade.getDate()!=null && newGrade.getValue()!=null){
+//            grade = Storage.updateGrade(updatedGradeId, newGrade);
+//            return Response.ok(grade).status(204).build();
+//        }
+//        return Response.ok(grade).status(400).build();
+//    }
 }

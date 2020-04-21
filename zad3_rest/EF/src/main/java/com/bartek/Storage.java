@@ -8,9 +8,7 @@ import com.bartek.models.Course;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import java.security.SecureRandom;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Storage {
     private static final SecureRandom random = new SecureRandom();
@@ -77,7 +75,7 @@ public class Storage {
     }
 
     public static Grade addGrade(Grade ng) {
-        if (ng.getValue() != null && ng.getDate() != null && ng.getCourse().getId() != null) {
+        if (ng.getValue() != 0 && ng.getDate() != null && ng.getCourse().getId() != null) {
             Course course = courses.stream().filter(s -> s.getId().equals(ng.getCourse().getId())).findFirst().orElse(null);
             if (course != null) {
                 Grade grade = new Grade(gradeID, ng.getValue(), ng.getDate(), ng.getCourse());
@@ -109,7 +107,6 @@ public class Storage {
 
     public static Student updateStudent(Long updatedStudentId, Student newStudent){
         Student student = students.stream().filter(s -> s.getIndex().equals(updatedStudentId)).findFirst().orElse(null);
-        System.out.println("print: " + + updatedStudentId + newStudent.toString());
         if (student != null){
 
             if (newStudent.getFirstName() != null && newStudent.getFirstName().length() > 0){
@@ -141,8 +138,8 @@ public class Storage {
     public static Grade updateGrade(Long updatedGradeId, Grade newGrade) {
         Grade grade = grades.stream().filter(s -> s.getId().equals(updatedGradeId)).findFirst().orElse(null);
         if (grade != null) {
-            if (newGrade.getValue() != null && newGrade.getValue().toString().length() > 0) {
-                grade.getValue().setValue(newGrade.getValue().getValue());
+            if (newGrade.getValue() != 0) {
+                grade.setValue(newGrade.getValue());
 //                grade.setValue(newGrade.getValue());
             }
             if (newGrade.getDate() != null && newGrade.getDate().toString().length() > 0) {
@@ -151,7 +148,7 @@ public class Storage {
             if (newGrade.getCourse().getId() != null && newGrade.getCourse().getId() >= 0){
                 Course course = courses.stream().filter(s -> s.getId().equals(newGrade.getCourse().getId())).findFirst().orElse(null);
                 if (course != null) {
-                    grade.setCourse(newGrade.getCourse());
+                    grade.setCourse(course);
                 }
             }
             return grade;
@@ -211,7 +208,7 @@ public class Storage {
     public static Grade generateGrade(Course course) {
         Grade grade = new Grade();
         grade.setId(gradeID);
-        grade.setValue(randomEnum(GradeValue.class));
+        grade.setValue(randomGradeValue());
         grade.setDate(new Date());
         grade.setCourse(course);
         gradeID++;
@@ -240,6 +237,12 @@ public class Storage {
     public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
         int x = random.nextInt(clazz.getEnumConstants().length);
         return clazz.getEnumConstants()[x];
+    }
+
+    public static double randomGradeValue() {
+        List<Double> givenList = Arrays.asList(2.0, 3.0, 3.5, 4.0, 4.5, 5.0);
+        Random rand = new Random();
+        return givenList.get(rand.nextInt(givenList.size()));
     }
 
     public static Set<Student> getStudents() {

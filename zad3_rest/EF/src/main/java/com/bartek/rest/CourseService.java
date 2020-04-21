@@ -13,16 +13,16 @@ public class CourseService {
 
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Set<Course> getAllCourses(){
+    public Set<Course> getAllCourses() {
         return Storage.getCourses();
     }
 
     @GET
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Course getCourseById(@PathParam("id") long id){
-        for (Course course : Storage.getCourses()){
-            if (course.getId() == id){
+    public Course getCourseById(@PathParam("id") long id) {
+        for (Course course : Storage.getCourses()) {
+            if (course.getId() == id) {
                 return course;
             }
         }
@@ -32,8 +32,14 @@ public class CourseService {
     @DELETE
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void deleteCourse(@PathParam("id") long id){
-        Storage.delete(Course.class, id);
+    public Response deleteCourse(@PathParam("id") long id) throws NotFoundException {
+        Course course = Storage.getCourses().stream().filter(s -> s.getId().equals(id)).findFirst().orElse(null);
+        if (course != null) {
+            Storage.delete(Course.class, id);
+            return Response.noContent().build();
+        } else {
+            return Response.noContent().status(404).build();
+        }
     }
 
     @POST
@@ -56,8 +62,7 @@ public class CourseService {
         if (newCourse.getName() != null && newCourse.getLecturer() != null) {
             course = Storage.updateCourse(updatedCourseId, newCourse);
             return Response.ok(course).status(204).build();
-        }
-        else{
+        } else {
             return Response.ok(course).status(400).build();
         }
     }

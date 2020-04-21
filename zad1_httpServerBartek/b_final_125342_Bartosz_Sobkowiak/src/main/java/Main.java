@@ -15,7 +15,7 @@ import java.nio.file.Files;
  */
 
 public class Main {
- // set for canonical path check in ubuntu
+    // set for canonical path check in ubuntu
     private static String path = "/";
     private static String defaultPath =  System.getProperty("user.dir");
     private static String canonical = "";
@@ -46,9 +46,8 @@ public class Main {
 
                 System.out.println("from URL: " + fromURI);
 
-                // if path from URI is smth else than just "/"
-                if (!fromURI.substring(1).equals("")) path = fromURI;
-                //else path = defaultPath;
+//                if (!fromURI.substring(1).equals("")) path = fromURI; // incorrect condition
+                path = fromURI;
 
 
                 File file = new File(defaultPath, path);

@@ -1,5 +1,6 @@
 package com.bartek;
 
+import com.bartek.rest.CourseOnlyService;
 import com.bartek.rest.GradeService;
 import com.bartek.rest.StudentService;
 import com.bartek.rest.CourseService;
@@ -36,7 +37,8 @@ public class Main {
                 .register(DeclarativeLinkingFeature.class)
                 .register(StudentService.class)
                 .register(GradeService.class)
-                .register(CourseService.class);
+                .register(CourseService.class)
+                .register(CourseOnlyService.class);
 
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI

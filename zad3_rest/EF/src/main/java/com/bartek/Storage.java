@@ -169,18 +169,18 @@ public class Storage {
     }
 
     public static void generateSomeObjects() {
-        Course course1 = generateCourse("SINT");
+        Course course1 = generateCourse("QWER");
         Grade grade1 = generateGrade(course1);
 
-        Course course2 = generateCourse("AEM");
+        Course course2 = generateCourse("ASDF");
         Grade grade2 = generateGrade(course2);
 
-        Course course3 = generateCourse("PIRO");
+        Course course3 = generateCourse("ZXCV");
         Grade grade3 = generateGrade(course3);
 
-        Student student1 = generateStudent("John", "Doe");
-        Student student2 = generateStudent("Merry", "Does");
-        Student student3 = generateStudent("Charles", "Doesy");
+        Student student1 = generateStudent("Jerry", "Arry");
+        Student student2 = generateStudent("Merry", "Berry");
+        Student student3 = generateStudent("Terry", "Cerry");
 
 
         student1.setGrade(grade1);

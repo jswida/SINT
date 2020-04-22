@@ -1,11 +1,32 @@
 package com.bartek.models;
 
+import com.bartek.rest.CourseService;
+import com.bartek.rest.GradeService;
+import com.bartek.rest.StudentService;
+import org.glassfish.jersey.linking.Binding;
+import org.glassfish.jersey.linking.InjectLink;
+import org.glassfish.jersey.linking.InjectLinks;
+
+import javax.ws.rs.core.Link;
 import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.*;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Student {
+    @InjectLinks({
+            @InjectLink(
+                    resource =  StudentService.class,
+                    rel = "self"),
+            @InjectLink(resource = StudentService.class, rel = "parent"),
+            @InjectLink(resource = GradeService.class, rel = "grades"),
+    })
+    @XmlElement(name = "link")
+    @XmlElementWrapper(name = "links")
+    @XmlJavaTypeAdapter(Link.JaxbAdapter.class)
+    List<Link> links;
+
     @XmlElement
     private Long index; // index
     @XmlElement
@@ -84,5 +105,9 @@ public class Student {
                 ", birthday=" + birthday +
                 ", grades=" + grades +
                 '}';
+    }
+
+    public void clearLinks() {
+        this.links = null;
     }
 }

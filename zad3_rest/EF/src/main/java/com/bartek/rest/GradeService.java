@@ -6,13 +6,14 @@ import com.bartek.models.Course;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.util.List;
 import java.util.Set;
 
 @Path("/grades")
 public class GradeService {
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Set<Grade> getAllGrades() {
+    public List<Grade> getAllGrades() {
         return Storage.getGrades();
     }
 
@@ -56,8 +57,6 @@ public class GradeService {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response postNewGrade(Grade ng, @Context UriInfo uriInfo) throws BadRequestException {
         Grade grade = Storage.addGrade(ng);
-//        student.clearLinks();
-
         UriBuilder builder = uriInfo.getAbsolutePathBuilder();
         builder.path(Long.toString(grade.getId()));
         return Response.created(builder.build()).entity(grade).build();

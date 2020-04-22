@@ -12,9 +12,9 @@ import java.util.*;
 
 public class Storage {
     private static final SecureRandom random = new SecureRandom();
-    private static Set<Student> students;
-    private static Set<Grade> grades;
-    private static Set<Course> courses;
+    private static ArrayList<Student> students;
+    private static ArrayList<Grade> grades;
+    private static ArrayList<Course> courses;
     private static Long studentID = 0L;
     private static Long gradeID = 0L;
     private static Long CourseID = 0L;
@@ -45,11 +45,8 @@ public class Storage {
         else if (object == Course.class) {
             Course course = courses.stream().filter(s -> s.getId().equals(id)).findFirst().orElse(null);
             if (course != null) {
-                for (Grade grade : grades) {
-                    if (grade.getCourse().getId().equals(id)) {
-                        delete(Grade.class, grade.getId());
-                    }
-                }
+                grades.removeIf(g -> g.getCourse().getId().equals(id));
+                students.forEach(s -> s.getGrades().removeIf(g -> g.getCourse().getId().equals(id)));
                 courses.remove(course);
             } else throw new NotFoundException();
         }
@@ -187,9 +184,9 @@ public class Storage {
         student2.setGrade(grade2);
         student3.setGrade(grade3);
 
-        students = new HashSet<>();
-        grades = new HashSet<>();
-        courses = new HashSet<>();
+        students = new ArrayList<>();
+        grades = new ArrayList<>();
+        courses = new ArrayList<>();
 
         students.add(student1);
         students.add(student2);
@@ -245,27 +242,27 @@ public class Storage {
         return givenList.get(rand.nextInt(givenList.size()));
     }
 
-    public static Set<Student> getStudents() {
+    public static ArrayList<Student> getStudents() {
         return students;
     }
 
-    public static void setStudents(Set<Student> students) {
+    public static void setStudents(ArrayList<Student> students) {
         Storage.students = students;
     }
 
-    public static Set<Grade> getGrades() {
+    public static ArrayList<Grade> getGrades() {
         return grades;
     }
 
-    public static void setGrades(Set<Grade> grades) {
+    public static void setGrades(ArrayList<Grade> grades) {
         Storage.grades = grades;
     }
 
-    public static Set<Course> getCourses() {
+    public static ArrayList<Course> getCourses() {
         return courses;
     }
 
-    public static void setCourses(Set<Course> courses) {
+    public static void setCourses(ArrayList<Course> courses) {
         Storage.courses = courses;
     }
 

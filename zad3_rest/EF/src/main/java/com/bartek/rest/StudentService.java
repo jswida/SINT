@@ -19,7 +19,7 @@ public class StudentService {
 
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Set<Student> getAllStudents() {
+    public List<Student> getAllStudents() {
         return Storage.getStudents();
     }
 
@@ -47,13 +47,18 @@ public class StudentService {
     @GET
     @Path("/{id}/grades/{gradeId}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Grade getStudentGradeById(@PathParam("id") long id, @PathParam("gradeId") long gradeId) {
+    public Response getStudentGradeById(@PathParam("id") long id, @PathParam("gradeId") long gradeId) {
         Student student = Storage.getStudents().stream().filter(s -> s.getIndex() == id).findFirst().orElse(null);
         if (student != null) {
             Grade grade = student.getGrades().stream().filter(s -> s.getId().equals(gradeId)).findFirst().orElse(null);
-            if (grade != null) return grade;
-            else throw new NotFoundException();
-        } else throw new NotFoundException();
+            if (grade != null) {
+                return Response.ok(grade).build();
+            } else {
+                return Response.status(404).build();
+            }
+        }else {
+                return Response.noContent().status(404).build();
+            }
     }
 
 

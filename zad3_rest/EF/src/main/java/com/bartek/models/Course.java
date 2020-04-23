@@ -2,6 +2,7 @@ package com.bartek.models;
 
 import com.bartek.rest.CourseService;
 import com.bartek.rest.CoursesService;
+import org.glassfish.jersey.linking.Binding;
 import org.glassfish.jersey.linking.InjectLink;
 import org.glassfish.jersey.linking.InjectLinks;
 
@@ -14,8 +15,16 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Course {
     @InjectLinks({
-            @InjectLink(resource = CourseService.class, rel = "self"),
-            @InjectLink(resource = CoursesService.class, rel = "parent"),
+            @InjectLink(
+                    value="courses/{id}",
+                    rel = "self",
+                    bindings={
+                    @Binding(name="id", value="${instance.id}")
+            }),
+            @InjectLink(
+                    resource = CoursesService.class,
+                    rel = "parent"
+            ),
     })
     @XmlElement(name = "link")
     @XmlElementWrapper(name = "links")

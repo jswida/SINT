@@ -17,9 +17,22 @@ import java.util.*;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Student {
     @InjectLinks({
-//            @InjectLink(resource = StudentService.class, rel = "self"),
-            @InjectLink(resource = StudentsService.class, rel = "parent"),
-//            @InjectLink(resource = GradesService.class, rel = "grades"),
+            @InjectLink(
+                    value="students/{index}",
+                    rel="self",
+                    bindings={
+                        @Binding(name="index", value="${instance.index}")
+            }),
+            @InjectLink(
+                    resource = StudentsService.class,
+                    rel = "parent"
+            ),
+            @InjectLink(
+                    value="students/{index}/grades",
+                    rel = "grades",
+                    bindings={
+                    @Binding(name="index", value="${instance.index}")
+            }),
     })
     @XmlElement(name = "link")
     @XmlElementWrapper(name = "links")
@@ -89,6 +102,9 @@ public class Student {
 
     public void setGrades(Set<Grade> grades) {
         this.grades = grades;
+        for (Grade grade : this.grades){
+            grade.setStudentId(this.index);
+        }
     }
 
     public void setGrade(Grade grade) {

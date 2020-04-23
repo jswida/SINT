@@ -35,7 +35,8 @@ public class Main {
                 GradesService.class,
                 CourseService.class,
                 CoursesService.class,
-                DeclarativeLinkingFeature.class
+                DeclarativeLinkingFeature.class,
+                ExceptionHandler.class
         );
 
         // create and start a new instance of grizzly http server

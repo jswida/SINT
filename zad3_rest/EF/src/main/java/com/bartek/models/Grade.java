@@ -1,8 +1,7 @@
 package com.bartek.models;
 
-import com.bartek.rest.CoursesService;
-import com.bartek.rest.GradeService;
-import com.bartek.rest.GradesService;
+import com.bartek.rest.*;
+import org.glassfish.jersey.linking.Binding;
 import org.glassfish.jersey.linking.InjectLink;
 import org.glassfish.jersey.linking.InjectLinks;
 
@@ -16,9 +15,28 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Grade {
     @InjectLinks({
-//            @InjectLink(resource = GradeService.class, rel = "self"),
-            @InjectLink(resource = GradesService.class, rel = "parent"),
-            @InjectLink(resource = CoursesService.class, rel = "course"),
+            @InjectLink(
+                    value="students/{index}/grades/{id}",
+                    rel = "self",
+                    bindings={
+                            @Binding(name="index", value="${instance.studentId}"),
+                            @Binding(name="id", value="${instance.id}")
+                    }),
+            @InjectLink(
+                    value="students/{index}",
+                    rel = "student",
+                    bindings={
+                            @Binding(name="index", value="${instance.studentId}")
+                    }),
+            @InjectLink(
+                    resource = GradesService.class,
+                    rel = "parent"
+            ),
+            @InjectLink(
+                    resource = CourseService.class,
+                    rel = "course",
+                    bindings = {@Binding(name = "id", value = "${instance.course.id}")}
+            ),
     })
     @XmlElement(name = "link")
     @XmlElementWrapper(name = "links")
@@ -35,17 +53,13 @@ public class Grade {
     private Date date;
     @XmlElement
     private Course course;
+    @XmlTransient
+    private long studentId;
 
     public Grade( ) {
     }
 
 
-//    public Grade(Long id, GradeValue valueGV, Date date, Course course) {
-//        this.id = id;
-//        this.valueGV = valueGV;
-//        this.date = date;
-//        this.course = course;
-//    }
 
     public Grade(Long id, String value, Date date, Course course) {
         this.id = id;
@@ -104,6 +118,14 @@ public class Grade {
 
     public void setCourse(Course course) {
         this.course = course;
+    }
+
+    public long getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(long studentId) {
+        this.studentId = studentId;
     }
 
     @Override

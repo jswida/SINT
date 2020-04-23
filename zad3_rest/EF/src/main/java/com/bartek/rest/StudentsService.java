@@ -26,7 +26,7 @@ public class StudentsService {
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response postNewStudent(Student ns, @Context UriInfo uriInfo) throws BadRequestException {
-        if (ns.getFirstName().length() > 0 && ns.getLastName().length() > 0 && ns.getBrithday().toString().length() > 0) {
+        if (ns.getFirstName().length() > 0 && ns.getLastName().length() > 0 && ns.getBirthday().toString().length() > 0) {
             Student student = Storage.addStudent(ns);
             UriBuilder builder = uriInfo.getAbsolutePathBuilder();
             builder.path(Long.toString(student.getIndex()));

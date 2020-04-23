@@ -57,7 +57,7 @@ public class StudentService {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response updateStudent(@PathParam("id") Long updateStudentId, Student newStudent) throws NotFoundException {
         Student student = Storage.getStudents().stream().filter(s -> s.getIndex().equals(updateStudentId)).findFirst().orElse(null);
-        if (newStudent.getFirstName() != null && newStudent.getLastName() != null && newStudent.getBrithday() != null) {
+        if (newStudent.getFirstName() != null && newStudent.getLastName() != null && newStudent.getBirthday() != null) {
             student = Storage.updateStudent(updateStudentId, newStudent);
             return Response.ok(student).status(204).build();
         } else {

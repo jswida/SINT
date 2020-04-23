@@ -74,11 +74,11 @@ public class Student {
         this.lastName = lastName;
     }
 
-    public Date getBrithday() {
+    public Date getBirthday() {
         return birthday;
     }
 
-    public void setBirthDate(Date birthday) {
+    public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
 

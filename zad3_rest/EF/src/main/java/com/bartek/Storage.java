@@ -53,12 +53,12 @@ public class Storage {
     }
 
     public static Student addStudent(Student ns) {
-        if (ns.getFirstName() != null && ns.getLastName() != null && ns.getBrithday() != null) {
+        if (ns.getFirstName() != null && ns.getLastName() != null && ns.getBirthday() != null) {
             Student student = new Student();
             student.setIndex(studentID);
             student.setName(ns.getFirstName());
             student.setSurname(ns.getLastName());
-            student.setBirthDate(ns.getBrithday());
+            student.setBirthday(ns.getBirthday());
 //            if (ns.getGrades() != null){
 //                student.setGrades(ns.getGrades());
 //            }
@@ -114,8 +114,8 @@ public class Storage {
                 student.setSurname(newStudent.getLastName());
             }
 
-            if (newStudent.getBrithday() != null && newStudent.getBrithday().toString().length() > 0){
-                student.setBirthDate(newStudent.getBrithday());
+            if (newStudent.getBirthday() != null && newStudent.getBirthday().toString().length() > 0){
+                student.setBirthday(newStudent.getBirthday());
             }
 
             if (newStudent.getGrades() != null ){
@@ -224,7 +224,7 @@ public class Storage {
     public static Student generateStudent(String name, String surname) {
         Student student = new Student();
         student.setIndex(studentID);
-        student.setBirthDate(new Date());
+        student.setBirthday(new Date());
         student.setName(name);
         student.setSurname(surname);
         studentID++;

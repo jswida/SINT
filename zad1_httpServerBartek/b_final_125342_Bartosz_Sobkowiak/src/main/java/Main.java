@@ -7,6 +7,8 @@ import java.net.InetSocketAddress;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.file.Files;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 
 /**
  * tested on ubuntu 18.04
@@ -19,7 +21,7 @@ public class Main {
     private static String path = "/";
     private static String defaultPath =  System.getProperty("user.dir");
     private static String canonical = "";
-
+    private static Semaphore semaphore = new Semaphore(1);
     public static void main(String[] args) throws Exception {
 
         // ONLY ABSOLUTE PATH IN PARAMS
@@ -30,6 +32,7 @@ public class Main {
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/", new ContentHandler());
 
+        server.setExecutor(Executors.newFixedThreadPool(2));
         System.out.println("Starting server on port: " + port);
         System.out.println("Default path: " + defaultPath);
         server.start();
@@ -39,6 +42,7 @@ public class Main {
     static class ContentHandler implements HttpHandler {
         public void handle(HttpExchange exchange) throws IOException {
             try {
+                semaphore.acquire();
                 StringBuilder builder = new StringBuilder();
                 // get path from URI
                 String fromURI = exchange.getRequestURI().toString().replaceAll("%20", " ");
@@ -49,6 +53,7 @@ public class Main {
 //                if (!fromURI.substring(1).equals("")) path = fromURI; // incorrect condition
                 path = fromURI;
 
+                Thread.yield();
 
                 File file = new File(defaultPath, path);
 
@@ -132,6 +137,7 @@ public class Main {
                         OutputStream os = exchange.getResponseBody();
                         os.write(builder.toString().getBytes());
                         os.close();
+                        semaphore.release();
 
                     } else if (file.isFile()) {
 //                        System.out.println("file");
@@ -150,6 +156,7 @@ public class Main {
                             OutputStream os = exchange.getResponseBody();
                             os.write(bytes, 0, bytes.length);
                             os.close();
+                            semaphore.release();
 
                         } else {
                             errorMessage(exchange, 404);
@@ -160,7 +167,7 @@ public class Main {
                     }
 
                 }
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
 //                System.out.println(e);
             }
         }
@@ -176,6 +183,7 @@ public class Main {
             OutputStream os = exchange.getResponseBody();
             os.write(error.getBytes());
             os.close();
+            semaphore.release();
 
         } catch (IOException e) {
             System.out.println(e);

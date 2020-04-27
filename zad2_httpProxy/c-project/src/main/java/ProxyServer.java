@@ -26,7 +26,7 @@ public class ProxyServer {
     private static String statslistFile = "stats.csv";
     private static List<StatsOnly> stats = new ArrayList<>();
     private static Semaphore semaphore = new Semaphore(1);
-    private static int memoryBufferSize = 10;
+    private static int memoryBufferSize = 100;
 
     public static void main(String[] args) throws Exception {
         int port = 8000;

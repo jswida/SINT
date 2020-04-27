@@ -1,12 +1,13 @@
+import java.io.Serializable;
 
-public class Stats {
+public class StatsOnly implements Serializable {
 
     private String website;
     private Integer sent;
     private Integer received;
     private Integer request;
 
-    public Stats(String website, Integer sent, Integer received, Integer request) {
+    public StatsOnly(String website, Integer sent, Integer received, Integer request) {
         this.website = website;
         this.sent = sent;
         this.received = received;
@@ -44,4 +45,15 @@ public class Stats {
     public void setRequest(Integer request) {
         this.request = request;
     }
+
+    @Override
+    public String toString() {
+        return "StatsOnly{" +
+                "website='" + website + '\'' +
+                ", sent=" + sent +
+                ", received=" + received +
+                ", request=" + request +
+                '}';
+    }
 }
+

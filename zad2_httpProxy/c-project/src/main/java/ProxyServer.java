@@ -1,6 +1,6 @@
-import com.cedarsoftware.util.io.JsonWriter;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvValidationException;
 import com.sun.net.httpserver.*;
 
@@ -8,11 +8,11 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.*;
-import java.util.logging.Level;
+import java.util.concurrent.Semaphore;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
 
 /**
  * examples sites:
@@ -24,11 +24,14 @@ public class ProxyServer {
 
     private static String proxylistFile = "proxylist.txt";
     private static String statslistFile = "stats.csv";
-    private static HashSet<Stats> stats = new HashSet<>();
+    private static List<StatsOnly> stats = new ArrayList<>();
+    private static Semaphore semaphore = new Semaphore(1);
+    private static int memoryBufferSize = 10;
 
     public static void main(String[] args) throws Exception {
         int port = 8000;
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
+
         setStats();
         server.createContext("/", new ProxyHandler());
 
@@ -42,7 +45,7 @@ public class ProxyServer {
                 } catch (IOException e) {
                     System.out.println("Stats NOT saved");
                     e.printStackTrace();
-                } catch (CsvValidationException e) {
+                } catch (CsvValidationException | InterruptedException e) {
                     e.printStackTrace();
                 }
             }
@@ -63,9 +66,9 @@ public class ProxyServer {
             System.out.println("Proxy List: " + proxylist);
         }
 
-        public void handle(HttpExchange exchange) throws IOException {
+        public void handle(HttpExchange exchange) {
             try {
-                System.out.println("handle() ---");
+//                System.out.println("handle() ---");
                 /* REQUEST */
                 // get request info
                 String method = exchange.getRequestMethod();
@@ -81,7 +84,7 @@ public class ProxyServer {
                 for (String website : proxylist) {
                     if (url.toString().toLowerCase().contains(website)) {
                         errorMessage(exchange, 403);
-                        throw new IllegalAccessException();
+//                        throw new IllegalAccessException();
                     }
                 }
 
@@ -108,7 +111,7 @@ public class ProxyServer {
                     os.write(bytes);
                 }
 
-                Stats newstat = new Stats(url.getAuthority(), bytes_length, 0, 1);
+                StatsOnly newstat = new StatsOnly(url.getAuthority(), bytes_length, 0, 1);
                 addStats(newstat);
 
                 /* RESPONSE */
@@ -117,7 +120,7 @@ public class ProxyServer {
 
 //                Headers headersResponse = exchange.getResponseHeaders();
                 Set<Map.Entry<String, List<String>>> headersCon = connection.getHeaderFields().entrySet();
-                byte[] responseCon = {};
+                byte[] responseCon = new byte[0];
 
                 // get response
                 try {
@@ -126,7 +129,7 @@ public class ProxyServer {
                     if (connection.getErrorStream() != null) responseCon = connection.getErrorStream().readAllBytes();
                 }
 
-                Stats newstat2 = new Stats(url.getAuthority(), 0, responseCon.length, 1);
+                StatsOnly newstat2 = new StatsOnly(url.getAuthority(), 0, responseCon.length, 1);
                 addStats(newstat2);
 
                 // set new headers resolving transfer-encodinig problems
@@ -149,11 +152,11 @@ public class ProxyServer {
                     os.close();
                 }
 
-                System.out.println("--- handle()");
+//                System.out.println("--- handle()");
 
-            } catch (IOException | IllegalAccessException e) { // 403 error
+            } catch (IOException | InterruptedException | CsvValidationException e) { // 403 error
                 System.out.println("handle() exception");
-                System.out.println(e);
+//                e.printStackTrace();
             }
 
         }
@@ -195,7 +198,7 @@ public class ProxyServer {
         ProxyServer.proxylistFile = proxylistFile;
     }
 
-    private static void setStats() throws IOException, CsvValidationException {
+    private static void setStats() throws IOException, CsvValidationException, InterruptedException {
         String[] next;
 
         File file = new File(statslistFile);
@@ -204,52 +207,91 @@ public class ProxyServer {
 
         reader.readNext();
         while ((next = reader.readNext()) != null) {
-            Stats stat = new Stats(next[0], Integer.parseInt(next[2]), Integer.parseInt(next[3]), Integer.parseInt(next[1]));
+            StatsOnly stat = new StatsOnly(next[0], Integer.parseInt(next[1]), Integer.parseInt(next[2]), Integer.parseInt(next[3]));
             addStats(stat);
+        }
+        System.out.println("stats.csv has been loaded");
+
+    }
+
+    public static List<StatsOnly> getStats() {
+        return stats;
+    }
+
+    public static void addStats(StatsOnly stat) throws InterruptedException, IOException, CsvValidationException {
+        semaphore.acquire();
+        int statsLength = stats.size();
+        try {
+            stats.add(stat);
+        } catch (Exception e){
+            System.out.println("Adding to Stats error:");
+            System.out.println(e);
+        }
+        semaphore.release();
+
+        if (statsLength > memoryBufferSize){
+            semaphore.acquire();
+            tempSave();
+            stats.clear();
+            semaphore.release();
         }
 
     }
 
-    public static HashSet<Stats> getStats() {
-        return stats;
-    }
-
-    public static void addStats(Stats stats) {
-        ProxyServer.stats.add(stats);
-    }
-
-    private static void saveStats() throws IOException, CsvValidationException {
+    private static void saveStats() throws IOException, CsvValidationException, InterruptedException {
         String[] next;
+//        setStats();
 
-        File file = new File(statslistFile);
-        FileWriter fileWriter = new FileWriter(file);
-        CSVWriter writer = new CSVWriter(fileWriter);
+//        File file = new File(statslistFile);
+//        FileReader fileReader = new FileReader(file);
+//        FileWriter fileWriter = new FileWriter(file);
+        CSVWriter writer = new CSVWriter(new FileWriter(new File(statslistFile)));
+//        CSVReader reader = new CSVReader(new FileReader(new File(statslistFile)));
 
+        // read
+//        reader.readNext();
+//        while ((next = reader.readNext()) != null) {
+//            System.out.println("reader+");
+//            StatsOnly stat = new StatsOnly(next[0], Integer.parseInt(next[1]), Integer.parseInt(next[2]), Integer.parseInt(next[3]));
+//            stats.add(stat);
+//        }
+//        reader.close();
+
+        // load from serialized object
+        ArrayList<StatsOnly> listBefore = new ArrayList<>();
+        listBefore = (ArrayList<StatsOnly>) deserialize();
+        stats.addAll(listBefore);
+
+        // clear serialized object
+        ArrayList<StatsOnly> emptylist = new ArrayList<>();
+        serialize(emptylist);
+
+        // write
         String[] header = {"domain", "sent", "received", "requests"};
         writer.writeNext(header, false);
 
-        Map<String, List<Stats>> collect = ProxyServer.getStats()
+        Map<String, List<StatsOnly>> collect = ProxyServer.getStats()
                 .stream()
                 .collect(
                         Collectors.groupingBy(
-                                Stats::getWebsite, Collectors.toList()
+                                StatsOnly::getWebsite, Collectors.toList()
                         )
                 );
 
-        for (Map.Entry<String, List<Stats>> entries : collect.entrySet()) {
+        for (Map.Entry<String, List<StatsOnly>> entries : collect.entrySet()) {
             ArrayList<String> response = new ArrayList<>();
             int receivedBytes = 0;
             int sentBytes = 0;
             int requests = 0;
 
-            for (Stats s : entries.getValue()) {
+            for (StatsOnly s : entries.getValue()) {
                 receivedBytes += s.getReceived();
                 sentBytes += s.getSent();
                 requests += s.getRequest();
             }
 
             // make response
-            Stats statistic = entries.getValue().get(0);
+            StatsOnly statistic = entries.getValue().get(0);
             response.add(statistic.getWebsite());
             response.add(String.valueOf(sentBytes));
             response.add(String.valueOf(receivedBytes));
@@ -259,8 +301,68 @@ public class ProxyServer {
             writer.writeNext(response.toArray(new String[0]), false);
         }
 
+//        stats.clear();
+//        collect.clear();
+
         writer.close();
 
     }
 
+    public static void tempSave(){
+        System.out.println("temp save");
+        ArrayList<StatsOnly> listBefore = new ArrayList<>();
+
+        listBefore = (ArrayList<StatsOnly>) deserialize();
+        listBefore.addAll(stats);
+
+        System.out.println("saved object size: " + listBefore.size());
+        serialize(listBefore);
+
+    }
+    public static void serialize(ArrayList<StatsOnly> statslist){
+        try
+        {
+            FileOutputStream fos = new FileOutputStream("statsSerialized");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(statslist);
+            oos.close();
+            fos.close();
+        }
+        catch (IOException ioe)
+        {
+            ioe.printStackTrace();
+        }
+    }
+
+    public static List<StatsOnly> deserialize(){
+        ArrayList<StatsOnly> statlist = new ArrayList<>();
+
+        try
+        {
+            FileInputStream fis = new FileInputStream("statsSerialized");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+
+            statlist = (ArrayList<StatsOnly>) ois.readObject();
+
+            ois.close();
+            fis.close();
+        }
+        catch (IOException ioe)
+        {
+            System.out.println("File not created yet");
+//            ioe.printStackTrace();
+            return statlist;
+        }
+        catch (ClassNotFoundException c)
+        {
+            System.out.println("Class not found");
+//            c.printStackTrace();
+            return statlist;
+        }
+
+        return statlist;
+    }
+
 }
+
+

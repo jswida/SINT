@@ -21,7 +21,6 @@ public class Main {
     private static String path = "/";
     private static String defaultPath =  System.getProperty("user.dir");
     private static String canonical = "";
-    private static Semaphore semaphore = new Semaphore(1);
     public static void main(String[] args) throws Exception {
 
         // ONLY ABSOLUTE PATH IN PARAMS
@@ -40,9 +39,8 @@ public class Main {
 
 
     static class ContentHandler implements HttpHandler {
-        public void handle(HttpExchange exchange) throws IOException {
+        public synchronized void handle(HttpExchange exchange) throws IOException {
             try {
-                semaphore.acquire();
                 StringBuilder builder = new StringBuilder();
                 // get path from URI
                 String fromURI = exchange.getRequestURI().toString().replaceAll("%20", " ");
@@ -137,7 +135,7 @@ public class Main {
                         OutputStream os = exchange.getResponseBody();
                         os.write(builder.toString().getBytes());
                         os.close();
-                        semaphore.release();
+
 
                     } else if (file.isFile()) {
 //                        System.out.println("file");
@@ -156,7 +154,7 @@ public class Main {
                             OutputStream os = exchange.getResponseBody();
                             os.write(bytes, 0, bytes.length);
                             os.close();
-                            semaphore.release();
+
 
                         } else {
                             errorMessage(exchange, 404);
@@ -167,7 +165,7 @@ public class Main {
                     }
 
                 }
-            } catch (IOException | InterruptedException e) {
+            } catch (IOException e) {
 //                System.out.println(e);
             }
         }
@@ -183,7 +181,7 @@ public class Main {
             OutputStream os = exchange.getResponseBody();
             os.write(error.getBytes());
             os.close();
-            semaphore.release();
+
 
         } catch (IOException e) {
             System.out.println(e);

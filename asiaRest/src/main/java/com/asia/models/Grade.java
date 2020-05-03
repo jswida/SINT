@@ -2,6 +2,9 @@ package com.asia.models;
 
 import java.util.Date;
 import com.asia.services.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import dev.morphia.annotations.*;
+import org.bson.types.ObjectId;
 import org.glassfish.jersey.linking.Binding;
 import org.glassfish.jersey.linking.InjectLink;
 import org.glassfish.jersey.linking.InjectLinks;
@@ -16,6 +19,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
+@Entity(value = "grades")
+//@Validation("{firstName: {$type: \"string\", $exists: true, $regex: \"^.+$\"}, " +
+//        "lastName: {$type: \"string\", $exists: true, $regex: \"^.+$\"}, " +
+//        "birthday: {$type: \"date\", $exists: true}, "+
+//        "grades: {$not: {$elemMatch: { $or: [" +
+//        "   {value: {$not: {$type: \"double\", $in: [2, 3, 3.5, 4, 4.5, 5], $exists: true}}}," +
+//        "   {date: {$not: {$type: \"date\", $exists: true}}}," +
+//        "   {couse: {$not: {$type: \"object\", $exists: true}}}" +
+//        "] } } }" +
+//        "}")
 public class Grade {
     @InjectLinks({
             @InjectLink(resource = GradesService.class, rel = "parent"),
@@ -34,15 +47,23 @@ public class Grade {
     @XmlJavaTypeAdapter(Link.JaxbAdapter.class)
     List<Link> links;
 
+    @XmlTransient
+    @Id
+    ObjectId _id;
+
     @XmlElement
+    @Indexed(options = @IndexOptions(unique = true))
     private Long id;
     @XmlElement
     private double value;
     @XmlElement
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "CET")
     private Date date;
     @XmlElement
+    @Reference
     private Course course;
     @XmlTransient
+    @Reference
     private long studentIndex;
 
     public Grade( ) {
@@ -87,6 +108,7 @@ public class Grade {
         this.course = course;
     }
 
+    @XmlTransient
     public long getStudentIndex() {
         return studentIndex;
     }

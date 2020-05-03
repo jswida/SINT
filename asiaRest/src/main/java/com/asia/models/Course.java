@@ -5,12 +5,18 @@ import javax.ws.rs.core.Link;
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.List;
+
+import dev.morphia.annotations.*;
+import org.bson.types.ObjectId;
 import org.glassfish.jersey.linking.Binding;
 import org.glassfish.jersey.linking.InjectLink;
 import org.glassfish.jersey.linking.InjectLinks;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
+@Entity(value = "courses")
+@Validation("{name: {$type: \"string\", $exists: true, $regex: \"^.+$\"}, " +
+        "lecturer: {$type: \"string\", $exists: true, $regex: \"^.+$\"}, ")
 public class Course {
     @InjectLinks({
             @InjectLink(value="courses/{id}", rel = "self",
@@ -22,7 +28,11 @@ public class Course {
     @XmlJavaTypeAdapter(Link.JaxbAdapter.class)
     List<Link> links;
 
+    @Id
+    @XmlTransient
+    private ObjectId _id;
     @XmlElement
+    @Indexed(options = @IndexOptions(unique = true))
     private Long id;
     @XmlElement
     private String name;

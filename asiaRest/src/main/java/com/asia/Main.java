@@ -2,6 +2,8 @@ package com.asia;
 
 import com.asia.services.*;
 
+import com.mongodb.DB;
+import com.mongodb.client.MongoDatabase;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.linking.DeclarativeLinkingFeature;
@@ -40,5 +42,9 @@ public class Main {
 
         return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
     }
+
+//    public static DB getDatabase() {
+//        return MongoDatabase.;
+//    }
 
 }

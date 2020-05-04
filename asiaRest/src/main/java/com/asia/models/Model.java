@@ -12,20 +12,16 @@ import java.util.*;
 
 
 public class Model {
-    private final MongoClient mongoClinet;
-    private final Morphia morphia;
     private final Datastore datastore;
     private static Model instance = new Model();
     //private List<Course> courses;
     //private List<Student> students;
 
-    public Datastore getDatastore() {return datastore ;}
-
     public Model() {
-        this.mongoClinet = new MongoClient("localhost", 8004);
-        this.morphia = new Morphia();
-        this.morphia.mapPackage("models");
-        this.datastore = this.morphia.createDatastore(mongoClinet, "DATABASE");
+        MongoClient mongoClinet = new MongoClient("localhost", 8004);
+        Morphia morphia = new Morphia();
+        morphia.mapPackage("models");
+        this.datastore = morphia.createDatastore(mongoClinet, "DATABASE");
         this.datastore.ensureIndexes();
         this.datastore.enableDocumentValidation();
         this.fillDummy(this);
@@ -37,9 +33,10 @@ public class Model {
 
     public void fillDummy(Model model){
         if(this.datastore.createQuery(Student.class).count() > 0
-            || this.datastore.createQuery(Course.class).count() > 0
-            || this.datastore.createQuery(Seq.class).count() > 0)
+            && this.datastore.createQuery(Course.class).count() > 0
+            && this.datastore.createQuery(Seq.class).count() > 0){
             return;
+        }
 
         Course course1 = DataBase.generateCourse("SINT");
         Grade grade1 = DataBase.generateGrade(course1);
@@ -54,38 +51,21 @@ public class Model {
         Student student2 = DataBase.generateStudent("Michał", "Grazikowski");
         Student student3 = DataBase.generateStudent("Stanisław", "Szatniak");
 
-
         student1.setGrade(grade1);
         student2.setGrade(grade2);
         student3.setGrade(grade3);
 
-
-//        Course course1 = new Course(0L,"TP", "T Pawlak");
-//        Course course2 = new Course(1L,"SI", "T Pawlak");
-//
-//        Grade grade1 = new Grade(1L, 3.5, new Date(2020, 02, 17), course1);
-//        Grade grade2 = new Grade(2L, 4.5, new Date(2020, 02, 17), course2);
-//        Grade grade3 = new Grade(3L, 4.5, new Date(2020, 02, 17), course2);
-//
-//        Student student1 = new Student(1222L, "Joanna", "Swida", new Date(1997, 03, 17), null);
-//        Student student2 = new Student(1223L, "Joanna", "Swida", new Date(1997, 03, 17), null);
-//        Student student3 = new Student(1224L, "Joanna", "Swida", new Date(1997, 03, 17), null);
-
-        student1.setGrade(grade1);
-        student2.setGrade(grade2);
-        student3.setGrade(grade3);
+        this.datastore.save(new Seq(1225L, 3L, 3L));
 
         this.datastore.save(course1);
         this.datastore.save(course2);
 
         this.datastore.save(grade1);
-        this.datastore.save(grade2);
-        this.datastore.save(grade3);
-
         this.datastore.save(student1);
+        this.datastore.save(grade2);
         this.datastore.save(student2);
+        this.datastore.save(grade3);
         this.datastore.save(student3);
-
     }
 
     private Long nextStudentId() {

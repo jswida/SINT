@@ -5,6 +5,8 @@ import com.asia.models.*;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Path("/students/{index}")
 public class StudentService {
@@ -17,20 +19,20 @@ public class StudentService {
         else throw new NotFoundException();
     }
 
-//    @GET
-//    @Path("/courses")
-//    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-//    public Set<Course> getStudentCourses(@PathParam("index") long id) {
-//        Student student = Main.getDatabase().getStudent(id);
-//        if (student != null) {
-//            Set<Course> studentCourses = new HashSet<Course>();
-//            for (Grade grade : student.getGrades()) {
-//                Course course = Main.getDatabase().getCourses();
-//                if (course != null) studentCourses.add(course);
-//            }
-//            return studentCourses;
-//        } else throw new NotFoundException();
-//    }
+    @GET
+    @Path("/courses")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Set<Course> getStudentCourses(@PathParam("index") long id) {
+        Student student = Main.getDatabase().getStudent(id);
+        if (student != null) {
+            Set<Course> studentCourses = new HashSet<Course>();
+            for (Grade grade : student.getGrades()) {
+                Course course = Main.getDatabase().getCourse(grade.getCourse().getId());
+                if (course != null) studentCourses.add(course);
+            }
+            return studentCourses;
+        } else throw new NotFoundException();
+    }
 
 
     @DELETE
@@ -50,6 +52,7 @@ public class StudentService {
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response updateStudent(@PathParam("index") Long updateStudentIndex, Student newStudent) throws NotFoundException {
+        System.out.println("here");
         Student student = Main.getDatabase().getStudent(updateStudentIndex);
         if (newStudent.getFirstName() != null && newStudent.getLastName() != null && newStudent.getBirthday() != null) {
             student = Model.getInstance().updateStudent(student, newStudent);

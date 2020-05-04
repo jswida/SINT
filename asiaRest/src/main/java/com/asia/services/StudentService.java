@@ -1,14 +1,10 @@
 package com.asia.services;
 
-import com.asia.DataBase;
 import com.asia.Main;
 import com.asia.models.*;
-import com.fasterxml.jackson.annotation.JsonCreator;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Path("/students/{index}")
 public class StudentService {
@@ -40,7 +36,7 @@ public class StudentService {
     @DELETE
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response deleteStudent(@PathParam("index") long index) throws NotFoundException {
-        Student student = DataBase.getStudents().stream().filter(s -> s.getIndex().equals(index)).findFirst().orElse(null);
+        Student student = Main.getDatabase().getStudent(index);
         if (student != null) {
             Main.getDatabase().deleteStudent(student);
             return Response.noContent().build();

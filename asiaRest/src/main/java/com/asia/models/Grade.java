@@ -20,15 +20,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity(value = "grades")
-//@Validation("{firstName: {$type: \"string\", $exists: true, $regex: \"^.+$\"}, " +
-//        "lastName: {$type: \"string\", $exists: true, $regex: \"^.+$\"}, " +
-//        "birthday: {$type: \"date\", $exists: true}, "+
-//        "grades: {$not: {$elemMatch: { $or: [" +
-//        "   {value: {$not: {$type: \"double\", $in: [2, 3, 3.5, 4, 4.5, 5], $exists: true}}}," +
-//        "   {date: {$not: {$type: \"date\", $exists: true}}}," +
-//        "   {couse: {$not: {$type: \"object\", $exists: true}}}" +
-//        "] } } }" +
-//        "}")
 public class Grade {
     @InjectLinks({
             @InjectLink(resource = GradesService.class, rel = "parent"),

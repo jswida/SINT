@@ -1,5 +1,6 @@
 package com.asia.models;
 
+import com.asia.DataBase;
 import com.mongodb.MongoClient;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
@@ -15,63 +16,75 @@ public class Model {
     private final Morphia morphia;
     private final Datastore datastore;
     private static Model instance = new Model();
-
-    //private static Model instance = new Model();
     //private List<Course> courses;
     //private List<Student> students;
 
     public Datastore getDatastore() {return datastore ;}
 
-    static {
-        fillDummy(new Model());
-    }
-
     public Model() {
         this.mongoClinet = new MongoClient("localhost", 8004);
         this.morphia = new Morphia();
         this.morphia.mapPackage("models");
-        this.datastore = this.morphia.createDatastore(mongoClinet, "students");
+        this.datastore = this.morphia.createDatastore(mongoClinet, "DATABASE");
         this.datastore.ensureIndexes();
         this.datastore.enableDocumentValidation();
+        this.fillDummy(this);
     }
 
     public static Model getInstance() {
         return instance;
     }
 
-    public static void fillDummy(Model model){
-        Datastore datastore1 = model.getDatastore();
-        if(datastore1.createQuery(Student.class).count() > 0
-            || datastore1.createQuery(Course.class).count() > 0
-            || datastore1.createQuery(Seq.class).count() > 0)
+    public void fillDummy(Model model){
+        if(this.datastore.createQuery(Student.class).count() > 0
+            || this.datastore.createQuery(Course.class).count() > 0
+            || this.datastore.createQuery(Seq.class).count() > 0)
             return;
 
+        Course course1 = DataBase.generateCourse("SINT");
+        Grade grade1 = DataBase.generateGrade(course1);
 
-        Course course1 = new Course(0L,"TP", "T Pawlak");
-        Course course2 = new Course(1L,"SI", "T Pawlak");
+        Course course2 = DataBase.generateCourse("AEM");
+        Grade grade2 = DataBase.generateGrade(course2);
 
-        Grade grade1 = new Grade(1L, 3.5, new Date(2020, 02, 17), course1);
-        Grade grade2 = new Grade(2L, 4.5, new Date(2020, 02, 17), course2);
-        Grade grade3 = new Grade(3L, 4.5, new Date(2020, 02, 17), course2);
+        Course course3 = DataBase.generateCourse("PIRO");
+        Grade grade3 = DataBase.generateGrade(course3);
 
-        Student student1 = new Student(1222L, "Joanna", "Swida", new Date(1997, 03, 17), null);
-        Student student2 = new Student(1223L, "Joanna", "Swida", new Date(1997, 03, 17), null);
-        Student student3 = new Student(1224L, "Joanna", "Swida", new Date(1997, 03, 17), null);
+        Student student1 = DataBase.generateStudent("Joanna", "Swida");
+        Student student2 = DataBase.generateStudent("Michał", "Grazikowski");
+        Student student3 = DataBase.generateStudent("Stanisław", "Szatniak");
+
 
         student1.setGrade(grade1);
         student2.setGrade(grade2);
         student3.setGrade(grade3);
 
-        datastore1.save(course1);
-        datastore1.save(course2);
 
-        datastore1.save(grade1);
-        datastore1.save(grade2);
-        datastore1.save(grade3);
+//        Course course1 = new Course(0L,"TP", "T Pawlak");
+//        Course course2 = new Course(1L,"SI", "T Pawlak");
+//
+//        Grade grade1 = new Grade(1L, 3.5, new Date(2020, 02, 17), course1);
+//        Grade grade2 = new Grade(2L, 4.5, new Date(2020, 02, 17), course2);
+//        Grade grade3 = new Grade(3L, 4.5, new Date(2020, 02, 17), course2);
+//
+//        Student student1 = new Student(1222L, "Joanna", "Swida", new Date(1997, 03, 17), null);
+//        Student student2 = new Student(1223L, "Joanna", "Swida", new Date(1997, 03, 17), null);
+//        Student student3 = new Student(1224L, "Joanna", "Swida", new Date(1997, 03, 17), null);
 
-        datastore1.save(student1);
-        datastore1.save(student2);
-        datastore1.save(student3);
+        student1.setGrade(grade1);
+        student2.setGrade(grade2);
+        student3.setGrade(grade3);
+
+        this.datastore.save(course1);
+        this.datastore.save(course2);
+
+        this.datastore.save(grade1);
+        this.datastore.save(grade2);
+        this.datastore.save(grade3);
+
+        this.datastore.save(student1);
+        this.datastore.save(student2);
+        this.datastore.save(student3);
 
     }
 
@@ -90,34 +103,12 @@ public class Model {
         return id.getGradeID();
     }
 
-    public List<Student> getStudents(String firstName, String lastName, Date birthDate, String order) {
-        Query<Student> query = datastore.createQuery(Student.class);
-        if (firstName != null && !firstName.isEmpty()){
-            query.field("firstName").containsIgnoreCase(firstName);
-        }
-        if (lastName != null && !lastName.isEmpty()){
-            query.field(lastName).containsIgnoreCase(lastName);
-        }
-        if (birthDate != null) {
-            if (order != null && order.equals("eq")){
-                query.field("birthday").equal(birthDate);
-            } else if (order != null && order.equals("gt")){
-                query.field("birthday").equal(birthDate);
-            } else if (order != null && order.equals("lt")) {
-                query.field("birthday").equal(birthDate);
-            }
-        }
-        return query.asList();
+    public List<Student> getStudents() {
+        return datastore.createQuery(Student.class).asList();
     }
 
-    public List<Course> getCourses(String name, String lecturer) {
+    public List<Course> getCourses() {
         Query<Course> query = datastore.createQuery(Course.class);
-        if (name != null && !name.isEmpty()){
-            query.field("name").containsIgnoreCase(name);
-        }
-        if (lecturer != null && !lecturer.isEmpty()){
-            query.field("lecturer").containsIgnoreCase(lecturer);
-        }
         return query.asList();
     }
 
@@ -188,18 +179,10 @@ public class Model {
         datastore.delete(student);
     }
 
-    public List<Grade> getGrades(Long index, Course course, Double val, String order) throws NotFoundException {
+    public List<Grade> getGrades(Long index) throws NotFoundException {
         Student student = this.getStudent(index);
-        Query<Grade> query = datastore.find(Grade.class).field("studentIndex").equal(student.getIndex());
-        if(course != null){
-            if (order != null && order.equals("eq")){
-                query.field("grade").equal(val);
-            } else if (order != null && order.equals("gt")) {
-//                query.field("grade").hasAnyOf(Grade.GradeValue.greaterThan(value));
-//            } else if (order != null && order.equals("lt")) {
-//                query.field("grade").hasAnyOf(Grade.GradeValue.lessThan(value));
-            }
-            return query.asList();
+        if(student != null){
+            return datastore.createQuery(Grade.class).field("studentIndex").equal(student.getIndex()).asList();
         }
         throw new NotFoundException();
     }

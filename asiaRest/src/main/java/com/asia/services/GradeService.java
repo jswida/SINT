@@ -1,7 +1,5 @@
 package com.asia.services;
 
-
-import com.asia.DataBase;
 import com.asia.Main;
 import com.asia.models.*;
 
@@ -9,7 +7,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 @Path("/students/{index}/grades/{gradeId}")
 public class GradeService {

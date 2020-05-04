@@ -15,8 +15,6 @@ import org.glassfish.jersey.linking.InjectLinks;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity(value = "courses")
-@Validation("{name: {$type: \"string\", $exists: true, $regex: \"^.+$\"}, " +
-        "lecturer: {$type: \"string\", $exists: true, $regex: \"^.+$\"}, ")
 public class Course {
     @InjectLinks({
             @InjectLink(value="courses/{id}", rel = "self",

@@ -1,26 +1,22 @@
 package com.asia.services;
 
-import com.asia.DataBase;
 import com.asia.Main;
 import com.asia.models.*;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.awt.event.MouseAdapter;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 @Path("students/{index}/grades")
 public class GradesService {
 
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Grade> getStudentGrades(@PathParam("index") long index, @QueryParam("course_id") Long courseId, @QueryParam("grade") double val, @QueryParam("order") String order) {
+    public List<Grade> getStudentGrades(@PathParam("index") long index) {
         Student student = Main.getDatabase().getStudent(index);
-        Course course = Main.getDatabase().getCourse(courseId);
         if (student != null) {
-            return Main.getDatabase().getGrades(index, course, val, order);
+            return Main.getDatabase().getGrades(index);
         }
         else throw new NotFoundException();
     }

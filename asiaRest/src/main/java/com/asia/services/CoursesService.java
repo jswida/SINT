@@ -13,8 +13,8 @@ public class CoursesService {
 
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Course> getAllCourses(@QueryParam("name") String name, @QueryParam("lecturer") String leturer) {
-        return Main.getDatabase().getCourses(name, leturer);
+    public List<Course> getAllCourses() {
+        return Main.getDatabase().getCourses();
     }
 
     @POST

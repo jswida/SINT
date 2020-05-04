@@ -68,17 +68,17 @@ public class Model {
         this.datastore.save(student3);
     }
 
-    private Long nextStudentId() {
+    private synchronized Long nextStudentId() {
         Seq id = datastore.findAndModify(datastore.createQuery(Seq.class), datastore.createUpdateOperations(Seq.class).inc("studentIndex", 1));
         return id.getStudentIndex();
     }
 
-    private Long nextCourseId() {
+    private synchronized Long nextCourseId() {
         Seq id = datastore.findAndModify(datastore.createQuery(Seq.class), datastore.createUpdateOperations(Seq.class).inc("courseID", 1));
         return id.getCourseID();
     }
 
-    private Long nextGradeId() {
+    private synchronized Long nextGradeId() {
         Seq id = datastore.findAndModify(datastore.createQuery(Seq.class), datastore.createUpdateOperations(Seq.class).inc("gradeID", 1));
         return id.getGradeID();
     }
@@ -185,7 +185,16 @@ public class Model {
         if(tmp.getDate() != null){
             grade.setDate(tmp.getDate());
         }
-        grade.setCourse(tmp.getCourse());
+        if(tmp.getCourse().getName() != null) {
+            grade.getCourse().setName(tmp.getCourse().getName());
+        }
+        if (tmp.getCourse().getLecturer() != null){
+            grade.getCourse().setLecturer(tmp.getCourse().getLecturer());
+        }
+        if(!tmp.getCourse().getId().equals(grade.getCourse().getId())) {
+            Course course = this.getCourse(tmp.getCourse().getId());
+            grade.setCourse(course);
+        }
         datastore.save(grade);
         return this.getGrade(student, grade.getId());
     }

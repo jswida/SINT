@@ -52,7 +52,6 @@ public class StudentService {
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response updateStudent(@PathParam("index") Long updateStudentIndex, Student newStudent) throws NotFoundException {
-        System.out.println("here");
         Student student = Main.getDatabase().getStudent(updateStudentIndex);
         if (newStudent.getFirstName() != null && newStudent.getLastName() != null && newStudent.getBirthday() != null) {
             student = Model.getInstance().updateStudent(student, newStudent);

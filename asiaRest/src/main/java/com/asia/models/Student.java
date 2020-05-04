@@ -41,6 +41,14 @@ public class Student {
     @Id
     @XmlTransient
     private ObjectId _id;
+    @XmlJavaTypeAdapter(ObjectIdJaxbAdapter.class)
+    public ObjectId get_id() {
+        return _id;
+    }
+    public void set_id(ObjectId id) {
+        this._id = id;
+    }
+
     @XmlElement
     @Indexed(options = @IndexOptions(unique = true))
     private Long index;

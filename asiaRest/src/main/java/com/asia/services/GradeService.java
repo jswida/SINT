@@ -2,6 +2,7 @@ package com.asia.services;
 
 
 import com.asia.DataBase;
+import com.asia.Main;
 import com.asia.models.*;
 
 import javax.ws.rs.*;
@@ -16,9 +17,9 @@ public class GradeService {
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response getStudentGradeById(@PathParam("index") long index, @PathParam("gradeId") long gradeId) {
-        Student student = DataBase.getStudents().stream().filter(s -> s.getIndex() == index).findFirst().orElse(null);
+        Student student = Main.getDatabase().getStudent(index);
         if (student != null) {
-            Grade grade = student.getGrades().stream().filter(s -> s.getId().equals(gradeId)).findFirst().orElse(null);
+            Grade grade = Main.getDatabase().getGrade(student, gradeId);
             if (grade != null) {
                 return Response.ok(grade).build();
             } else {
@@ -32,11 +33,11 @@ public class GradeService {
     @DELETE
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response deleteStudent(@PathParam("index") long index, @PathParam("gradeId") long gradeId) throws NotFoundException {
-        Student student = DataBase.getStudents().stream().filter(s -> s.getIndex().equals(index)).findFirst().orElse(null);
+        Student student = Main.getDatabase().getStudent(index);
         if (student != null) {
-            Grade grade = student.getGrades().stream().filter(s -> s.getId().equals(gradeId)).findFirst().orElse(null);
+            Grade grade = Main.getDatabase().getGrade(student, gradeId);
             if (grade != null) {
-                DataBase.delete(Grade.class, gradeId);
+                Main.getDatabase().deleteGrade(student, grade);
                 return Response.noContent().build();
             }
             else{
@@ -54,12 +55,12 @@ public class GradeService {
     public Response updateStudentGradeById(@PathParam("index") long index, @PathParam("gradeId") long gradeId, Grade newGrade) {
 
         List<Double> gradesValues = Arrays.asList(2.0, 3.0, 3.5, 4.0, 4.5, 5.0);
-        Student student = DataBase.getStudents().stream().filter(s -> s.getIndex().equals(index)).findFirst().orElse(null);
+        Student student = Main.getDatabase().getStudent(index);
         if (student != null) {
-            Grade grade = student.getGrades().stream().filter(s -> s.getId().equals(gradeId)).findFirst().orElse(null);
+            Grade grade = Main.getDatabase().getGrade(student, gradeId);
             if (grade != null) {
                 if (gradesValues.contains(newGrade.getValue())) {
-                    grade = DataBase.updateGrade(gradeId, newGrade);
+                    grade = Main.getDatabase().updateGrade(student, grade, newGrade);
                     return Response.ok(grade).status(204).build();
                 } else {
                     return Response.noContent().status(400).build();

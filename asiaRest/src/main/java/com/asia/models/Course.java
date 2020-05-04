@@ -70,6 +70,14 @@ public class Course {
         this.lecturer = lecturer;
     }
 
+    @XmlJavaTypeAdapter(ObjectIdJaxbAdapter.class)
+    public ObjectId get_id() {
+        return _id;
+    }
+    public void set_id(ObjectId id) {
+        this._id = id;
+    }
+
     @Override
     public String toString() {
         return "com.asia.models.Subject{" +

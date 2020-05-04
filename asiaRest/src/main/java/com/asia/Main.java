@@ -1,5 +1,6 @@
 package com.asia;
 
+import com.asia.models.Model;
 import com.asia.services.*;
 
 import com.mongodb.DB;
@@ -43,8 +44,8 @@ public class Main {
         return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
     }
 
-//    public static DB getDatabase() {
-//        return MongoDatabase.;
-//    }
+    public static Model getDatabase() {
+        return Model.getInstance();
+    }
 
 }

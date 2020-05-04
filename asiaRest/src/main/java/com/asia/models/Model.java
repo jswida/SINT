@@ -14,6 +14,7 @@ public class Model {
     private final MongoClient mongoClinet;
     private final Morphia morphia;
     private final Datastore datastore;
+    private static Model instance = new Model();
 
     //private static Model instance = new Model();
     //private List<Course> courses;
@@ -32,6 +33,10 @@ public class Model {
         this.datastore = this.morphia.createDatastore(mongoClinet, "students");
         this.datastore.ensureIndexes();
         this.datastore.enableDocumentValidation();
+    }
+
+    public static Model getInstance() {
+        return instance;
     }
 
     public static void fillDummy(Model model){

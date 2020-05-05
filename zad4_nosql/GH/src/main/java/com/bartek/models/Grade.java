@@ -64,9 +64,9 @@ public class Grade {
     @Reference
     private long studentId; //student index
 
-    @XmlTransient
     @Id
-    ObjectId _id;
+    @XmlTransient
+    private ObjectId _id = new ObjectId();
     @XmlJavaTypeAdapter(ObjectIdJaxbAdapter.class)
     public ObjectId get_id() {
         return _id;

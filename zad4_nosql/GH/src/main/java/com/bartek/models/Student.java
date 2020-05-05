@@ -60,7 +60,7 @@ public class Student {
 
     @Id
     @XmlTransient
-    private ObjectId _id;
+    private ObjectId _id = new ObjectId();
     @XmlJavaTypeAdapter(ObjectIdJaxbAdapter.class)
     public ObjectId getId() {
         return _id;

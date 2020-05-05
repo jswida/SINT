@@ -47,7 +47,7 @@ public class Course {
 
     @Id
     @XmlTransient
-    private ObjectId _id;
+    private ObjectId _id = new ObjectId();
     @XmlJavaTypeAdapter(ObjectIdJaxbAdapter.class)
     public ObjectId get_id() {
         return _id;

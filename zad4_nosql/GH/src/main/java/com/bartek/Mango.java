@@ -7,8 +7,11 @@ import com.bartek.models.Student;
 import com.mongodb.MongoClient;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
+import dev.morphia.query.Query;
 
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
+import java.util.HashSet;
 import java.util.List;
 
 import static com.bartek.Storage.*;
@@ -77,6 +80,8 @@ public class Mango {
         }
     }
 
+    // next
+
     private synchronized Long nextStudentId() {
         Squence id = datastore.findAndModify(
                 datastore.createQuery(Squence.class),
@@ -101,6 +106,8 @@ public class Mango {
         return id.getGradeID();
     }
 
+    // get
+
     public Course getCourse(Long id) throws NotFoundException {
         Course course = (Course) datastore.find(Course.class).field("id").equal(id);
         if (course == null) throw  new NotFoundException();
@@ -113,5 +120,128 @@ public class Mango {
         return student;
     }
 
+    public Grade getGrade(Student student, Long gradeId) throws NotFoundException {
+        Grade grade = datastore.find(Grade.class).field("studentIndex").equal(student.getIndex()).field("id").equal(gradeId).get();
+        if(grade == null){
+            throw new NotFoundException();
+        }
+        return grade;
+    }
+
+    public List<Student> getStudents() {
+        return (List<Student>) datastore.find(Student.class);
+    }
+
+    public List<Course> getCourses() {
+        return (List<Course>) datastore.find(Course.class);
+    }
+
+    public List<Grade> getGrades(Long index) throws NotFoundException {
+        Student student = this.getStudent(index);
+        if(student != null){
+            return datastore.createQuery(Grade.class).field("studentIndex").equal(student.getIndex()).asList();
+        }
+        throw new NotFoundException();
+    }
+
+    // delete
+
+    public void deleteStudent(Student student) {
+        datastore.delete(datastore.find(Grade.class).field("studentIndex").equal(student.getIndex()));
+        datastore.delete(student);
+    }
+
+    public void deleteCourse(Course course){
+        datastore.delete(datastore.find(Grade.class).field("course").equal(course));
+        datastore.delete(course);
+    }
+
+    public void deleteGrade(Student student, Grade grade) {
+        datastore.delete(grade);
+    }
+
+    // post
+
+    public Student addStudent(Student student) throws BadRequestException {
+        if (student.getFirstName() != null && student.getLastName() != null && student.getBirthday() != null){
+            Long index = this.nextStudentId();
+            Student newStudent = new Student(
+                    index, student.getFirstName(), student.getLastName(),
+                    student.getBirthday(), new HashSet<>());
+            datastore.save(newStudent);
+            return this.getStudent(index);
+        }
+        throw new BadRequestException();
+    }
+
+    public Course addCourse(Course course) throws BadRequestException {
+        if (course.getName() != null && course.getLecturer() != null){
+            Long id = this.nextCourseId();
+            Course newCourse = new Course(id, course.getName(), course.getLecturer());
+            datastore.save(newCourse);
+            return this.getCourse(id);
+        }
+        throw new BadRequestException();
+    }
+
+    public Grade addGrade(Grade ng) throws NotFoundException, BadRequestException {
+        if (ng.getValue() != 0 && ng.getDate() != null && ng.getCourse().getId() != null) {
+            Long id = this.nextGradeId();
+            Grade grade = new Grade(id, ng.getValue(), ng.getDate(), ng.getCourse());
+            grade.setStudentId(ng.getStudentId());
+            Student student = this.getStudent(ng.getStudentId());
+            datastore.save(grade);
+            return this.getGrade(student, id);
+        }
+        throw new BadRequestException();
+    }
+
+    // put
+
+    public Student updateStudent(Student student, Student ns) throws NotFoundException{
+        if(ns.getBirthday() != null) {
+            student.setBirthday(ns.getBirthday());
+        }
+        if(ns.getLastName() != null) {
+            student.setSurname(ns.getLastName());
+        }
+        if(ns.getFirstName() != null) {
+            student.setName(ns.getFirstName());
+        }
+        datastore.save(student);
+        return this.getStudent(student.getIndex());
+    }
+
+    public Course updateCourse(Course course, Course nc) throws NotFoundException {
+        if(nc.getLecturer() != null){
+            course.setLecturer(nc.getLecturer());
+        }
+        if(nc.getName() != null){
+            course.setName(nc.getName());
+        }
+        datastore.save(course);
+        return this.getCourse(course.getId());
+    }
+
+    public Grade updateGrade(Student student, Grade grade, Grade ng) throws NotFoundException {
+        if(ng.getValue() > 0){
+            grade.setValue(ng.getValue());
+        }
+        if(ng.getDate() != null){
+            grade.setDate(ng.getDate());
+        }
+        if(ng.getCourse().getName() != null) {
+            grade.getCourse().setName(ng.getCourse().getName());
+        }
+        if (ng.getCourse().getLecturer() != null){
+            grade.getCourse().setLecturer(ng.getCourse().getLecturer());
+        }
+        if(!ng.getCourse().getId().equals(grade.getCourse().getId())) {
+            Course course = this.getCourse(ng.getCourse().getId());
+            grade.setCourse(course);
+        }
+        datastore.save(grade);
+        return this.getGrade(student, grade.getId());
+    }
 
 }

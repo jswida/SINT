@@ -17,8 +17,8 @@ public class Main {
     public static void main(String[] args) throws IOException {
         Storage db = new Storage();
         final HttpServer server = startServer();
-//        System.out.println(String.format("Jersey app started with WADL available at "
-//                + "%sapplication.wadl\nHit enter to stop it...", BASE_URI));
+        System.out.println(String.format("Jersey app started with WADL available at "
+                + "%sapplication.wadl\nHit enter to stop it...", BASE_URI));
 
         System.in.read();
         server.shutdown();
@@ -44,5 +44,8 @@ public class Main {
         return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), config);
     }
 
+    public static Mango getMango(){
+        return Mango.getMangoIns();
+    }
 
 }

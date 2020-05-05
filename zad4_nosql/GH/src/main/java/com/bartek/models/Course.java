@@ -37,9 +37,6 @@ public class Course {
     @XmlJavaTypeAdapter(Link.JaxbAdapter.class)
     List<Link> links;
 
-    @Id
-    @XmlTransient
-    private ObjectId _id;
     @XmlElement
     @Indexed(options = @IndexOptions(unique = true))
     private Long id;
@@ -47,6 +44,17 @@ public class Course {
     private String name;
     @XmlElement
     private String lecturer;
+
+    @Id
+    @XmlTransient
+    private ObjectId _id;
+    @XmlJavaTypeAdapter(ObjectIdJaxbAdapter.class)
+    public ObjectId get_id() {
+        return _id;
+    }
+    public void set_id(ObjectId id) {
+        this._id = id;
+    }
 
     public Course() {
     }

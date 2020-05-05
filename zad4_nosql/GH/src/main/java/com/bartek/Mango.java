@@ -25,7 +25,7 @@ public class Mango {
         Morphia morphia = new Morphia();
         morphia.mapPackage("models");
 
-        this.datastore = morphia.createDatastore(client, "Mango3");
+        this.datastore = morphia.createDatastore(client, "Mango35");
         this.datastore.ensureIndexes();
         this.datastore.enableDocumentValidation();
         this.generateFirstMango(this);
@@ -242,15 +242,16 @@ public class Mango {
             if (ng.getDate() != null && ng.getDate().toString().length() > 0) {
                 grade.setDate(ng.getDate());
             }
-            if(ng.getCourse().getName() != null) {
-                grade.getCourse().setName(ng.getCourse().getName());
-            }
-            if (ng.getCourse().getLecturer() != null){
-                grade.getCourse().setLecturer(ng.getCourse().getLecturer());
-            }
             if(!ng.getCourse().getId().equals(grade.getCourse().getId())) {
                 Course course = this.getCourse(ng.getCourse().getId());
+                if(ng.getCourse().getName() != null) {
+                    course.setName(ng.getCourse().getName());
+                }
+                if (ng.getCourse().getLecturer() != null){
+                    course.setLecturer(ng.getCourse().getLecturer());
+                }
                 grade.setCourse(course);
+                datastore.save(course);
             }
 
             datastore.save(grade);

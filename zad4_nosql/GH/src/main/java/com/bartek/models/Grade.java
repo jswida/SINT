@@ -150,10 +150,13 @@ public class Grade {
     @Override
     public String toString() {
         return "Grade{" +
-                "id=" + id +
+                "links=" + links +
+                ", id=" + id +
                 ", value=" + value +
                 ", date=" + date +
                 ", course=" + course +
+                ", studentId=" + studentId +
+                ", _id=" + _id +
                 '}';
     }
 }

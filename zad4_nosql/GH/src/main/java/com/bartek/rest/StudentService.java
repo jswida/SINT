@@ -1,5 +1,6 @@
 package com.bartek.rest;
 
+import com.bartek.Mango;
 import com.bartek.Storage;
 import com.bartek.models.Course;
 import com.bartek.models.Grade;
@@ -18,7 +19,7 @@ public class StudentService {
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Student getStudentById(@PathParam("id") long id) {
-        Student student = Storage.getStudents().stream().filter(s -> s.getIndex() == id).findFirst().orElse(null);
+        Student student = Mango.getMangoIns().getStudent(id);
         if (student != null) return student;
         else throw new NotFoundException();
     }
@@ -27,11 +28,11 @@ public class StudentService {
     @Path("/courses")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Set<Course> getStudentCourses(@PathParam("id") long id) {
-        Student student = Storage.getStudents().stream().filter(s -> s.getIndex() == id).findFirst().orElse(null);
+        Student student = Mango.getMangoIns().getStudent(id);
         if (student != null) {
             Set<Course> studentCourses = new HashSet<Course>();
             for (Grade grade : student.getGrades()) {
-                Course course = Storage.getCourses().stream().filter(s -> s.getId().equals(grade.getCourse().getId())).findFirst().orElse(null);
+                Course course = Mango.getMangoIns().getCourses().stream().filter(s -> s.getId().equals(grade.getCourse().getId())).findFirst().orElse(null);
                 if (course != null) studentCourses.add(course);
             }
             return studentCourses;
@@ -42,9 +43,9 @@ public class StudentService {
     @DELETE
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response deleteStudent(@PathParam("id") long id) throws NotFoundException {
-        Student student = Storage.getStudents().stream().filter(s -> s.getIndex().equals(id)).findFirst().orElse(null);
+        Student student = Mango.getMangoIns().getStudent(id);
         if (student != null) {
-            Storage.delete(Student.class, id);
+            Mango.getMangoIns().deleteStudent(student);
             return Response.noContent().build();
         }
         else{
@@ -56,9 +57,9 @@ public class StudentService {
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response updateStudent(@PathParam("id") Long updateStudentId, Student newStudent) throws NotFoundException {
-        Student student = Storage.getStudents().stream().filter(s -> s.getIndex().equals(updateStudentId)).findFirst().orElse(null);
+        Student student = Mango.getMangoIns().getStudent(updateStudentId);
         if (newStudent.getFirstName() != null && newStudent.getLastName() != null && newStudent.getBirthday() != null) {
-            student = Storage.updateStudent(updateStudentId, newStudent);
+            student = Mango.getMangoIns().updateStudent(student, newStudent);
             return Response.ok(student).status(204).build();
         } else {
             return Response.ok(student).status(400).build();

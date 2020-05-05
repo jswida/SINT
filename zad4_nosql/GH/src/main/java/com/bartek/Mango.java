@@ -109,19 +109,19 @@ public class Mango {
     // get
 
     public Course getCourse(Long id) throws NotFoundException {
-        Course course = (Course) datastore.find(Course.class).field("id").equal(id);
+        Course course = datastore.find(Course.class).field("id").equal(id).get();
         if (course == null) throw  new NotFoundException();
         return course;
     }
 
     public Student getStudent(Long id) throws NotFoundException{
-        Student student = (Student) datastore.find(Student.class).field("index").equal(id);
+        Student student = datastore.find(Student.class).field("index").equal(id).get();
         if (student == null) throw new NotFoundException();
         return student;
     }
 
     public Grade getGrade(Student student, Long gradeId) throws NotFoundException {
-        Grade grade = datastore.find(Grade.class).field("studentIndex").equal(student.getIndex()).field("id").equal(gradeId).get();
+        Grade grade = datastore.find(Grade.class).field("studentId").equal(student.getIndex()).field("id").equal(gradeId).get();
         if(grade == null){
             throw new NotFoundException();
         }
@@ -129,17 +129,17 @@ public class Mango {
     }
 
     public List<Student> getStudents() {
-        return (List<Student>) datastore.find(Student.class);
+        return datastore.find(Student.class).asList();
     }
 
     public List<Course> getCourses() {
-        return (List<Course>) datastore.find(Course.class);
+        return datastore.find(Course.class).asList();
     }
 
     public List<Grade> getGrades(Long index) throws NotFoundException {
         Student student = this.getStudent(index);
         if(student != null){
-            return datastore.createQuery(Grade.class).field("studentIndex").equal(student.getIndex()).asList();
+            return datastore.createQuery(Grade.class).field("studentId").equal(student.getIndex()).asList();
         }
         throw new NotFoundException();
     }
@@ -147,7 +147,7 @@ public class Mango {
     // delete
 
     public void deleteStudent(Student student) {
-        datastore.delete(datastore.find(Grade.class).field("studentIndex").equal(student.getIndex()));
+        datastore.delete(datastore.find(Grade.class).field("studentId").equal(student.getIndex()));
         datastore.delete(student);
     }
 
@@ -158,6 +158,9 @@ public class Mango {
 
     public void deleteGrade(Student student, Grade grade) {
         datastore.delete(grade);
+        // added
+        student.getGrades().remove(grade);
+        datastore.save(student);
     }
 
     // post
@@ -189,9 +192,18 @@ public class Mango {
             Long id = this.nextGradeId();
             Grade grade = new Grade(id, ng.getValue(), ng.getDate(), ng.getCourse());
             grade.setStudentId(ng.getStudentId());
-            Student student = this.getStudent(ng.getStudentId());
+
+            System.out.println(grade);
+
+            Student student = getStudent(ng.getStudentId());
+            System.out.println("have student");
+            // added
+            student.getGrades().add(grade);
+
             datastore.save(grade);
-            return this.getGrade(student, id);
+            // added
+            datastore.save(student);
+            return grade;
         }
         throw new BadRequestException();
     }
@@ -224,24 +236,26 @@ public class Mango {
     }
 
     public Grade updateGrade(Student student, Grade grade, Grade ng) throws NotFoundException {
-        if(ng.getValue() > 0){
-            grade.setValue(ng.getValue());
-        }
-        if(ng.getDate() != null){
-            grade.setDate(ng.getDate());
-        }
-        if(ng.getCourse().getName() != null) {
-            grade.getCourse().setName(ng.getCourse().getName());
-        }
-        if (ng.getCourse().getLecturer() != null){
-            grade.getCourse().setLecturer(ng.getCourse().getLecturer());
-        }
-        if(!ng.getCourse().getId().equals(grade.getCourse().getId())) {
-            Course course = this.getCourse(ng.getCourse().getId());
-            grade.setCourse(course);
-        }
-        datastore.save(grade);
-        return this.getGrade(student, grade.getId());
+        if (grade != null) {
+            if (ng.getValue() != 0) {
+                grade.setValue(ng.getValue());
+            }
+            if (ng.getDate() != null && ng.getDate().toString().length() > 0) {
+                grade.setDate(ng.getDate());
+            }
+            if (ng.getCourse().getId() != null && ng.getCourse().getId() >= 0){
+                Course course = this.getCourse(ng.getCourse().getId());
+                if (course != null) {
+                    grade.setCourse(course);
+                }
+            }
+            datastore.save(grade);
+            datastore.save(student);
+            return grade;
+
+        } else throw new NotFoundException();
     }
+
+
 
 }

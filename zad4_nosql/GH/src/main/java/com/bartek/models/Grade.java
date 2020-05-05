@@ -1,6 +1,9 @@
 package com.bartek.models;
 
 import com.bartek.rest.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import dev.morphia.annotations.*;
+import org.bson.types.ObjectId;
 import org.glassfish.jersey.linking.Binding;
 import org.glassfish.jersey.linking.InjectLink;
 import org.glassfish.jersey.linking.InjectLinks;
@@ -13,6 +16,7 @@ import java.util.List;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
+@Entity(value = "grades")
 public class Grade {
     @InjectLinks({
             @InjectLink(
@@ -44,17 +48,32 @@ public class Grade {
     List<Link> links;
 
     @XmlElement
+    @Indexed(options = @IndexOptions(unique = true))
     private Long id;
 //    @XmlElement
 //    private GradeValue valueGV;
     @XmlElement
     private double value;
     @XmlElement
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "CET")
     private Date date;
     @XmlElement
+    @Reference
     private Course course;
     @XmlTransient
-    private long studentId;
+    @Reference
+    private long studentId; //student index
+
+    @XmlTransient
+    @Id
+    ObjectId _id;
+    @XmlJavaTypeAdapter(ObjectIdJaxbAdapter.class)
+    public ObjectId get_id() {
+        return _id;
+    }
+    public void set_id(ObjectId id) {
+        this._id = id;
+    }
 
     public Grade( ) {
     }

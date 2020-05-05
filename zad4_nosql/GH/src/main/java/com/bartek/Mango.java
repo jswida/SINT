@@ -25,7 +25,7 @@ public class Mango {
         Morphia morphia = new Morphia();
         morphia.mapPackage("models");
 
-        this.datastore = morphia.createDatastore(client, "DATABASE");
+        this.datastore = morphia.createDatastore(client, "Mango3");
         this.datastore.ensureIndexes();
         this.datastore.enableDocumentValidation();
         this.generateFirstMango(this);
@@ -62,6 +62,10 @@ public class Mango {
             student1.setGrade(grade1);
             student2.setGrade(grade2);
             student3.setGrade(grade3);
+
+            grade1.setStudentId(student1.getIndex());
+            grade2.setStudentId(student2.getIndex());
+            grade3.setStudentId(student3.getIndex());
 
             this.datastore.save(new Squence(123456L, 4L, 4L));
 
@@ -187,22 +191,17 @@ public class Mango {
         throw new BadRequestException();
     }
 
-    public Grade addGrade(Grade ng) throws NotFoundException, BadRequestException {
+    public Grade addGrade(Student student, Grade ng) throws NotFoundException, BadRequestException {
         if (ng.getValue() != 0 && ng.getDate() != null && ng.getCourse().getId() != null) {
             Long id = this.nextGradeId();
             Grade grade = new Grade(id, ng.getValue(), ng.getDate(), ng.getCourse());
             grade.setStudentId(ng.getStudentId());
 
-            System.out.println(grade);
-
-            Student student = getStudent(ng.getStudentId());
-            System.out.println("have student");
-            // added
-            student.getGrades().add(grade);
+//            Student student = getStudent(grade.getStudentId());
+//            student.getGrades().add(grade);
 
             datastore.save(grade);
-            // added
-            datastore.save(student);
+//            datastore.save(student);
             return grade;
         }
         throw new BadRequestException();
@@ -243,12 +242,17 @@ public class Mango {
             if (ng.getDate() != null && ng.getDate().toString().length() > 0) {
                 grade.setDate(ng.getDate());
             }
-            if (ng.getCourse().getId() != null && ng.getCourse().getId() >= 0){
-                Course course = this.getCourse(ng.getCourse().getId());
-                if (course != null) {
-                    grade.setCourse(course);
-                }
+            if(ng.getCourse().getName() != null) {
+                grade.getCourse().setName(ng.getCourse().getName());
             }
+            if (ng.getCourse().getLecturer() != null){
+                grade.getCourse().setLecturer(ng.getCourse().getLecturer());
+            }
+            if(!ng.getCourse().getId().equals(grade.getCourse().getId())) {
+                Course course = this.getCourse(ng.getCourse().getId());
+                grade.setCourse(course);
+            }
+
             datastore.save(grade);
             datastore.save(student);
             return grade;

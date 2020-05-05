@@ -184,6 +184,10 @@ public class Storage {
         student2.setGrade(grade2);
         student3.setGrade(grade3);
 
+        grade1.setStudentId(student1.getIndex());
+        grade2.setStudentId(student2.getIndex());
+        grade3.setStudentId(student3.getIndex());
+
         students = new ArrayList<>();
         grades = new ArrayList<>();
         courses = new ArrayList<>();

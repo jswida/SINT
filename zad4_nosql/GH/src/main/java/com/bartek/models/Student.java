@@ -54,7 +54,7 @@ public class Student {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "CET")
     private Date birthday;
     @XmlTransient
-//    @Embedded
+    @Embedded
     private Set<Grade> grades = new HashSet<>();
 
 

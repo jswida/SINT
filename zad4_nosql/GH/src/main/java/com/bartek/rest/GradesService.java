@@ -29,7 +29,8 @@ public class GradesService {
     public Response postNewGradeForStudent(Grade ng, @PathParam("id") long id, @Context UriInfo uriInfo) throws BadRequestException {
         List<Double> gradesList = Arrays.asList(2.0, 3.0, 3.5, 4.0, 4.5, 5.0);
         if (gradesList.contains(ng.getValue()) && ng.getDate().toString().length() > 0 && ng.getCourse() != null){
-            Grade grade = Mango.getMangoIns().addGrade(ng);
+            Student student = Mango.getMangoIns().getStudent(id);
+            Grade grade = Mango.getMangoIns().addGrade(student, ng);
             UriBuilder builder = uriInfo.getAbsolutePathBuilder();
             builder.path(Long.toString(grade.getId()));
             return Response.created(builder.build()).entity(grade).build();

@@ -1,7 +1,6 @@
 package com.bartek.rest;
 
-
-import com.bartek.Storage;
+import com.bartek.Main;
 import com.bartek.models.Course;
 
 import javax.ws.rs.*;
@@ -14,21 +13,16 @@ public class CourseService {
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Course getCourseById(@PathParam("id") long id) {
-        for (Course course : Storage.getCourses()) {
-            if (course.getId() == id) {
-                return course;
-            }
-        }
-        throw new NotFoundException();
+        return Main.getDatabase().getCourseByID(id);
+
     }
 
     @DELETE
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response deleteCourse(@PathParam("id") long id) throws NotFoundException {
-        Course course = Storage.getCourses().stream().filter(s -> s.getId().equals(id)).findFirst().orElse(null);
+        Course course = Main.getDatabase().getCourseByID(id);
         if (course != null) {
-            System.out.println("Delete Course: " + course.toString());
-            Storage.delete(Course.class, id);
+            Main.getDatabase().deleteCourse(course);
             return Response.noContent().build();
         } else {
             return Response.noContent().status(404).build();
@@ -40,9 +34,9 @@ public class CourseService {
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response updateCourse(@PathParam("id") Long updatedCourseId, Course newCourse) throws NotFoundException {
-        Course course = Storage.getCourses().stream().filter(s -> s.getId().equals(updatedCourseId)).findFirst().orElse(null);
+        Course course = Main.getDatabase().getCourseByID(updatedCourseId);
         if (newCourse.getName() != null && newCourse.getLecturer() != null) {
-            course = Storage.updateCourse(updatedCourseId, newCourse);
+            course = Main.getDatabase().updateCourse(course, newCourse);
             return Response.ok(course).status(204).build();
         } else {
             return Response.ok(course).status(400).build();

@@ -1,5 +1,6 @@
 package com.bartek.models;
 
+import com.bartek.nosql.ObjectIdJaxbAdapter;
 import com.bartek.rest.CourseService;
 import com.bartek.rest.GradesService;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -146,6 +147,7 @@ public class Grade {
         this.student = student;
     }
 
+    @XmlJavaTypeAdapter(ObjectIdJaxbAdapter.class)
     public ObjectId get_id() {
         return _id;
     }

@@ -16,7 +16,8 @@ public class Main {
     public static final String BASE_URI = "http://localhost:8000/";
 
     public static void main(String[] args) throws IOException {
-        Storage db = new Storage();
+//        Storage db = new Storage();
+        Mango mangoDB = getDatabase();
 
         final HttpServer server = startServer();
         System.out.println(String.format("Jersey app started with WADL available at "

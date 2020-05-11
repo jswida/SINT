@@ -1,5 +1,6 @@
 package com.bartek.models;
 
+import com.bartek.nosql.ObjectIdJaxbAdapter;
 import com.bartek.rest.CoursesService;
 import org.bson.types.ObjectId;
 import org.glassfish.jersey.linking.Binding;
@@ -79,6 +80,7 @@ public class Course {
         this.lecturer = lecturer;
     }
 
+    @XmlJavaTypeAdapter(ObjectIdJaxbAdapter.class)
     public ObjectId get_id() {
         return _id;
     }

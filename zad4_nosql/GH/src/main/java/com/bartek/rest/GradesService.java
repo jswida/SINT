@@ -1,6 +1,6 @@
 package com.bartek.rest;
 
-import com.bartek.Storage;
+import com.bartek.Main;
 import com.bartek.models.Grade;
 import com.bartek.models.Student;
 
@@ -16,9 +16,9 @@ public class GradesService {
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Grade> getStudentGrades(@PathParam("id") long id) {
-        Student student = Storage.getStudents().stream().filter(s -> s.getIndex() == id).findFirst().orElse(null);
+        Student student = Main.getDatabase().getStudentByID(id);
         if (student != null){
-            return Storage.getGrades().stream().filter(s -> s.getStudentId() == id).collect(Collectors.toList());
+            return Main.getDatabase().getGrades(id);
         }
         else throw new NotFoundException();
     }
@@ -28,8 +28,10 @@ public class GradesService {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response postNewGradeForStudent(Grade ng, @PathParam("id") long id, @Context UriInfo uriInfo) throws BadRequestException {
         List<Double> gradesList = Arrays.asList(2.0, 3.0, 3.5, 4.0, 4.5, 5.0);
+        Student student = Main.getDatabase().getStudentByID(id);
+
         if (gradesList.contains(ng.getValue()) && ng.getDate().toString().length() > 0 && ng.getCourse() != null){
-            Grade grade = Storage.addGradeToStudent(ng, id);
+            Grade grade = Main.getDatabase().addGrade(student, ng.getCourse(), ng);
             UriBuilder builder = uriInfo.getAbsolutePathBuilder();
             builder.path(Long.toString(grade.getId()));
             return Response.created(builder.build()).entity(grade).build();

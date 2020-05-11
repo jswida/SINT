@@ -1,5 +1,6 @@
 package com.bartek.models;
 
+import com.bartek.nosql.ObjectIdJaxbAdapter;
 import com.bartek.rest.StudentsService;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.bson.types.ObjectId;
@@ -101,6 +102,7 @@ public class Student {
         this.birthday = birthday;
     }
 
+    @XmlJavaTypeAdapter(ObjectIdJaxbAdapter.class)
     public ObjectId get_id() {
         return _id;
     }

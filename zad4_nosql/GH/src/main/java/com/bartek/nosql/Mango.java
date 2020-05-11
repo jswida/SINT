@@ -8,6 +8,7 @@ import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.query.Query;
 
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +17,9 @@ import static com.bartek.Storage.*;
 
 
 public class Mango {
-    private static final boolean debug = true;
+    private static final boolean debug = false;
+
+
     private static Mango instance = new Mango();
     private final Datastore datastore;
 
@@ -24,10 +27,12 @@ public class Mango {
         final Morphia morphia = new Morphia();
         morphia.mapPackage("models");
 
-        datastore = morphia.createDatastore(new MongoClient(), "sint_db_1");
+        datastore = morphia.createDatastore(new MongoClient("localhost", 8004), "sint_db_6");
+        this.datastore.enableDocumentValidation();
         datastore.ensureIndexes();
 
-        loadMango();
+        this.loadMango();
+        System.out.println("MongoDB loaded");
     }
 
     public static Mango getInstance() {
@@ -35,67 +40,90 @@ public class Mango {
     }
 
     public void loadMango() {
+        System.out.println("Students \t Courses \t Grades");
+        System.out.print(datastore.getCount(Student.class));
+        System.out.print("\t");
+        System.out.print(datastore.getCount(Course.class));
+        System.out.print("\t");
+        System.out.println(datastore.getCount(Grade.class));
+
+
         if (debug) {
             datastore.delete(datastore.createQuery(Course.class));
             datastore.delete(datastore.createQuery(Student.class));
             datastore.delete(datastore.createQuery(Grade.class));
             datastore.delete(datastore.createQuery(Seq.class));
         }
-        if (datastore.getCount(Course.class) == 0 && datastore.getCount(Student.class) == 0) {
+        if (datastore.getCount(Course.class) <= 0 && datastore.getCount(Student.class) <= 0) {
+            datastore.save(new Seq(30000L, 2000L, 100L));
             try {
                 Course course1 = generateCourse("QWER");
-                Grade grade1 = generateGrade(course1);
+                course1.setId(nextCourseId());
 
                 Course course2 = generateCourse("ASDF");
-                Grade grade2 = generateGrade(course2);
+                course2.setId(nextCourseId());
 
                 Course course3 = generateCourse("ZXCV");
-                Grade grade3 = generateGrade(course3);
+                course3.setId(nextCourseId());
 
                 Student student1 = generateStudent("Jerry", "Arry");
+                student1.setIndex(nextStudentId());
                 Student student2 = generateStudent("Merry", "Berry");
+                student2.setIndex(nextStudentId());
                 Student student3 = generateStudent("Terry", "Cerry");
-
-
-                grade1.setStudent(student1);
-                grade1.setStudentId(student1.getIndex());
-                grade2.setStudent(student2);
-                grade2.setStudentId(student2.getIndex());
-                grade3.setStudent(student3);
-                grade3.setStudentId(student3.getIndex());
+                student3.setIndex(nextStudentId());
 
                 this.datastore.save(course1);
                 this.datastore.save(course2);
                 this.datastore.save(course3);
 
-                this.datastore.save(grade1);
                 this.datastore.save(student1);
-                this.datastore.save(grade2);
                 this.datastore.save(student2);
-                this.datastore.save(grade3);
                 this.datastore.save(student3);
 
-            } catch (Exception ignored) {
+                Grade grade1 = generateGrade(getCourseByID(course1.getId()));
+                grade1.setId(nextGradeId());
+                grade1.setStudent(getStudentByID(student1.getIndex()));
+                grade1.setStudentId(student1.getIndex());
+
+                Grade grade2 = generateGrade(getCourseByID(course2.getId()));
+                grade2.setId(nextGradeId());
+                grade2.setStudent(getStudentByID(student2.getIndex()));
+                grade2.setStudentId(student2.getIndex());
+
+                Grade grade3 = generateGrade(getCourseByID(course3.getId()));
+                grade3.setId(nextGradeId());
+                grade3.setStudent(getStudentByID(student3.getIndex()));
+                grade3.setStudentId(student3.getIndex());
+
+                this.datastore.save(grade1);
+                this.datastore.save(grade2);
+                this.datastore.save(grade3);
+
+                System.out.println("Init data created");
+
+            } catch (Exception e) {
+                System.out.println("Error when creating init data");
+                e.printStackTrace();
             }
-            datastore.save(new Seq(30000L, 2000L, 100L));
         }
     }
 
     // next
 
     private synchronized Long nextStudentId() {
-        Seq id = datastore.findAndModify(datastore.createQuery(Seq.class), datastore.createUpdateOperations(Seq.class).inc("studentIndex", 1));
-        return id.getStudentIndex();
+        Seq id = datastore.findAndModify(datastore.createQuery(Seq.class), datastore.createUpdateOperations(Seq.class).inc("studentId", 1));
+        return id.getStudentId();
     }
 
     private synchronized Long nextCourseId() {
-        Seq id = datastore.findAndModify(datastore.createQuery(Seq.class), datastore.createUpdateOperations(Seq.class).inc("courseID", 1));
-        return id.getCourseID();
+        Seq id = datastore.findAndModify(datastore.createQuery(Seq.class), datastore.createUpdateOperations(Seq.class).inc("courseId", 1));
+        return id.getCourseId();
     }
 
     private synchronized Long nextGradeId() {
-        Seq id = datastore.findAndModify(datastore.createQuery(Seq.class), datastore.createUpdateOperations(Seq.class).inc("gradeID", 1));
-        return id.getGradeID();
+        Seq id = datastore.findAndModify(datastore.createQuery(Seq.class), datastore.createUpdateOperations(Seq.class).inc("gradeId", 1));
+        return id.getGradeId();
     }
 
     // get
@@ -149,16 +177,16 @@ public class Mango {
     public List<Grade> getGrades(Long index) throws NotFoundException {
         Student student = this.getStudentByID(index);
         if(student != null){
-            return datastore.createQuery(Grade.class).field("studentIndex").equal(student.getIndex()).asList();
+            return datastore.createQuery(Grade.class).field("studentId").equal(student.getIndex()).asList();
         }
         throw new NotFoundException();
     }
 
     public List<Grade> getGradesFiltered(Long index, int courseId, double value, String order) throws NotFoundException {
         Student student = this.getStudentByID(index);
-        Query<Grade> query = datastore.find(Grade.class).field("studentIndex").equal(student.getIndex());
+        Query<Grade> query = datastore.find(Grade.class).field("studentId").equal(student.getIndex());
         if (courseId > 0)
-            query.field("courseID").equal(courseId);
+            query.field("courseId").equal(courseId);
 //        if (value > 0) {
 //            if (order != null && order.equals("eq")) {
 //                query.field("grade").equal(value);
@@ -171,13 +199,97 @@ public class Mango {
         return query.asList();
     }
 
-    public Grade getGradeByID(Student student, int gradeID) throws NotFoundException {
-        Grade grade = datastore.find(Grade.class).field("studentIndex").equal(student.getIndex()).field("id").equal(gradeID).get();
+    public Grade getGradeByID(Student student, Long gradeId) throws NotFoundException {
+        Grade grade = datastore.find(Grade.class).field("studentId").equal(student.getIndex()).field("id").equal(gradeId).get();
         if (grade == null) throw new NotFoundException();
         return grade;
     }
 
+    // delete
 
+    public void deleteStudent(Student student) {
+        datastore.delete(datastore.find(Grade.class).field("studentId").equal(student.getIndex()));
+        datastore.delete(student);
+    }
+
+    public void deleteCourse(Course course) {
+        datastore.delete(datastore.find(Grade.class).field("course").equal(course));
+        datastore.delete(course);
+    }
+    public void deleteGrade(Grade grade) {
+        datastore.delete(grade);
+    }
+
+    // post
+
+    public Student addStudent(Student newStudent) throws BadRequestException {
+        if (newStudent.getFirstName() != null && newStudent.getLastName() != null && newStudent.getBirthday() != null) {
+            Long index = this.nextStudentId();
+            Student student = new Student(index, newStudent.getFirstName(), newStudent.getLastName(), newStudent.getBirthday());
+            datastore.save(student);
+            return this.getStudentByID(index);
+        }
+        throw new BadRequestException();
+    }
+
+    public Course addCourse(Course newCourse) throws BadRequestException {
+        if (newCourse.getName() != null && newCourse.getLecturer() != null) {
+            Long id = this.nextCourseId();
+            Course course = new Course(id, newCourse.getName(), newCourse.getLecturer());
+            datastore.save(course);
+            return this.getCourseByID(id);
+        }
+        throw new BadRequestException();
+    }
+
+    public Grade addGrade(Student student, Course course, Grade newGrade) throws NotFoundException, BadRequestException {
+        if (newGrade.getDate() != null && newGrade.getValue() > 0) {
+            Long id = this.nextGradeId();
+            Grade grade = new Grade(id, newGrade.getValue(), newGrade.getDate(), course, student.getIndex(), student);
+            // save course separately?
+            datastore.save(grade);
+            return this.getGradeByID(student, id);
+        }
+
+        throw new BadRequestException();
+    }
+
+    // put
+
+    public Student updateStudent(Student student, Student newStudent) throws NotFoundException {
+        if (newStudent.getBirthday() != null)
+            student.setBirthday(newStudent.getBirthday());
+        if (newStudent.getLastName() != null)
+            student.setLastName(newStudent.getLastName());
+        if (newStudent.getFirstName() != null)
+            student.setFirstName(newStudent.getFirstName());
+
+        datastore.save(student);
+        return this.getStudentByID(student.getIndex());
+    }
+
+    public Course updateCourse(Course course, Course newCourse) throws NotFoundException {
+        if (newCourse.getLecturer() != null)
+            course.setLecturer(newCourse.getLecturer());
+        if (newCourse.getName() != null)
+            course.setName(newCourse.getName());
+
+        datastore.save(course);
+        return this.getCourseByID(course.getId());
+    }
+
+    public Grade updateGrade(Student student, Grade grade, Grade newGrade) throws NotFoundException {
+        if (newGrade.getValue() > 0)
+            grade.setValue(newGrade.getValue());
+        if (newGrade.getDate() != null)
+            grade.setDate(newGrade.getDate());
+        if (newGrade.getCourse() != null){
+            grade.setCourse(newGrade.getCourse());
+        }
+
+        datastore.save(grade);
+        return this.getGradeByID(student, grade.getId());
+    }
 
 
 }

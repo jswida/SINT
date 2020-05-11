@@ -1,6 +1,6 @@
 package com.bartek.rest;
 
-import com.bartek.Storage;
+import com.bartek.Main;
 import com.bartek.models.Student;
 
 import javax.ws.rs.*;
@@ -13,7 +13,8 @@ public class StudentsService {
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Student> getAllStudents() {
-        return Storage.getStudents();
+        
+        return Main.getDatabase().getStudents();
     }
 
     @POST
@@ -21,7 +22,7 @@ public class StudentsService {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response postNewStudent(Student ns, @Context UriInfo uriInfo) throws BadRequestException {
         if (ns.getFirstName().length() > 0 && ns.getLastName().length() > 0 && ns.getBirthday().toString().length() > 0) {
-            Student student = Storage.addStudent(ns);
+            Student student = Main.getDatabase().addStudent(ns);
             UriBuilder builder = uriInfo.getAbsolutePathBuilder();
             builder.path(Long.toString(student.getIndex()));
             return Response.created(builder.build()).entity(student).build();

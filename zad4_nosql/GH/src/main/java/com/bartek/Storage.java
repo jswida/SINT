@@ -192,30 +192,30 @@ public class Storage {
 
     public static Grade generateGrade(Course course) {
         Grade grade = new Grade();
-        grade.setId(gradeID);
+//        grade.setId(gradeID);
         grade.setValue(randomGradeValue());
         grade.setDate(new Date());
         grade.setCourse(course);
-        gradeID++;
+//        gradeID++;
         return grade;
     }
 
     public static Course generateCourse(String name) {
         Course course = new Course();
-        course.setId(CourseID);
+//        course.setId(CourseID);
         course.setName(name);
         course.setLecturer("Jan Kowalski");
-        CourseID++;
+//        CourseID++;
         return course;
     }
 
     public static Student generateStudent(String name, String surname) {
         Student student = new Student();
-        student.setIndex(studentID);
+//        student.setIndex(studentID);
         student.setBirthday(new Date());
         student.setName(name);
         student.setSurname(surname);
-        studentID++;
+//        studentID++;
         return student;
     }
 

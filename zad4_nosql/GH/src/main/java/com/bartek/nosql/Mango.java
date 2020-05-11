@@ -18,7 +18,7 @@ import static com.bartek.Storage.*;
 
 
 public class Mango {
-    private static final boolean debug = true;
+    private static final boolean debug = false;
 
 
     private static Mango instance = new Mango();
@@ -28,7 +28,7 @@ public class Mango {
         final Morphia morphia = new Morphia();
         morphia.mapPackage("models");
 
-        datastore = morphia.createDatastore(new MongoClient("localhost", 8004), "sint_db_7");
+        datastore = morphia.createDatastore(new MongoClient("localhost", 8004), "sint_db_8");
         datastore.enableDocumentValidation();
         datastore.ensureIndexes();
 

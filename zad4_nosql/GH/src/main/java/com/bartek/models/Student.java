@@ -17,6 +17,7 @@ import java.util.List;
 
 @Entity
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 @Indexes(
         @Index(fields = {@Field("index")}, options = @IndexOptions(unique = true))
 )

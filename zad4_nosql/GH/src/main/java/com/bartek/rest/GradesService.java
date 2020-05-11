@@ -20,15 +20,9 @@ public class GradesService {
         Student student = Main.getDatabase().getStudentByID(id);
         if (student != null){
             List<Grade> grades = Main.getDatabase().getGrades(id);
-//            grades.clear();
             System.out.println(grades);
-            try {
-                return grades;
-            } catch (Exception e){
-                System.out.println("hey");
-                e.printStackTrace();
-                return null;
-            }
+            return grades;
+
         }
         else throw new NotFoundException();
     }

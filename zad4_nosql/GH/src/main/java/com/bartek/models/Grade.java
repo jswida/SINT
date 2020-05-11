@@ -20,6 +20,7 @@ import java.util.List;
 
 @Entity
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 @Indexes(
         @Index(fields = @Field("id"), options = @IndexOptions(unique = true))
 )
@@ -71,7 +72,7 @@ public class Grade {
     private Course course;
 
     @XmlTransient
-//    @JsonIgnore
+    @JsonIgnore
 //    @Reference
     private long studentId;
 

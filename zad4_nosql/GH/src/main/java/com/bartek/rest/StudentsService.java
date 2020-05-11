@@ -14,9 +14,9 @@ public class StudentsService {
 
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Student> getAllStudents(@QueryParam("birthday") String date, @QueryParam("order") String order, @QueryParam("firstName") String firstName, @QueryParam("lastName") String lastName) {
+    public List<Student> getAllStudents(@QueryParam("birthday") String date, @QueryParam("birthdayCompare") String compare, @QueryParam("firstName") String firstName, @QueryParam("lastName") String lastName) {
         Date birthday = new DateParamConverterProvider("yyyy-MM-dd").getConverter(Date.class, Date.class, null).fromString(date);
-        return Main.getDatabase().getStudentsFiltered(firstName, lastName, birthday, order);
+        return Main.getDatabase().getStudentsFiltered(firstName, lastName, birthday, compare);
     }
 
     @POST

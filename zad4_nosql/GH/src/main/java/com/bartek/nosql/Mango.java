@@ -138,19 +138,19 @@ public class Mango {
         return datastore.createQuery(Student.class).asList();
     }
 
-    public List<Student> getStudentsFiltered(String firstNameFilter, String lastNameFilter, Date birthDate, String order) {
+    public List<Student> getStudentsFiltered(String firstNameFilter, String lastNameFilter, Date birthDate, String compare) {
         Query<Student> query = datastore.createQuery(Student.class);
         if (firstNameFilter != null && !firstNameFilter.isEmpty())
             query.field("firstName").containsIgnoreCase(firstNameFilter);
         if (lastNameFilter != null && !lastNameFilter.isEmpty())
             query.field("lastName").containsIgnoreCase(lastNameFilter);
         if (birthDate != null) {
-            if (order != null && order.equals("eq")) {
-                query.field("dateOfBirth").equal(birthDate);
-            } else if (order != null && order.equals("gt")) {
-                query.field("dateOfBirth").greaterThan(birthDate);
-            } else if (order != null && order.equals("lt")) {
-                query.field("dateOfBirth").lessThan(birthDate);
+            if (compare != null && compare.equals("1")) {
+                query.field("birthday").greaterThan(birthDate);
+            } else if (compare != null && compare.equals("-1")) {
+                query.field("birthday").lessThan(birthDate);
+            } else {
+                query.field("birthday").equal(birthDate);
             }
         }
         return query.asList();

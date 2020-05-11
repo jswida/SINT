@@ -1,6 +1,7 @@
 package com.bartek.rest;
 
 import com.bartek.Main;
+import com.bartek.models.Course;
 import com.bartek.models.Grade;
 import com.bartek.models.Student;
 
@@ -18,7 +19,16 @@ public class GradesService {
     public List<Grade> getStudentGrades(@PathParam("id") long id) {
         Student student = Main.getDatabase().getStudentByID(id);
         if (student != null){
-            return Main.getDatabase().getGrades(id);
+            List<Grade> grades = Main.getDatabase().getGrades(id);
+//            grades.clear();
+            System.out.println(grades);
+            try {
+                return grades;
+            } catch (Exception e){
+                System.out.println("hey");
+                e.printStackTrace();
+                return null;
+            }
         }
         else throw new NotFoundException();
     }
@@ -29,7 +39,6 @@ public class GradesService {
     public Response postNewGradeForStudent(Grade ng, @PathParam("id") long id, @Context UriInfo uriInfo) throws BadRequestException {
         List<Double> gradesList = Arrays.asList(2.0, 3.0, 3.5, 4.0, 4.5, 5.0);
         Student student = Main.getDatabase().getStudentByID(id);
-
         if (gradesList.contains(ng.getValue()) && ng.getDate().toString().length() > 0 && ng.getCourse() != null){
             Grade grade = Main.getDatabase().addGrade(student, ng.getCourse(), ng);
             UriBuilder builder = uriInfo.getAbsolutePathBuilder();

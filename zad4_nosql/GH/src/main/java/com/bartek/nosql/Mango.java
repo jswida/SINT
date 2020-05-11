@@ -10,6 +10,7 @@ import org.mongodb.morphia.query.Query;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,8 +28,8 @@ public class Mango {
         final Morphia morphia = new Morphia();
         morphia.mapPackage("models");
 
-        datastore = morphia.createDatastore(new MongoClient("localhost", 8004), "sint_db_6");
-        this.datastore.enableDocumentValidation();
+        datastore = morphia.createDatastore(new MongoClient("localhost", 8004), "sint_db_7");
+        datastore.enableDocumentValidation();
         datastore.ensureIndexes();
 
         this.loadMango();
@@ -39,13 +40,7 @@ public class Mango {
         return instance;
     }
 
-    public void loadMango() {
-        if (debug) {
-            datastore.delete(datastore.createQuery(Course.class));
-            datastore.delete(datastore.createQuery(Student.class));
-            datastore.delete(datastore.createQuery(Grade.class));
-            datastore.delete(datastore.createQuery(Seq.class));
-        }
+    public void printCurrentStatus() {
         System.out.println("CURRENT DB STATE");
         System.out.println("Students \t Courses \t Grades");
         System.out.print(datastore.getCount(Student.class));
@@ -53,6 +48,17 @@ public class Mango {
         System.out.print(datastore.getCount(Course.class));
         System.out.print("\t\t\t");
         System.out.println(datastore.getCount(Grade.class));
+    }
+
+    public void loadMango() {
+        if (debug) {
+            datastore.delete(datastore.createQuery(Course.class));
+            datastore.delete(datastore.createQuery(Student.class));
+            datastore.delete(datastore.createQuery(Grade.class));
+            datastore.delete(datastore.createQuery(Seq.class));
+        }
+
+        this.printCurrentStatus();
 
         if (datastore.getCount(Course.class) <= 0 && datastore.getCount(Student.class) <= 0) {
             datastore.save(new Seq(30000L, 2000L, 100L));
@@ -101,6 +107,7 @@ public class Mango {
                 this.datastore.save(grade3);
 
                 System.out.println("Init data created");
+                this.printCurrentStatus();
 
             } catch (Exception e) {
                 System.out.println("Error when creating init data");
@@ -175,11 +182,8 @@ public class Mango {
     }
 
     public List<Grade> getGrades(Long index) throws NotFoundException {
-        Student student = this.getStudentByID(index);
-        if(student != null){
-            return datastore.createQuery(Grade.class).field("studentId").equal(student.getIndex()).asList();
-        }
-        throw new NotFoundException();
+        List<Grade> grades = datastore.createQuery(Grade.class).field("studentId").equal(index).asList();
+        return grades;
     }
 
     public List<Grade> getGradesFiltered(Long index, int courseId, double value, String order) throws NotFoundException {
@@ -216,6 +220,7 @@ public class Mango {
         datastore.delete(datastore.find(Grade.class).field("course").equal(course));
         datastore.delete(course);
     }
+
     public void deleteGrade(Grade grade) {
         datastore.delete(grade);
     }
@@ -243,10 +248,10 @@ public class Mango {
     }
 
     public Grade addGrade(Student student, Course course, Grade newGrade) throws NotFoundException, BadRequestException {
-        if (newGrade.getDate() != null && newGrade.getValue() > 0) {
+        Course existedCourse = datastore.find(Course.class).field("id").equal(course.getId()).get();
+        if (newGrade.getDate() != null && newGrade.getValue() > 0 &&  existedCourse != null) {
             Long id = this.nextGradeId();
-            Grade grade = new Grade(id, newGrade.getValue(), newGrade.getDate(), course, student.getIndex(), student);
-            // save course separately?
+            Grade grade = new Grade(id, newGrade.getValue(), newGrade.getDate(), existedCourse, student.getIndex(), student);
             datastore.save(grade);
             return this.getGradeByID(student, id);
         }
@@ -283,8 +288,9 @@ public class Mango {
             grade.setValue(newGrade.getValue());
         if (newGrade.getDate() != null)
             grade.setDate(newGrade.getDate());
-        if (newGrade.getCourse() != null){
-            grade.setCourse(newGrade.getCourse());
+        if (newGrade.getCourse() != null) {
+            Course course = getCourseByID(newGrade.getCourse().getId());
+            grade.setCourse(course);
         }
 
         datastore.save(grade);

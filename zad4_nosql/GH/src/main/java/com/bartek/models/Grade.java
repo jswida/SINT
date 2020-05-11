@@ -71,6 +71,8 @@ public class Grade {
     private Course course;
 
     @XmlTransient
+//    @JsonIgnore
+//    @Reference
     private long studentId;
 
     @JsonIgnore

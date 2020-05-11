@@ -17,7 +17,7 @@ import static com.bartek.Storage.*;
 
 
 public class Mango {
-    private static final boolean debug = false;
+    private static final boolean debug = true;
 
 
     private static Mango instance = new Mango();
@@ -40,20 +40,20 @@ public class Mango {
     }
 
     public void loadMango() {
-        System.out.println("Students \t Courses \t Grades");
-        System.out.print(datastore.getCount(Student.class));
-        System.out.print("\t");
-        System.out.print(datastore.getCount(Course.class));
-        System.out.print("\t");
-        System.out.println(datastore.getCount(Grade.class));
-
-
         if (debug) {
             datastore.delete(datastore.createQuery(Course.class));
             datastore.delete(datastore.createQuery(Student.class));
             datastore.delete(datastore.createQuery(Grade.class));
             datastore.delete(datastore.createQuery(Seq.class));
         }
+        System.out.println("CURRENT DB STATE");
+        System.out.println("Students \t Courses \t Grades");
+        System.out.print(datastore.getCount(Student.class));
+        System.out.print("\t\t\t");
+        System.out.print(datastore.getCount(Course.class));
+        System.out.print("\t\t\t");
+        System.out.println(datastore.getCount(Grade.class));
+
         if (datastore.getCount(Course.class) <= 0 && datastore.getCount(Student.class) <= 0) {
             datastore.save(new Seq(30000L, 2000L, 100L));
             try {

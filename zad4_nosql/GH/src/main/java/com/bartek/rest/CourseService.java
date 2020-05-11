@@ -35,7 +35,7 @@ public class CourseService {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response updateCourse(@PathParam("id") Long updatedCourseId, Course newCourse) throws NotFoundException {
         Course course = Main.getDatabase().getCourseByID(updatedCourseId);
-        if (newCourse.getName() != null && newCourse.getLecturer() != null) {
+        if (newCourse.getName().length() > 0 && newCourse.getLecturer().length() > 0) {
             course = Main.getDatabase().updateCourse(course, newCourse);
             return Response.ok(course).status(204).build();
         } else {

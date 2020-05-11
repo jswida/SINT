@@ -1,6 +1,5 @@
 package com.bartek.models;
 
-import com.bartek.rest.CourseService;
 import com.bartek.rest.CoursesService;
 import org.glassfish.jersey.linking.Binding;
 import org.glassfish.jersey.linking.InjectLink;

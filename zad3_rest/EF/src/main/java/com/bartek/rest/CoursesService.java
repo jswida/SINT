@@ -3,12 +3,10 @@ package com.bartek.rest;
 
 import com.bartek.Storage;
 import com.bartek.models.Course;
-import com.bartek.models.Student;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
-import java.util.Set;
 
 @Path("/courses")
 public class CoursesService {

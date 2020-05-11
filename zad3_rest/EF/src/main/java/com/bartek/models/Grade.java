@@ -1,6 +1,7 @@
 package com.bartek.models;
 
-import com.bartek.rest.*;
+import com.bartek.rest.CourseService;
+import com.bartek.rest.GradesService;
 import org.glassfish.jersey.linking.Binding;
 import org.glassfish.jersey.linking.InjectLink;
 import org.glassfish.jersey.linking.InjectLinks;
@@ -93,10 +94,6 @@ public class Grade {
 
     public void setValue(double value) {
         this.value = value;
-    }
-
-    public void setValueGV(GradeValue valueGV) {
-        this.value = valueGV.getValue();
     }
 
     public Date getDate() {

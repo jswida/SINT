@@ -5,11 +5,10 @@ import com.bartek.models.Grade;
 import com.bartek.models.Student;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Path("/students/{id}/grades/{gradeId}")
 public class GradeService {

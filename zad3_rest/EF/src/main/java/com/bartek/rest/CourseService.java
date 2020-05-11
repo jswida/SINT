@@ -5,8 +5,8 @@ import com.bartek.Storage;
 import com.bartek.models.Course;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.*;
-import java.util.List;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("/courses/{id}")
 public class CourseService {

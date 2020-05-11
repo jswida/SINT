@@ -1,9 +1,8 @@
 package com.bartek;
 
-import com.bartek.models.Grade;
-import com.bartek.models.GradeValue;
-import com.bartek.models.Student;
 import com.bartek.models.Course;
+import com.bartek.models.Grade;
+import com.bartek.models.Student;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;

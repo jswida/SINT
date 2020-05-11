@@ -1,8 +1,5 @@
 package com.bartek.models;
 
-import com.bartek.rest.GradeService;
-import com.bartek.rest.GradesService;
-import com.bartek.rest.StudentService;
 import com.bartek.rest.StudentsService;
 import org.glassfish.jersey.linking.Binding;
 import org.glassfish.jersey.linking.InjectLink;
@@ -11,7 +8,8 @@ import org.glassfish.jersey.linking.InjectLinks;
 import javax.ws.rs.core.Link;
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)

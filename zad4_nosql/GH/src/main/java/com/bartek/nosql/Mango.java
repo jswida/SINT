@@ -28,7 +28,7 @@ public class Mango {
         final Morphia morphia = new Morphia();
         morphia.mapPackage("models");
 
-        datastore = morphia.createDatastore(new MongoClient("localhost", 8004), "sint_db");
+        datastore = morphia.createDatastore(new MongoClient("localhost", 8004), "sint_db2");
         datastore.enableDocumentValidation();
         datastore.ensureIndexes();
 
@@ -182,17 +182,27 @@ public class Mango {
     }
 
     public List<Grade> getGrades(Long index) throws NotFoundException {
-        List<Grade> grades = datastore.createQuery(Grade.class).field("studentId").equal(index).asList();
-        return grades;
+        return datastore.createQuery(Grade.class).field("studentId").equal(index).asList();
     }
 
-    public List<Grade> getGradesFiltered(Long index, int courseId, double value, String compare, Date date, String dateCompare) throws NotFoundException {
+    public List<Grade> getGradesFiltered(Long index, String courseId, double value, String compare, Date date, String dateCompare) throws NotFoundException {
         Student student = this.getStudentByID(index);
         Query<Grade> query = datastore.find(Grade.class).field("studentId").equal(student.getIndex());
-        Course course = datastore.createQuery(Course.class).field("id").equal(courseId).get();
-        if (course != null) {
-            query.field("course").equal(course);
+
+        // Grade has only Course field, not courseId
+        // have to check if: courseId is in correct format and if this course exists
+        if (courseId != null) {
+            try {
+                Long courseIdToLong = Long.valueOf(courseId);
+                Course course = datastore.createQuery(Course.class).asList().stream().filter(c -> c.getId().equals(courseIdToLong)).findFirst().orElse(null);
+                if (course != null) {
+                    query.field("course").equal(course);
+                }
+            } catch (NumberFormatException e) {
+                query.field("id").equal(-1L); // if courseId is incorrect - make query return nothing
+            }
         }
+//        System.out.println(courseId);
         if (value > 0) {
             if (compare != null && compare.equals("1")) {
                 query.field("value").greaterThan(value);

@@ -19,7 +19,7 @@ public class GradesService {
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Grade> getStudentGrades(@PathParam("id") long id,
-                                        @QueryParam("course") int courseId,
+                                        @QueryParam("course") String courseId,
                                         @QueryParam("value") double value,
                                         @QueryParam("valueCompare") String compare,
                                         @QueryParam("date") String date,

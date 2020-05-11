@@ -20,7 +20,7 @@ public class GradesService {
         Student student = Main.getDatabase().getStudentByID(id);
         if (student != null){
             List<Grade> grades = Main.getDatabase().getGrades(id);
-            System.out.println(grades);
+//            System.out.println(grades);
             return grades;
 
         }

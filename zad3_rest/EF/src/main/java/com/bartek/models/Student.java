@@ -47,18 +47,15 @@ public class Student {
     private String lastName;
     @XmlElement
     private Date birthday;
-    @XmlTransient
-    private Set<Grade> grades = new HashSet<>();
 
     public Student() {
     }
 
-    public Student(Long index, String firstName, String lastName, Date birthday, Set<Grade> grades) {
+    public Student(Long index, String firstName, String lastName, Date birthday) {
         this.index = index;
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthday = birthday;
-        this.grades = grades;
     }
 
 
@@ -95,22 +92,6 @@ public class Student {
         this.birthday = birthday;
     }
 
-    @XmlTransient
-    public Set<Grade> getGrades() {
-        return grades;
-    }
-
-    public void setGrades(Set<Grade> grades) {
-        this.grades = grades;
-        for (Grade grade : this.grades){
-            grade.setStudentId(this.index);
-        }
-    }
-
-    public void setGrade(Grade grade) {
-        this.grades.add(grade);
-    }
-
     @Override
     public String toString() {
         return "com.bartek.models.Student{" +
@@ -118,7 +99,6 @@ public class Student {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", birthday=" + birthday +
-                ", grades=" + grades +
                 '}';
     }
 

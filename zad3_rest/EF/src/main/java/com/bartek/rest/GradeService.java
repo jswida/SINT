@@ -9,6 +9,7 @@ import javax.ws.rs.core.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Path("/students/{id}/grades/{gradeId}")
 public class GradeService {
@@ -18,7 +19,7 @@ public class GradeService {
     public Response getStudentGradeById(@PathParam("id") long id, @PathParam("gradeId") long gradeId) {
         Student student = Storage.getStudents().stream().filter(s -> s.getIndex() == id).findFirst().orElse(null);
         if (student != null) {
-            Grade grade = student.getGrades().stream().filter(s -> s.getId().equals(gradeId)).findFirst().orElse(null);
+            Grade grade = Storage.getGrades().stream().filter(s -> s.getStudentId() == id && s.getId() == gradeId).findFirst().orElse(null);
             if (grade != null) {
                 return Response.ok(grade).build();
             } else {
@@ -31,10 +32,10 @@ public class GradeService {
 
     @DELETE
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Response deleteStudent(@PathParam("id") long id, @PathParam("gradeId") long gradeId) throws NotFoundException {
+    public Response deleteGrade(@PathParam("id") long id, @PathParam("gradeId") long gradeId) throws NotFoundException {
         Student student = Storage.getStudents().stream().filter(s -> s.getIndex().equals(id)).findFirst().orElse(null);
         if (student != null) {
-            Grade grade = student.getGrades().stream().filter(s -> s.getId().equals(gradeId)).findFirst().orElse(null);
+            Grade grade = Storage.getGrades().stream().filter(s -> s.getStudentId() == id && s.getId() == gradeId).findFirst().orElse(null);
             if (grade != null) {
                 Storage.delete(Grade.class, gradeId);
                 return Response.noContent().build();
@@ -56,7 +57,7 @@ public class GradeService {
         List<Double> gradesList = Arrays.asList(2.0, 3.0, 3.5, 4.0, 4.5, 5.0);
         Student student = Storage.getStudents().stream().filter(s -> s.getIndex().equals(id)).findFirst().orElse(null);
         if (student != null) {
-            Grade grade = student.getGrades().stream().filter(s -> s.getId().equals(gradeId)).findFirst().orElse(null);
+            Grade grade = Storage.getGrades().stream().filter(s -> s.getStudentId() == id && s.getId() == gradeId).findFirst().orElse(null);
             if (grade != null) {
                 if (gradesList.contains(newGrade.getValue())) {
                     grade = Storage.updateGrade(gradeId, newGrade);

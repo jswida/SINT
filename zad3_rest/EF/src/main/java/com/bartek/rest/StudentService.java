@@ -23,21 +23,6 @@ public class StudentService {
         else throw new NotFoundException();
     }
 
-    @GET
-    @Path("/courses")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Set<Course> getStudentCourses(@PathParam("id") long id) {
-        Student student = Storage.getStudents().stream().filter(s -> s.getIndex() == id).findFirst().orElse(null);
-        if (student != null) {
-            Set<Course> studentCourses = new HashSet<Course>();
-            for (Grade grade : student.getGrades()) {
-                Course course = Storage.getCourses().stream().filter(s -> s.getId().equals(grade.getCourse().getId())).findFirst().orElse(null);
-                if (course != null) studentCourses.add(course);
-            }
-            return studentCourses;
-        } else throw new NotFoundException();
-    }
-
 
     @DELETE
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})

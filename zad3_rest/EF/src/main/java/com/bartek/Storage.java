@@ -28,16 +28,16 @@ public class Storage {
         // student
         if (object == Student.class) {
             Student student = students.stream().filter(s -> s.getIndex().equals(id)).findFirst().orElse(null);
-            if (student != null) students.remove(student);
+            if (student != null) {
+                grades.removeIf(g -> g.getStudentId() == student.getIndex());
+                students.remove(student);
+            }
             else throw new NotFoundException();
         }
         // grade
         else if (object == Grade.class) {
             Grade grade = grades.stream().filter(s -> s.getId().equals(id)).findFirst().orElse(null);
             if (grade != null) {
-                for (Student student : students) {
-                    student.getGrades().remove(grade); // does it work ?
-                }
                 grades.remove(grade);
             } else throw new NotFoundException();
         }
@@ -46,7 +46,6 @@ public class Storage {
             Course course = courses.stream().filter(s -> s.getId().equals(id)).findFirst().orElse(null);
             if (course != null) {
                 grades.removeIf(g -> g.getCourse().getId().equals(id));
-                students.forEach(s -> s.getGrades().removeIf(g -> g.getCourse().getId().equals(id)));
                 courses.remove(course);
             } else throw new NotFoundException();
         }
@@ -59,11 +58,6 @@ public class Storage {
             student.setName(ns.getFirstName());
             student.setSurname(ns.getLastName());
             student.setBirthday(ns.getBirthday());
-//            if (ns.getGrades() != null){
-//                student.setGrades(ns.getGrades());
-//            }
-//            else {
-            student.setGrades(new HashSet<>());
 
             studentID++;
             students.add(student);
@@ -87,7 +81,8 @@ public class Storage {
         Grade grade = addGrade(ng);
         Student student = students.stream().filter(s -> s.getIndex().equals(gradeStudentId)).findFirst().orElse(null);
         if (student != null) {
-            student.getGrades().add(grade);
+            grade.setStudentId(student.getIndex());
+            grade.setStudent(student);
             return grade;
         } else throw new NotFoundException();
 
@@ -118,14 +113,6 @@ public class Storage {
                 student.setBirthday(newStudent.getBirthday());
             }
 
-            if (newStudent.getGrades() != null ){
-                Set<Grade> newGrades = newStudent.getGrades();
-                for (Grade grade : newGrades){
-                    if (grade != null) {
-                        student.getGrades().add(grade);
-                    }
-                }
-            }
             return student;
         }
 
@@ -137,7 +124,6 @@ public class Storage {
         if (grade != null) {
             if (newGrade.getValue() != 0) {
                 grade.setValue(newGrade.getValue());
-//                grade.setValue(newGrade.getValue());
             }
             if (newGrade.getDate() != null && newGrade.getDate().toString().length() > 0) {
                 grade.setDate(newGrade.getDate());
@@ -180,9 +166,12 @@ public class Storage {
         Student student3 = generateStudent("Terry", "Cerry");
 
 
-        student1.setGrade(grade1);
-        student2.setGrade(grade2);
-        student3.setGrade(grade3);
+        grade1.setStudent(student1);
+        grade1.setStudentId(student1.getIndex());
+        grade2.setStudent(student2);
+        grade2.setStudentId(student2.getIndex());
+        grade3.setStudent(student3);
+        grade3.setStudentId(student3.getIndex());
 
         students = new ArrayList<>();
         grades = new ArrayList<>();

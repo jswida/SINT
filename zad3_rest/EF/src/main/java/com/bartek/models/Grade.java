@@ -45,8 +45,6 @@ public class Grade {
 
     @XmlElement
     private Long id;
-//    @XmlElement
-//    private GradeValue valueGV;
     @XmlElement
     private double value;
     @XmlElement
@@ -55,23 +53,26 @@ public class Grade {
     private Course course;
     @XmlTransient
     private long studentId;
+//    @JsonIgnore
+//    @Reference
+    @XmlTransient
+    Student student;
 
     public Grade( ) {
     }
 
 
-
-    public Grade(Long id, String value, Date date, Course course) {
+    public Grade(Long id, double value, Date date, Course course, long studentId, Student student) {
         this.id = id;
-//        this.valueGV = GradeValue.valueOf(value);
-        this.value = Double.parseDouble(value);
+        this.value = value;
         this.date = date;
         this.course = course;
+        this.studentId = studentId;
+        this.student = student;
     }
 
     public Grade(Long id, double value, Date date, Course course) {
         this.id = id;
-//        this.valueGV = GradeValue.valueOf(String.valueOf(value));
         this.value = value;
         this.date = date;
         this.course = course;
@@ -85,22 +86,16 @@ public class Grade {
         this.id = id;
     }
 
-//    public GradeValue getValueGV() {
-//        return valueGV;
-//    }
 
-//    @XmlElement(name="value")
     public double getValue() {
         return value;
     }
 
     public void setValue(double value) {
-//        this.valueGV = GradeValue.valueOf(String.valueOf(value));
         this.value = value;
     }
 
     public void setValueGV(GradeValue valueGV) {
-//        this.valueGV = valueGV;
         this.value = valueGV.getValue();
     }
 
@@ -128,13 +123,24 @@ public class Grade {
         this.studentId = studentId;
     }
 
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
     @Override
     public String toString() {
         return "Grade{" +
-                "id=" + id +
+                "links=" + links +
+                ", id=" + id +
                 ", value=" + value +
                 ", date=" + date +
                 ", course=" + course +
+                ", studentId=" + studentId +
+                ", student=" + student +
                 '}';
     }
 }

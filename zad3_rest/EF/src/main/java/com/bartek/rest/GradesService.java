@@ -10,15 +10,18 @@ import javax.ws.rs.core.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Path("/students/{id}/grades")
 public class GradesService {
 
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Set<Grade> getStudentGrades(@PathParam("id") long id) {
+    public List<Grade> getStudentGrades(@PathParam("id") long id) {
         Student student = Storage.getStudents().stream().filter(s -> s.getIndex() == id).findFirst().orElse(null);
-        if (student != null) return student.getGrades();
+        if (student != null){
+            return Storage.getGrades().stream().filter(s -> s.getStudentId() == id).collect(Collectors.toList());
+        }
         else throw new NotFoundException();
     }
 
@@ -37,25 +40,7 @@ public class GradesService {
             return Response.noContent().status(400).build();
         }
     }
-//    @GET
-//    @Path("/{id}")
-//    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-//    public Grade getGradeById(@PathParam("id") long id) {
-//        for (Grade grade : Storage.getGrades()) {
-//            if (grade.getId() == id) {
-//                return grade;
-//            }
-//        }
-//        throw new NotFoundException();
-//    }
-//
-//
-//    @DELETE
-//    @Path("/{id}")
-//    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-//    public void deleteGrade(@PathParam("id") long id) {
-//        Storage.delete(Grade.class, id);
-//    }
+
 
 
 

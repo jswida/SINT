@@ -17,8 +17,8 @@ public class Main {
     public static void main(String[] args) throws IOException {
         Storage db = new Storage();
         final HttpServer server = startServer();
-//        System.out.println(String.format("Jersey app started with WADL available at "
-//                + "%sapplication.wadl\nHit enter to stop it...", BASE_URI));
+        System.out.println(String.format("Jersey app started with WADL available at "
+                + "%sapplication.wadl\nHit enter to stop it...", BASE_URI));
 
         System.in.read();
         server.shutdown();
@@ -26,8 +26,6 @@ public class Main {
 
 
     public static HttpServer startServer() {
-        // create a resource config that scans for JAX-RS resources and providers
-        // in com.example.rest package
         ResourceConfig config = new ResourceConfig(
                 StudentService.class,
                 StudentsService.class,

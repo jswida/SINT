@@ -18,7 +18,7 @@ import static com.bartek.Storage.*;
 
 
 public class Mango {
-    private static final boolean debug = false;
+    private static final boolean debug = true;
 
 
     private static Mango instance = new Mango();
@@ -186,7 +186,7 @@ public class Mango {
         return grades;
     }
 
-    public List<Grade> getGradesFiltered(Long index, int courseId, double value, String order) throws NotFoundException {
+    public List<Grade> getGradesFiltered(Long index, int courseId, double value, String compare) throws NotFoundException {
         Student student = this.getStudentByID(index);
         Query<Grade> query = datastore.find(Grade.class).field("studentId").equal(student.getIndex());
         Course course = datastore.createQuery(Course.class).field("id").equal(courseId).get();
@@ -194,12 +194,12 @@ public class Mango {
             query.field("course").equal(course);
         }
         if (value > 0) {
-            if (order != null && order.equals("eq")) {
-                query.field("grade").equal(value);
-            } else if (order != null && order.equals("gt")) {
-                query.field("grade").greaterThan(value);
-            } else if (order != null && order.equals("lt")) {
-                query.field("grade").lessThan(value);
+            if (compare != null && compare.equals("1")) {
+                query.field("value").greaterThan(value);
+            } else if (compare != null && compare.equals("-1")) {
+                query.field("value").lessThan(value);
+            } else {
+                query.field("value").equal(value);
             }
         }
         return query.asList();

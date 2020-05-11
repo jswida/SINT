@@ -2,9 +2,11 @@ package com.bartek.rest;
 
 import com.bartek.Main;
 import com.bartek.models.Student;
+import com.bartek.nosql.DateParamConverterProvider;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.util.Date;
 import java.util.List;
 
 @Path("/students")
@@ -12,9 +14,9 @@ public class StudentsService {
 
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Student> getAllStudents() {
-        
-        return Main.getDatabase().getStudents();
+    public List<Student> getAllStudents(@QueryParam("birthday") String date, @QueryParam("order") String order, @QueryParam("firstName") String firstName, @QueryParam("lastName") String lastName) {
+        Date birthday = new DateParamConverterProvider("yyyy-MM-dd").getConverter(Date.class, Date.class, null).fromString(date);
+        return Main.getDatabase().getStudentsFiltered(firstName, lastName, birthday, order);
     }
 
     @POST

@@ -144,15 +144,15 @@ public class Mango {
             query.field("firstName").containsIgnoreCase(firstNameFilter);
         if (lastNameFilter != null && !lastNameFilter.isEmpty())
             query.field("lastName").containsIgnoreCase(lastNameFilter);
-//        if (birthDate != null) {
-//            if (order != null && order.equals("eq")) {
-//                query.field("dateOfBirth").equal(birthDate);
-//            } else if (order != null && order.equals("gt")) {
-//                query.field("dateOfBirth").greaterThan(birthDate);
-//            } else if (order != null && order.equals("lt")) {
-//                query.field("dateOfBirth").lessThan(birthDate);
-//            }
-//        }
+        if (birthDate != null) {
+            if (order != null && order.equals("eq")) {
+                query.field("dateOfBirth").equal(birthDate);
+            } else if (order != null && order.equals("gt")) {
+                query.field("dateOfBirth").greaterThan(birthDate);
+            } else if (order != null && order.equals("lt")) {
+                query.field("dateOfBirth").lessThan(birthDate);
+            }
+        }
         return query.asList();
     }
 
@@ -166,12 +166,12 @@ public class Mango {
         return datastore.createQuery(Course.class).asList();
     }
 
-    public List<Course> getCoursesFiltered(String name, String supervisor) {
+    public List<Course> getCoursesFiltered(String name, String lecturer) {
         Query<Course> query = datastore.createQuery(Course.class);
         if (name != null && !name.isEmpty())
             query.field("name").containsIgnoreCase(name);
-        if (supervisor != null && !supervisor.isEmpty())
-            query.field("lecturer").containsIgnoreCase(supervisor);
+        if (lecturer != null && !lecturer.isEmpty())
+            query.field("lecturer").containsIgnoreCase(lecturer);
         return query.asList();
     }
 
@@ -189,17 +189,19 @@ public class Mango {
     public List<Grade> getGradesFiltered(Long index, int courseId, double value, String order) throws NotFoundException {
         Student student = this.getStudentByID(index);
         Query<Grade> query = datastore.find(Grade.class).field("studentId").equal(student.getIndex());
-        if (courseId > 0)
-            query.field("courseId").equal(courseId);
-//        if (value > 0) {
-//            if (order != null && order.equals("eq")) {
-//                query.field("grade").equal(value);
-//            } else if (order != null && order.equals("gt")) {
-//                query.field("grade").hasAnyOf();
-//            } else if (order != null && order.equals("lt")) {
-//                query.field("grade").hasAnyOf();
-//            }
-//        }
+        Course course = datastore.createQuery(Course.class).field("id").equal(courseId).get();
+        if (course != null) {
+            query.field("course").equal(course);
+        }
+        if (value > 0) {
+            if (order != null && order.equals("eq")) {
+                query.field("grade").equal(value);
+            } else if (order != null && order.equals("gt")) {
+                query.field("grade").greaterThan(value);
+            } else if (order != null && order.equals("lt")) {
+                query.field("grade").lessThan(value);
+            }
+        }
         return query.asList();
     }
 

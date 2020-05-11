@@ -16,11 +16,10 @@ public class GradesService {
 
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Grade> getStudentGrades(@PathParam("id") long id) {
+    public List<Grade> getStudentGrades(@PathParam("id") long id, @QueryParam("course") int courseId, @QueryParam("value") double value, @QueryParam("order") String order) {
         Student student = Main.getDatabase().getStudentByID(id);
         if (student != null){
-            List<Grade> grades = Main.getDatabase().getGrades(id);
-            return grades;
+            return Main.getDatabase().getGradesFiltered(id, courseId, value, order);
 
         }
         else throw new NotFoundException();

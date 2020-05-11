@@ -2,9 +2,14 @@ package com.bartek.models;
 
 import com.bartek.rest.CourseService;
 import com.bartek.rest.GradesService;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.bson.types.ObjectId;
 import org.glassfish.jersey.linking.Binding;
 import org.glassfish.jersey.linking.InjectLink;
 import org.glassfish.jersey.linking.InjectLinks;
+import org.mongodb.morphia.annotations.*;
 
 import javax.ws.rs.core.Link;
 import javax.xml.bind.annotation.*;
@@ -12,8 +17,12 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.Date;
 import java.util.List;
 
+@Entity
 @XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
+@Indexes(
+        @Index(fields = @Field("id"), options = @IndexOptions(unique = true))
+)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Grade {
     @InjectLinks({
             @InjectLink(
@@ -42,20 +51,29 @@ public class Grade {
     @XmlElement(name = "link")
     @XmlElementWrapper(name = "links")
     @XmlJavaTypeAdapter(Link.JaxbAdapter.class)
+    @Transient
     List<Link> links;
 
-    @XmlElement
+    @XmlTransient
+    @Id
+    ObjectId _id;
+
     private Long id;
-    @XmlElement
+
     private double value;
-    @XmlElement
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "CET")
     private Date date;
-    @XmlElement
+
+    @XmlElement(name = "course")
+    @Reference
     private Course course;
+
     @XmlTransient
     private long studentId;
-//    @JsonIgnore
-//    @Reference
+
+    @JsonIgnore
+    @Reference
     @XmlTransient
     Student student;
 
@@ -128,10 +146,19 @@ public class Grade {
         this.student = student;
     }
 
+    public ObjectId get_id() {
+        return _id;
+    }
+
+    public void set_id(ObjectId _id) {
+        this._id = _id;
+    }
+
     @Override
     public String toString() {
         return "Grade{" +
                 "links=" + links +
+                ", _id=" + _id +
                 ", id=" + id +
                 ", value=" + value +
                 ", date=" + date +

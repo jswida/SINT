@@ -1,9 +1,12 @@
 package com.bartek.models;
 
 import com.bartek.rest.StudentsService;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.bson.types.ObjectId;
 import org.glassfish.jersey.linking.Binding;
 import org.glassfish.jersey.linking.InjectLink;
 import org.glassfish.jersey.linking.InjectLinks;
+import org.mongodb.morphia.annotations.*;
 
 import javax.ws.rs.core.Link;
 import javax.xml.bind.annotation.*;
@@ -11,8 +14,11 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.Date;
 import java.util.List;
 
+@Entity
 @XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
+@Indexes(
+        @Index(fields = {@Field("index")}, options = @IndexOptions(unique = true))
+)
 public class Student {
     @InjectLinks({
             @InjectLink(
@@ -35,15 +41,21 @@ public class Student {
     @XmlElement(name = "link")
     @XmlElementWrapper(name = "links")
     @XmlJavaTypeAdapter(Link.JaxbAdapter.class)
+    @Transient
     List<Link> links;
 
-    @XmlElement
+    @XmlTransient
+    @Id
+    ObjectId _id;
+
+
     private Long index; // index
-    @XmlElement
+
     private String firstName;
-    @XmlElement
+
     private String lastName;
-    @XmlElement
+
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="CET")
     private Date birthday;
 
     public Student() {
@@ -64,7 +76,6 @@ public class Student {
     public void setIndex(Long index) {
         this.index = index;
     }
-
 
     public String getFirstName() {
         return firstName;
@@ -90,17 +101,31 @@ public class Student {
         this.birthday = birthday;
     }
 
+    public ObjectId get_id() {
+        return _id;
+    }
+
+    public void set_id(ObjectId _id) {
+        this._id = _id;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     @Override
     public String toString() {
-        return "com.bartek.models.Student{" +
-                "index=" + index +
+        return "Student{" +
+                "links=" + links +
+                ", _id=" + _id +
+                ", index=" + index +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", birthday=" + birthday +
                 '}';
-    }
-
-    public void clearLinks() {
-        this.links = null;
     }
 }

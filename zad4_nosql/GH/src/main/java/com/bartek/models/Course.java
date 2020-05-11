@@ -1,17 +1,22 @@
 package com.bartek.models;
 
 import com.bartek.rest.CoursesService;
+import org.bson.types.ObjectId;
 import org.glassfish.jersey.linking.Binding;
 import org.glassfish.jersey.linking.InjectLink;
 import org.glassfish.jersey.linking.InjectLinks;
+import org.mongodb.morphia.annotations.*;
 
 import javax.ws.rs.core.Link;
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.List;
 
+@Entity
 @XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
+@Indexes(
+        @Index(fields = {@Field("id")}, options = @IndexOptions(unique = true))
+)
 public class Course {
     @InjectLinks({
             @InjectLink(
@@ -28,13 +33,17 @@ public class Course {
     @XmlElement(name = "link")
     @XmlElementWrapper(name = "links")
     @XmlJavaTypeAdapter(Link.JaxbAdapter.class)
+    @Transient
     List<Link> links;
 
-    @XmlElement
+    @XmlTransient
+    @Id
+    ObjectId _id;
+
     private Long id;
-    @XmlElement
+
     private String name;
-    @XmlElement
+
     private String lecturer;
 
     public Course() {
@@ -70,10 +79,20 @@ public class Course {
         this.lecturer = lecturer;
     }
 
+    public ObjectId get_id() {
+        return _id;
+    }
+
+    public void set_id(ObjectId _id) {
+        this._id = _id;
+    }
+
     @Override
     public String toString() {
-        return "com.bartek.models.Subject{" +
-                "id=" + id +
+        return "Course{" +
+                "links=" + links +
+                ", _id=" + _id +
+                ", id=" + id +
                 ", name='" + name + '\'' +
                 ", lecturer='" + lecturer + '\'' +
                 '}';

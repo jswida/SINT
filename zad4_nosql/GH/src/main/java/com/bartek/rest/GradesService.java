@@ -4,10 +4,12 @@ import com.bartek.Main;
 import com.bartek.models.Course;
 import com.bartek.models.Grade;
 import com.bartek.models.Student;
+import com.bartek.nosql.DateParamConverterProvider;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,10 +18,17 @@ public class GradesService {
 
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Grade> getStudentGrades(@PathParam("id") long id, @QueryParam("course") int courseId, @QueryParam("value") double value, @QueryParam("valueCompare") String compare) {
+    public List<Grade> getStudentGrades(@PathParam("id") long id,
+                                        @QueryParam("course") int courseId,
+                                        @QueryParam("value") double value,
+                                        @QueryParam("valueCompare") String compare,
+                                        @QueryParam("date") String date,
+                                        @QueryParam("dateCompare") String dateCompare
+                                        ) {
+        Date gradeDate = new DateParamConverterProvider("yyyy-MM-dd").getConverter(Date.class, Date.class, null).fromString(date);
         Student student = Main.getDatabase().getStudentByID(id);
         if (student != null){
-            return Main.getDatabase().getGradesFiltered(id, courseId, value, compare);
+            return Main.getDatabase().getGradesFiltered(id, courseId, value, compare, gradeDate, dateCompare);
 
         }
         else throw new NotFoundException();

@@ -186,7 +186,7 @@ public class Mango {
         return grades;
     }
 
-    public List<Grade> getGradesFiltered(Long index, int courseId, double value, String compare) throws NotFoundException {
+    public List<Grade> getGradesFiltered(Long index, int courseId, double value, String compare, Date date, String dateCompare) throws NotFoundException {
         Student student = this.getStudentByID(index);
         Query<Grade> query = datastore.find(Grade.class).field("studentId").equal(student.getIndex());
         Course course = datastore.createQuery(Course.class).field("id").equal(courseId).get();
@@ -200,6 +200,15 @@ public class Mango {
                 query.field("value").lessThan(value);
             } else {
                 query.field("value").equal(value);
+            }
+        }
+        if (date != null) {
+            if (dateCompare != null && dateCompare.equals("1")) {
+                query.field("date").greaterThan(date);
+            } else if (dateCompare != null && dateCompare.equals("-1")) {
+                query.field("date").lessThan(date);
+            } else {
+                query.field("date").equal(date);
             }
         }
         return query.asList();

@@ -73,6 +73,10 @@ public class Grade {
 
     @XmlTransient
     @JsonIgnore
+    private long courseId;
+
+    @XmlTransient
+    @JsonIgnore
 //    @Reference
     private long studentId;
 
@@ -85,11 +89,12 @@ public class Grade {
     }
 
 
-    public Grade(Long id, double value, Date date, Course course, long studentId, Student student) {
+    public Grade(Long id, double value, Date date, Course course, long courseId, long studentId, Student student) {
         this.id = id;
         this.value = value;
         this.date = date;
         this.course = course;
+        this.courseId = courseId;
         this.studentId = studentId;
         this.student = student;
     }
@@ -148,6 +153,14 @@ public class Grade {
 
     public void setStudent(Student student) {
         this.student = student;
+    }
+
+    public long getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(long courseId) {
+        this.courseId = courseId;
     }
 
     @XmlJavaTypeAdapter(ObjectIdJaxbAdapter.class)

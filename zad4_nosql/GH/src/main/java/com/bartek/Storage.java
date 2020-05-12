@@ -196,6 +196,7 @@ public class Storage {
         grade.setValue(randomGradeValue());
         grade.setDate(new Date());
         grade.setCourse(course);
+        grade.setCourseId(course.getId());
 //        gradeID++;
         return grade;
     }

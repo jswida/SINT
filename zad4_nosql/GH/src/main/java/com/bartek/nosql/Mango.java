@@ -28,7 +28,7 @@ public class Mango {
         final Morphia morphia = new Morphia();
         morphia.mapPackage("models");
 
-        datastore = morphia.createDatastore(new MongoClient("localhost", 8004), "sint_db2");
+        datastore = morphia.createDatastore(new MongoClient("localhost", 8004), "sint_db3");
         datastore.enableDocumentValidation();
         datastore.ensureIndexes();
 
@@ -189,20 +189,15 @@ public class Mango {
         Student student = this.getStudentByID(index);
         Query<Grade> query = datastore.find(Grade.class).field("studentId").equal(student.getIndex());
 
-        // Grade has only Course field, not courseId
-        // have to check if: courseId is in correct format and if this course exists
         if (courseId != null) {
             try {
                 Long courseIdToLong = Long.valueOf(courseId);
-                Course course = datastore.createQuery(Course.class).asList().stream().filter(c -> c.getId().equals(courseIdToLong)).findFirst().orElse(null);
-                if (course != null) {
-                    query.field("course").equal(course);
-                }
+                query.field("courseId").equal(courseIdToLong);
             } catch (NumberFormatException e) {
                 query.field("id").equal(-1L); // if courseId is incorrect - make query return nothing
             }
         }
-//        System.out.println(courseId);
+
         if (value > 0) {
             if (compare != null && compare.equals("1")) {
                 query.field("value").greaterThan(value);
@@ -272,7 +267,7 @@ public class Mango {
         Course existedCourse = datastore.find(Course.class).field("id").equal(course.getId()).get();
         if (newGrade.getDate() != null && newGrade.getValue() > 0 &&  existedCourse != null) {
             Long id = this.nextGradeId();
-            Grade grade = new Grade(id, newGrade.getValue(), newGrade.getDate(), existedCourse, student.getIndex(), student);
+            Grade grade = new Grade(id, newGrade.getValue(), newGrade.getDate(), existedCourse, existedCourse.getId(), student.getIndex(), student);
             datastore.save(grade);
             return this.getGradeByID(student, id);
         }
@@ -312,6 +307,7 @@ public class Mango {
         if (newGrade.getCourse() != null) {
             Course course = getCourseByID(newGrade.getCourse().getId());
             grade.setCourse(course);
+            grade.setCourseId(course.getId());
         }
 
         datastore.save(grade);

@@ -1,0 +1,137 @@
+/* 
+adobe CC
+dark blue: #455073
+blue: #57D6F2
+green: #4BBF89 
+*/
+
+body {
+    background-color: #f7f7f7;
+}
+header {
+    padding: 10px 20px;
+    background: linear-gradient(#7DAEE8, #f7f7f7);
+    font-family: 'Bitter', serif;
+    font-size: 1em;
+}
+
+header div {
+    display: inline-block;
+}
+
+header img {
+    width: 50px;
+    vertical-align: middle;
+    padding-bottom: 15px;
+}
+
+footer {
+    color: #000000;
+    background-color:rgba(75, 191, 137, 0.788);
+    padding: 10px 20px;
+    border-top: 1px solid #333333;
+
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    font-size: 0.7em;
+}
+
+body {
+    margin: 0;
+    color: #202020;
+    font-family: 'Raleway', sans-serif;
+}
+
+article {
+    display: none;
+    overflow-x: scroll;
+    padding: 10px 15px;
+}
+
+article:target {
+    display: block;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover{
+    text-decoration: underline;
+}
+
+input {
+    border-radius:5px;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+thead {
+    background: #455073;
+    color: #f7f7f7;
+}
+
+tr > th{
+    padding: 5px;
+    padding-bottom: 20px;
+}
+
+tr > td {
+    padding: 5px;
+}
+
+th.table-actions{
+    vertical-align: text-top;
+}
+
+tbody > tr:nth-child(odd) {
+    background: #f7f7f7
+}
+
+tbody > tr:nth-child(even) {
+    background: #7DAEE8
+}
+
+tbody > tr {
+    border: 1px solid #f7f7f7;
+}
+
+tbody > tr:hover {
+    background: #4BBF89;
+    border: 1px solid #acacac;
+}
+
+
+.content-nav {
+    padding: 20px;
+}
+
+.content-nav > ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.content-nav > ul > li {
+    float: left;
+  }
+  
+.content-nav > ul > li a {
+    display: block;
+    color: white;
+    background: #455073;
+    text-align: center;
+    padding: 16px;
+    text-decoration: none;
+    border: 1px solid #f7f7f7;
+  }
+  
+.content-nav > ul > li a:hover {
+    background-color: #45507393;
+  }

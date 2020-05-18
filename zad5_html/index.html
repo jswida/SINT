@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Bitter&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
@@ -20,9 +21,11 @@
 
 <div class="content-main">
     <nav class="content-nav">
+        <h2>Menu</h2>
         <ul>
             <li><a class="link-nav" href="#students">Manage students</a></li>
             <li><a class="link-nav" href="#courses">Manage courses</a></li>
+            <li><a class="link-nav" href="#">Empty view</a></li>
         </ul>
     </nav>
 
@@ -58,7 +61,7 @@
                     <td>
                         <input type="date" name="birthdate" value="1999-07-07" min="1930-01-01" max="2030-01-01" required>
                     </td>
-                    <td>
+                    <td class="td-buttons">
                         <button type="button" class="info" onclick="location.href='#grades'">Grades</button>
                         <button type="button" class="danger">Delete</button>
                     </td>
@@ -76,7 +79,7 @@
                     <td>
                         <input type="date" name="birthdate" value="1997-07-07" min="1930-01-01" max="2030-01-01" required>
                     </td>
-                    <td>
+                    <td class="td-buttons">
                         <button type="button" class="info" onclick="location.href='#grades'">Grades</button>
                         <button type="button" class="danger">Delete</button>
                     </td>
@@ -93,7 +96,7 @@
                     <td>
                         <input type="date" name="birthdate" min="1930-01-01" max="2030-01-01" required>
                     </td>
-                    <td>
+                    <td class="td-buttons">
                         <button type="button" class="success">Add new</button>
                     </td>
                 </tr>
@@ -150,7 +153,7 @@
                             <option value="BARDZO_DOBRY">5.0</option>
                         </select>
                     </td>
-                    <td>
+                    <td class="td-buttons">
                         <button type="button" class="danger">Delete</button></td>
                 </tr>
                 <tr>
@@ -173,7 +176,7 @@
                             <option value="BARDZO_DOBRY">5.0</option>
                         </select>
                     </td>
-                    <td>
+                    <td class="td-buttons">
                         <button type="button" class="danger">Delete</button></td>
                 </tr>
                 <tr>
@@ -196,7 +199,7 @@
                             <option value="BARDZO_DOBRY">5.0</option>
                         </select>
                     </td>
-                    <td>
+                    <td class="td-buttons">
                         <button type="button" class="success">Add new</button></td>
                 </tr>
                 </tbody>
@@ -227,7 +230,7 @@
                     <td>
                         <input type="text" name="lecturer" value="Terry Cerry" required>
                     </td>
-                    <td>
+                    <td class="td-buttons">
                         <button type="button" class="danger">Delete</button>
                     </td>
                 </tr>
@@ -241,7 +244,7 @@
                     <td>
                         <input type="text" name="lecturer" value="Derry Ferry" required>
                     </td>
-                    <td>
+                    <td class="td-buttons">
                         <button type="button" class="danger">Delete</button>
                     </td>
                 </tr>
@@ -254,7 +257,7 @@
                     <td>
                         <input type="text" name="lecturer" placeholder="Lecturer name" required>
                     </td>
-                    <td>
+                    <td class="td-buttons">
                         <button type="button" class="success">Add new</button>
                     </td>
                 </tr>

@@ -6,8 +6,9 @@ green: #4BBF89
 */
 
 body {
-    background-color: #f7f7f7;
+    background-color: #ffffff;
 }
+
 header {
     padding: 10px 20px;
     background: linear-gradient(#7DAEE8, #f7f7f7);
@@ -45,10 +46,19 @@ body {
     font-family: 'Raleway', sans-serif;
 }
 
+form {
+    width: auto;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    /* padding-right: 20px; */
+}
+
 article {
     display: none;
     overflow-x: scroll;
     padding: 10px 15px;
+    flex: auto;
 }
 
 article:target {
@@ -65,65 +75,130 @@ a:hover{
 
 input {
     border-radius:5px;
+    border: 1px solid #455073;
+    width: auto;
+    background-color: inherit;
+    padding: 2px;
+    flex: auto;
+    min-width: 25px;
+}
+
+input:invalid {
+    color: black;
+    background-color: rgba(255, 132, 132, 0.808);
 }
 
 table {
     border-collapse: collapse;
+    width: 100%;
+    margin: 0;
+    padding: 0;
 }
+
 
 thead {
     background: #455073;
     color: #f7f7f7;
+
 }
 
-tr > th{
-    padding: 5px;
-    padding-bottom: 20px;
+thead input {
+    border: 1px solid #f7f7f7;
+    color: #f7f7f7;
 }
 
-tr > td {
-    padding: 5px;
+tr{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 10px;
+}
+
+tr th{
+    padding-bottom: 10px;
+
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    flex: 1;
+
+}
+
+tr td {
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex: 1;
+
 }
 
 th.table-actions{
     vertical-align: text-top;
 }
 
-tbody > tr:nth-child(odd) {
+tbody tr:nth-child(odd) {
     background: #f7f7f7
 }
 
-tbody > tr:nth-child(even) {
+tbody tr:nth-child(even) {
     background: #7DAEE8
 }
 
-tbody > tr {
+tbody tr:nth-child(even) input {
     border: 1px solid #f7f7f7;
 }
 
-tbody > tr:hover {
+tbody tr {
+    border: 1px solid #f7f7f7;
+}
+
+tbody tr:hover {
     background: #4BBF89;
     border: 1px solid #acacac;
 }
 
-
-.content-nav {
-    padding: 20px;
+tbody tr:hover input {
+    border: 1px solid #f7f7f7;
 }
 
-.content-nav > ul {
+tbody tr:hover button{
+    border: 1px solid #f7f7f7;
+}
+
+tbody tr input {
+    width: 100%;
+    height: 100%;
+}
+
+
+nav {
+    padding: 10px;
+    padding-left: 20px;
+    width: auto;
+    /* max-width: 15%; */
+
+    flex: auto;
+}
+
+nav ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
-    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
 }
 
-.content-nav > ul > li {
-    float: left;
-  }
+nav li {
+    flex: auto ;
+}
   
-.content-nav > ul > li a {
-    display: block;
+nav ul li a {
+    display: flex;
     color: white;
     background: #455073;
     text-align: center;
@@ -132,6 +207,117 @@ tbody > tr:hover {
     border: 1px solid #f7f7f7;
   }
   
-.content-nav > ul > li a:hover {
+nav ul li a:hover {
     background-color: #45507393;
   }
+
+.td-buttons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-self: center;
+}
+
+.td-buttons > button{
+    flex: auto; 
+}
+
+button {
+    width: auto;
+    height: 100%;
+    background-color: #455073;
+    border: 1px solid #455073;
+    border-radius: 5px;
+    color: white;
+    padding: 6px;
+    text-align: center;
+    text-decoration: none;
+    /* display: inline-block; */
+    font-size: 14px;
+    margin-left: 1px;
+    margin-right: 1px;
+}
+
+button:hover {
+    color: #455073;
+    background-color: #f7f7f7;
+}
+
+button.danger {
+    background-color: rgb(255, 71, 71);
+}
+
+button.danger:hover {
+    color: rgb(255, 71, 71);
+    background-color: #f7f7f7;
+
+}
+
+button.success {
+    background-color: #4BBF89;
+}
+
+button.success:hover {
+    background-color: #f7f7f7;
+    color: #4BBF89;
+}
+
+.content-main {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 100px;
+}
+
+@media print {
+    * {
+        /* Chrome, Opera, Safari */
+        -webkit-print-color-adjust: exact !important;  
+
+        /* Firefox */
+        /* not accepted in CSS validator */
+        /* color-adjust: exact;  */ 
+    }
+    
+    body {
+        color: #000000;
+        background: #ffffff;
+      }
+      
+      header, footer, nav, input[type="search"], th input[type="number"], th input[type="date"], thead select {
+        display: none;
+      }
+      
+      table, thead, table input, thead tr, table tbody tr, tbody tr:nth-child(even), tbody tr:nth-child(odd), thead tr, tbody tr:hover, tbody tr:hover td {
+        background: none;
+        background-color: transparent;
+        border: none;
+      }
+      
+      tbody tr:last-child, td:last-child, th:last-child {
+        display: none;
+      }
+      
+      table {
+        border-collapse: collapse;
+        text-align: center;
+      }
+
+      tr{
+          text-align: center;
+          color: black;
+      }
+    
+      th, td {
+        text-align: center;
+        border-top: 1px solid #868686;
+        border-bottom: 1px solid #868686;
+      }
+
+      td select {
+          border: none;
+          background-color: transparent;
+          text-decoration: none;
+          appearance: none;
+      }
+}

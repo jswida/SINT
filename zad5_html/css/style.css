@@ -152,6 +152,7 @@ tbody tr:nth-child(even) input {
     border: 1px solid #f7f7f7;
 }
 
+
 tbody tr {
     border: 1px solid #f7f7f7;
 }
@@ -168,6 +169,8 @@ tbody tr:hover input {
 tbody tr:hover button{
     border: 1px solid #f7f7f7;
 }
+
+
 
 tbody tr input {
     width: 100%;
@@ -260,6 +263,31 @@ button.success {
 button.success:hover {
     background-color: #f7f7f7;
     color: #4BBF89;
+}
+
+select {
+    position: relative;
+    display: block;
+    width: 100%;
+    margin: 0 auto;
+    /* height: 100%; */
+    background-color: #455073;
+    border: 1px solid #455073;
+    border-radius: 5px;
+    color: white;
+    padding: 5px;
+    text-align: center;
+    text-decoration: none;
+    /* display: inline-block; */
+    font-size: 14px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+th > select {
+    background-color: #f7f7f7;
+    color: #455073;
+    border: 1px solid #f7f7f7;
 }
 
 .content-main {

@@ -1,9 +1,109 @@
 'use strict';
 const SERVER_URL = 'http://localhost:8000';
 
+function loadStudents(model) {
+
+    var jsonData = ko.toJS(model.studentFilters);
+    if (jsonData.birth_date === "") {
+        delete jsonData.birth_date;
+    }
+
+    $.ajax({
+        url: SERVER_URL + '/students',
+        type: 'GET',
+        dataType : "json",
+        data: jsonData,
+        contentType: "application/json"
+    }).done(function(result) {
+        result.forEach(function (record) {
+            model.students.push(new ObservableObject(record));
+        });
+        model.studentSubscription = model.students.subscribe(removedObjectCallback, null, 'arrayChange');
+    });
+}
+
+function loadCourses(model) {
+    var jsonData = ko.toJS(model.courseFilters);
+
+    $.ajax({
+        url: SERVER_URL + '/courses',
+        type: 'GET',
+        dataType : "json",
+        data: jsonData,
+        contentType: "application/json"
+    }).done(function(result) {
+        result.forEach(function (record) {
+            model.courses.push(new ObservableObject(record));
+        });
+        model.courseSubscription = model.courses.subscribe(removedObjectCallback, null, 'arrayChange');
+    });
+}
+
+function loadGrades(model, student) {
+    var jsonData = ko.toJS(model.gradeFilters);
+    // let a = resourceUrl(student, 'grades');
+    $.ajax({
+        url: resourceUrl(student, 'grades'),
+        type: 'GET',
+        dataType : "json",
+        data: jsonData,
+        contentType: "application/json"
+    }).done(function(result) {
+        result.forEach(function (record) {
+            model.grades.push(new ObservableObject(record));
+        });
+    });
+}
+
+function removedObjectCallback(changes) {
+    changes.forEach(function(change) {
+        // Student / Course deleted from database
+        if (change.status === 'deleted') {
+            $.ajax({
+                url: resourceUrl(change.value),
+                type: 'DELETE',
+                dataType : "json",
+                contentType: "application/json"
+            }).done(function() {
+                console.log('Object removed from eStudent service');
+            });
+        }
+    })
+}
+
+function resourceUrl(record, type = 'self') {
+    const links = record.link();
+    const resourceUrl = links.find(function(link) {
+        return link.params.rel() === type
+    });
+
+    return SERVER_URL + resourceUrl.href();
+}
+
+function ObservableObject(data) {
+    var self = this;
+    ko.mapping.fromJS(data, {}, self);
+
+    ko.computed(function() {
+        return ko.mapping.toJSON(self);
+    }).subscribe(function(res) {
+        var resource = ko.mapping.fromJSON(res);
+        $.ajax({
+            url: resourceUrl(resource),
+            type: 'PUT',
+            dataType : "json",
+            contentType: "application/json",
+            data: ko.mapping.toJSON(self)
+        }).done(function(data) {
+            console.log('Record updated');
+        });
+    });
+}
+
 $(document).ready(function(){
-    let StateViewModel = function () {
-        let self = this;
+
+    var StateViewModel = function () {
+        var self = this;
         self.students = ko.observableArray();
         self.courses = ko.observableArray();
         self.grades = ko.observableArray();
@@ -23,7 +123,7 @@ $(document).ready(function(){
         self.newStudent = {
             firstName: ko.observable(),
             lastName: ko.observable(),
-            dateOfBirth: ko.observable()
+            birthday: ko.observable()
         };
         self.studentSubscription = null;
         self.courseSubscription = null;
@@ -58,9 +158,11 @@ $(document).ready(function(){
             self.students.remove(student)
         };
         self.setGrades = function(student) {
+            // location.href = "#grades";
             self.grades.removeAll();
             self.newGrade.student(student);
             self.newGrade.studentIndex(student.index());
+
             loadGrades(self, student);
             self.loaded = true;
 
@@ -83,6 +185,7 @@ $(document).ready(function(){
             self.grades.removeAll();
         };
         self.saveNewStudent = function() {
+            console.log(self.newStudent);
             $.ajax({
                 url: SERVER_URL + '/students',
                 type: 'POST',
@@ -93,8 +196,13 @@ $(document).ready(function(){
                 self.students.push(new ObservableObject(data));
                 self.newStudent.firstName('');
                 self.newStudent.lastName('');
-                self.newStudent.dateOfBirth('');
-            });
+                self.newStudent.birthday('');
+            }).fail(function(xhr, status, error) {
+                console.log(xhr);
+                console.log(status);
+                console.log(error);
+                })
+            ;
         };
         self.saveNewCourse = function() {
             $.ajax({
@@ -138,6 +246,7 @@ $(document).ready(function(){
         });
 
         Object.keys(self.courseFilters).forEach(function (key) {
+
             self.courseFilters[key].subscribe(function (val) {
                 // Disable auto delete from database
                 if (self.courseSubscription) {
@@ -163,106 +272,13 @@ $(document).ready(function(){
                 }
             });
         });
-    }
-    let model = new StateViewModel();
-    ko.applyBindings(model);
+    };
 
+
+
+    var model = new StateViewModel();
+    ko.applyBindings(model);
+    console.log(model);
+    loadStudents(model);
     loadCourses(model);
 });
-
-function ObservableObject(data) {
-    let self = this;
-    ko.mapping.fromJS(data, {}, self);
-
-    ko.computed(function() {
-        return ko.mapping.toJSON(self);
-    }).subscribe(function(res) {
-        let resource = ko.mapping.fromJSON(res);
-        $.ajax({
-            url: resourceUrl(resource),
-            type: 'PUT',
-            dataType : "json",
-            contentType: "application/json",
-            data: ko.mapping.toJSON(self)
-        }).done(function(data) {
-            console.log('Record updated');
-        });
-    });
-}
-
-function removedObjectCallback(changes) {
-    changes.forEach(function(change) {
-        // Student / Course deleted from database
-        if (change.status === 'deleted') {
-            $.ajax({
-                url: resourceUrl(change.value),
-                type: 'DELETE',
-                dataType : "json",
-                contentType: "application/json"
-            }).done(function() {
-                console.log('Object removed from service');
-            });
-        }
-    })
-}
-
-function resourceUrl(record, type = 'self') {
-    const links = record.link();
-    const resourceUrl = links.find(function(link) {
-        return link.params.rel() === type
-    });
-
-    return resourceUrl.href();
-}
-
-function loadStudents(model) {
-    let jsonData = ko.toJS(model.studentFilters);
-    if (jsonData.birth_date === "") {
-        delete jsonData.birth_date;
-    }
-    $.ajax({
-        url: SERVER_URL + '/students',
-        type: 'GET',
-        dataType : "json",
-        data: jsonData,
-        contentType: "application/json"
-    }).done(function(result) {
-        result.forEach(function (record) {
-            model.students.push(new ObservableObject(record));
-        });
-        model.studentSubscription = model.students.subscribe(removedObjectCallback, null, 'arrayChange');
-    });
-}
-
-function loadCourses(model) {
-    let jsonData = ko.toJS(model.courseFilters);
-
-    $.ajax({
-        url: SERVER_URL + '/courses',
-        type: 'GET',
-        dataType : "json",
-        data: jsonData,
-        contentType: "application/json"
-    }).done(function(result) {
-        result.forEach(function (record) {
-            model.courses.push(new ObservableObject(record));
-        });
-        model.courseSubscription = model.courses.subscribe(removedObjectCallback, null, 'arrayChange');
-    });
-}
-
-function loadGrades(model, student) {
-    let jsonData = ko.toJS(model.gradeFilters);
-
-    $.ajax({
-        url: resourceUrl(student, 'grades'),
-        type: 'GET',
-        dataType : "json",
-        data: jsonData,
-        contentType: "application/json"
-    }).done(function(result) {
-        result.forEach(function (record) {
-            model.grades.push(new ObservableObject(record));
-        });
-    });
-}

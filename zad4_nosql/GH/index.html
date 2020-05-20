@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+<!-- cd snap/mongodb -->
+<!-- bin/mongod --dbpath ./data/db/ --port 8004 -->
 <head>
     <meta charset="UTF-8">
     <title>Uni Grade Manager</title>
     <link rel="stylesheet" href="resources/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Bitter&display=swap" rel="stylesheet">
-    <script type="text/javascript" src="resources/scripts/script.js"></script>
+
     <script type="text/javascript"
             src="https://code.jquery.com/jquery-3.5.1.js"
             integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
             crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout-min.js"></script>
+    <script type='text/javascript' src='resources/scripts/knockout-3.5.1.js'></script>
+
+    <!--    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout-min.js"></script>-->
     <script type="text/javascript" src="resources/scripts/knockout.mapping-latest.js"></script>
+    <script type="text/javascript" src="resources/scripts/script.js"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -39,14 +44,14 @@
 
     <article class="article-content" id="students">
         <h2>List of students</h2>
-        <form id="studentsForm">
+        <form id="studentsForm" data-bind="submit: saveNewStudent">
             <table>
                 <thead>
                     <tr>
-                        <th>Index <br> <input type="number" name="indexSearch" placeholder="search.."> </th>
-                        <th>First Name <br> <input type="search" name="firstName" placeholder="search.."></th>
-                        <th>Last Name <br> <input type="search" name="lastName" placeholder="search.."></th>
-                        <th>Birth Date <br> <input type="date" name="birthDate">
+                        <th>Index <br> <input type="number" name="index" placeholder="search.."> </th>
+                        <th>First Name <br> <input data-bind="textInput: studentFilters.first_name" type="search" name="first_name" placeholder="search.."></th>
+                        <th>Last Name <br> <input data-bind="textInput: studentFilters.last_name" type="search" name="last_name" placeholder="search.."></th>
+                        <th>Birth Date <br> <input data-bind="textInput: studentFilters.birth_date" type="date" name="birth_date">
                             <select>
                                 <option value="lt">Less</option>
                                 <option value="eq">Equal</option>
@@ -56,59 +61,42 @@
                         <th class="table-actions">Actions</th>
                     </tr>
                 </thead>
+                <tbody data-bind="foreach: students">
                 <tr>
                     <td>
-                        <input type="number" name="index" value="123123" placeholder="Index" readonly>
+                        <input data-bind="value: index" type="number" name="index" placeholder="Index" readonly>
                     </td>
                     <td>
-                        <input type="text" name="firstname" value="Jerry" placeholder="First name" required>
+                        <input data-bind="value: firstName" type="text" name="firstname" placeholder="First name" required>
                     </td>
                     <td>
-                        <input type="text" name="lastname" value="Terry" placeholder="Last name" required>
+                        <input data-bind="value: lastName"  type="text" name="lastname" placeholder="Last name" required>
                     </td>
                     <td>
-                        <input type="date" name="birthdate" value="1999-07-07" min="1930-01-01" max="2030-01-01" required>
+                        <input data-bind="value: birthday" type="date" name="birthdate" min="1930-01-01" max="2030-01-01" required>
                     </td>
                     <td class="td-buttons">
-                        <button type="button" class="info" onclick="location.href='#grades'">Grades</button>
-                        <button type="button" class="danger">Delete</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="number" value="321321" placeholder="Index" readonly>
-                    </td>
-                    <td>
-                        <input type="text" name="firstname" value="Merry" placeholder="First name" required>
-                    </td>
-                    <td>
-                        <input type="text" name="lastname" value="Berry" placeholder="Last name" required>
-                    </td>
-                    <td>
-                        <input type="date" name="birthdate" value="1997-07-07" min="1930-01-01" max="2030-01-01" required>
-                    </td>
-                    <td class="td-buttons">
-                        <button type="button" class="info" onclick="location.href='#grades'">Grades</button>
-                        <button type="button" class="danger">Delete</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                    </td>
-                    <td>
-                        <input type="text" name="firstname" placeholder="First name" required>
-                    </td>
-                    <td>
-                        <input type="text" name="lastname" placeholder="Last name" required>
-                    </td>
-                    <td>
-                        <input type="date" name="birthdate" min="1930-01-01" max="2030-01-01" required>
-                    </td>
-                    <td class="td-buttons">
-                        <button type="button" class="success">Add new</button>
+                        <button type="button" class="info"  onclick="location.href='#grades'" data-bind="click: $parent.setGrades"> Grades</button>
+                        <button type="button" class="danger" data-bind="click: $parent.removeStudent">Delete</button>
                     </td>
                 </tr>
                 </tbody>
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                        <input  data-bind="value: newStudent.firstName" type="text" name="firstname" placeholder="First name" required>
+                    </td>
+                    <td>
+                        <input  data-bind="value: newStudent.lastName" type="text" name="lastname" placeholder="Last name" required>
+                    </td>
+                    <td>
+                        <input  data-bind="value: newStudent.birthday" type="date" name="birthdate" min="1930-01-01" max="2030-01-01" required>
+                    </td>
+                    <td class="td-buttons">
+                        <button type="submit" class="success">Add new</button>
+                    </td>
+                </tr>
             </table>
         </form>
     </article>
@@ -121,7 +109,7 @@
                     <th class="table-actions">Course</th>
                     <th class="table-actions">Created at</th>
                     <th>
-                        Value 
+                        Value
                         <br>
                         <select>
                             <option value="NIEDOSTATECZNY">2.0</option>
@@ -278,7 +266,7 @@
 <footer>
     <p>&copy; Bartosz Sobkowiak 2020</p>
     <a href="https://put.poznan.pl/">Poznan University of Technology</a> <br>
-    <a href="https://fc.put.poznan.pl/index.php">Faculty of Computing</a> 
+    <a href="https://fc.put.poznan.pl/index.php">Faculty of Computing</a>
 </footer>
 
 </body>

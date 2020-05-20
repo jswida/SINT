@@ -1,5 +1,6 @@
 package com.bartek;
 
+import com.bartek.nosql.CustomHeaders;
 import com.bartek.nosql.Mango;
 import com.bartek.rest.*;
 import org.glassfish.grizzly.http.server.HttpServer;
@@ -41,7 +42,8 @@ public class Main {
                 CoursesService.class,
                 DeclarativeLinkingFeature.class,
                 ExceptionHandler.class,
-                DeclarativeLinkingFeature.class
+                DeclarativeLinkingFeature.class,
+                CustomHeaders.class
         );
 
         // create and start a new instance of grizzly http server

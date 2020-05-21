@@ -112,12 +112,12 @@
                         Value
                         <br>
                         <select>
-                            <option value="NIEDOSTATECZNY">2.0</option>
-                            <option value="DOSTATECZNY">3.0</option>
-                            <option value="DOSTATECZNY_PLUS">3.5</option>
-                            <option value="DOBRY" selected>4.0</option>
-                            <option value="DOBRY_PLUS">4.5</option>
-                            <option value="BARDZO_DOBRY">5.0</option>
+                            <option value="2.0">2.0</option>
+                            <option value="3.0">3.0</option>
+                            <option value="3.5">3.5</option>
+                            <option value="4.0" >4.0</option>
+                            <option value="4.5">4.5</option>
+                            <option value="5.0">5.0</option>
                         </select>
                         <select>
                             <option value="lt">Less</option>
@@ -128,77 +128,69 @@
                     <th class="table-actions">Actions</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr>
-                    <td>
-                        <select>
-                            <option value="1" selected>SINT</option>
-                            <option value="2">AEM</option>
-                        </select>
-                    </td>
-                    <td>
-                        <input type="date" name="createdAt" min="2010-01-01" max="2030-12-31" value="2019-01-01" required>
-                    </td>
-                    <td>
-                        <select>
-                            <option value="NIEDOSTATECZNY">2.0</option>
-                            <option value="DOSTATECZNY">3.0</option>
-                            <option value="DOSTATECZNY_PLUS">3.5</option>
-                            <option value="DOBRY" selected>4.0</option>
-                            <option value="DOBRY_PLUS">4.5</option>
-                            <option value="BARDZO_DOBRY">5.0</option>
-                        </select>
-                    </td>
-                    <td class="td-buttons">
-                        <button type="button" class="danger">Delete</button></td>
-                </tr>
-                <tr>
-                    <td>
-                        <select>
-                            <option value="1" selected>SINT</option>
-                            <option value="2">AEM</option>
-                        </select>
-                    </td>
-                    <td>
-                        <input type="date" name="createdAt" min="2010-01-01" max="2030-12-31" value="2019-01-01" required>
-                    </td>
-                    <td>
-                        <select>
-                            <option value="NIEDOSTATECZNY">2.0</option>
-                            <option value="DOSTATECZNY">3.0</option>
-                            <option value="DOSTATECZNY_PLUS">3.5</option>
-                            <option value="DOBRY" selected>4.0</option>
-                            <option value="DOBRY_PLUS">4.5</option>
-                            <option value="BARDZO_DOBRY">5.0</option>
-                        </select>
-                    </td>
-                    <td class="td-buttons">
-                        <button type="button" class="danger">Delete</button></td>
-                </tr>
-                <tr>
-                    <td>
-                        <select>
-                            <option value="1" selected>SINT</option>
-                            <option value="2">AEM</option>
-                        </select>
-                    </td>
-                    <td>
-                        <input type="date" name="createdAt" min="2010-01-01" max="2030-12-31" value="2019-01-01" required>
-                    </td>
-                    <td>
-                        <select>
-                            <option value="NIEDOSTATECZNY">2.0</option>
-                            <option value="DOSTATECZNY">3.0</option>
-                            <option value="DOSTATECZNY_PLUS">3.5</option>
-                            <option value="DOBRY" selected>4.0</option>
-                            <option value="DOBRY_PLUS">4.5</option>
-                            <option value="BARDZO_DOBRY">5.0</option>
-                        </select>
-                    </td>
-                    <td class="td-buttons">
-                        <button type="button" class="success">Add new</button></td>
-                </tr>
+                <tbody data-bind="foreach: { data: grades, as: 'gradeObject' }">
+                    <tr>
+                        <td>
+                            <select data-bind="options: $parent.courses,
+                            optionsText: function(item) {
+                              return item.name;
+                            },
+                            optionsValue: function(item) {
+                              return item.id;
+                            },
+                            value: gradeObject.courseId">
+                            </select>
+                        </td>
+                        <td>
+                            <input data-bind="value: date" type="date" name="date" min="2000-01-01" max="2030-12-31" required>
+                        </td>
+                        <td>
+                            <select data-bind="options: $parent.possibleGradeValue,
+                            optionsText: function(item) {
+                              return item.name;
+                            },
+                            optionsValue: function(item) {
+                              return item.value;
+                            },
+                            value: gradeObject.value">
+                            </select>
+                        </td>
+                        <td class="td-buttons">
+                            <button type="button" class="danger" data-bind="click: $parent.removeGrade">Delete</button></td>
+                    </tr>
                 </tbody>
+                <tr>
+                    <td>
+                        <select data-bind="options: courses,
+                      optionsText: function(item) {
+                        return item.name;
+                      },
+                      optionsValue: function(item) {
+                        return item.id;
+                      },
+                      optionsCaption: 'Select course ...',
+                      value: gradeFilters.course_id">
+                        </select>
+                    </td>
+                    <td>
+                        <input data-bind="value: newGrade.date" type="date" name="date" min="2010-01-01" max="2030-12-31" required>
+                    </td>
+                    <td>
+                        <select>
+                            <option disabled selected value> -- select -- </option>
+                            <option value="2.0">2.0</option>
+                            <option value="3.0">3.0</option>
+                            <option value="3.5">3.5</option>
+                            <option value="4.0" >4.0</option>
+                            <option value="4.5">4.5</option>
+                            <option value="5.0">5.0</option>
+                        </select>
+                    </td>
+                    <td class="td-buttons">
+                        <button type="submit" class="success">Add new</button>
+                    </td>
+                </tr>
+
             </table>
         </form>
     </article>
@@ -210,54 +202,41 @@
                 <thead>
                 <tr>
                     <th>ID <br> <input type="search" name="idSearch" placeholder="search.."></th>
-                    <th>Name <br> <input type="search" name="nameSearch" placeholder="search.."></th>
-                    <th>Lecturer<br> <input type="search" name="lecturerSearch" placeholder="search.."></th>
+                    <th>Name <br> <input data-bind="textInput: courseFilters.name" type="search" name="name" placeholder="search.."></th>
+                    <th>Lecturer<br> <input data-bind="textInput: courseFilters.lecturer" type="search" name="lecturer" placeholder="search.."></th>
                     <th class="table-actions">Actions</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody data-bind="foreach: courses">
                 <tr>
                     <td>
-                        <input type="number" name="ID" value="1" readonly>
+                        <input data-bind="value: id"  type="number" name="ID" readonly>
                     </td>
                     <td>
-                        <input type="text" name="name" value="AEM" required>
+                        <input data-bind="value: name" type="text" name="name" required>
                     </td>
                     <td>
-                        <input type="text" name="lecturer" value="Terry Cerry" required>
+                        <input data-bind="value: lecturer" type="text" name="lecturer" required>
                     </td>
                     <td class="td-buttons">
-                        <button type="button" class="danger">Delete</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="number" name="ID" value="2" readonly>
-                    </td>
-                    <td>
-                        <input type="text" name="name" value="SINT" required>
-                    </td>
-                    <td>
-                        <input type="text" name="lecturer" value="Derry Ferry" required>
-                    </td>
-                    <td class="td-buttons">
-                        <button type="button" class="danger">Delete</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                    </td>
-                    <td>
-                        <input type="text" name="name" placeholder="Course name" required>
-                    </td>
-                    <td>
-                        <input type="text" name="lecturer" placeholder="Lecturer name" required>
-                    </td>
-                    <td class="td-buttons">
-                        <button type="button" class="success">Add new</button>
+                        <button type="button" class="danger" data-bind="click: $parent.removeCourse">Delete</button>
                     </td>
                 </tr>
                 </tbody>
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                        <input data-bind="value: newCourse.name" type="text" name="name" placeholder="Course name" required>
+                    </td>
+                    <td>
+                        <input data-bind="value: newCourse.lecturer" type="text" name="lecturer" placeholder="Lecturer name" required>
+                    </td>
+                    <td class="td-buttons">
+                        <button type="submit" class="success">Add new</button>
+                    </td>
+                </tr>
+
             </table>
         </form>
     </article>

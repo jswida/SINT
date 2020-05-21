@@ -40,6 +40,7 @@ function loadCourses(model) {
 }
 
 function loadGrades(model, student) {
+    console.log("load grades");
     var jsonData = ko.toJS(model.gradeFilters);
     // let a = resourceUrl(student, 'grades');
     $.ajax({
@@ -129,7 +130,7 @@ $(document).ready(function(){
         self.courseSubscription = null;
         self.newCourse = {
             name: ko.observable(),
-            supervisor: ko.observable()
+            lecturer: ko.observable()
         };
         self.studentFilters = {
             first_name: ko.observable(),
@@ -139,7 +140,7 @@ $(document).ready(function(){
         };
         self.courseFilters = {
             name: ko.observable(),
-            supervisor: ko.observable()
+            lecturer: ko.observable()
         };
         self.loaded = false;
         self.gradeFilters = {
@@ -150,7 +151,7 @@ $(document).ready(function(){
         self.newGrade = {
             studentIndex: ko.observable(),
             courseID: ko.observable(),
-            createdAt: ko.observable(),
+            date: ko.observable(),
             grade: ko.observable(),
             student: ko.observable()
         };
@@ -166,7 +167,6 @@ $(document).ready(function(){
             loadGrades(self, student);
             self.loaded = true;
 
-            // https://knockoutjs.com/documentation/click-binding.html#note-3-allowing-the-default-click-action
             return true;
         };
         self.removeGrade = function(grade) {
@@ -201,7 +201,7 @@ $(document).ready(function(){
                 console.log(xhr);
                 console.log(status);
                 console.log(error);
-                })
+            })
             ;
         };
         self.saveNewCourse = function() {
@@ -214,7 +214,7 @@ $(document).ready(function(){
             }).done(function(data) {
                 self.courses.push(new ObservableObject(data));
                 self.newCourse.name('');
-                self.newCourse.supervisor('');
+                self.newCourse.lecturer('');
             });
         };
         self.saveNewGrade = function() {
@@ -226,7 +226,7 @@ $(document).ready(function(){
                 data: ko.mapping.toJSON(self.newGrade)
             }).done(function(data) {
                 self.grades.push(new ObservableObject(data));
-                self.newGrade.createdAt('');
+                self.newGrade.date('');
             });
         };
 
@@ -279,6 +279,7 @@ $(document).ready(function(){
     var model = new StateViewModel();
     ko.applyBindings(model);
     console.log(model);
+
     loadStudents(model);
     loadCourses(model);
 });

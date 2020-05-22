@@ -28,7 +28,7 @@ public class Mango {
         final Morphia morphia = new Morphia();
         morphia.mapPackage("models");
 
-        datastore = morphia.createDatastore(new MongoClient("localhost", 8004), "sint-baza1");
+        datastore = morphia.createDatastore(new MongoClient("localhost", 8004), "sint-baza13");
         datastore.enableDocumentValidation();
         datastore.ensureIndexes();
 
@@ -306,6 +306,11 @@ public class Mango {
             grade.setDate(newGrade.getDate());
         if (newGrade.getCourse() != null) {
             Course course = getCourseByID(newGrade.getCourse().getId());
+            grade.setCourse(course);
+            grade.setCourseId(course.getId());
+        }
+        if (newGrade.getCourseId() > 0){
+            Course course = getCourseByID(newGrade.getCourseId());
             grade.setCourse(course);
             grade.setCourseId(course.getId());
         }

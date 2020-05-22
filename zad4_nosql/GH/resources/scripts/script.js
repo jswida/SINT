@@ -53,6 +53,7 @@ function loadGrades(model, student) {
         result.forEach(function (record) {
             model.grades.push(new ObservableObject(record));
         });
+        // model.gradeSubscription = model.grades.subscribe(removedObjectCallback, null, 'arrayChange');
     });
 }
 
@@ -101,6 +102,16 @@ function ObservableObject(data) {
     });
 }
 
+function ObservableGrade(data) {
+    var self = this;
+    ko.mapping.fromJS(data, {}, self);
+
+    ko.computed(function() {
+        return ko.mapping.toJSON(self);
+    });
+}
+
+
 $(document).ready(function(){
 
     var StateViewModel = function () {
@@ -109,17 +120,17 @@ $(document).ready(function(){
         self.courses = ko.observableArray();
         self.grades = ko.observableArray();
         self.possibleGradeValue = ko.observableArray([
-            {name: '2.0', value: 'NIEDOSTATECZNY'},
-            {name: '3.0', value: 'DOSTATECZNY'},
-            {name: '3.5', value: 'DOSTATECZNY_PLUS'},
-            {name: '4.0', value: 'DOBRY'},
-            {name: '4.5', value: 'DOBRY_PLUS'},
-            {name: '5.0', value: 'BARDZO_DOBRY'}
+            {name: '2.0', value: '2.0'},
+            {name: '3.0', value: '3.0'},
+            {name: '3.5', value: '3.5'},
+            {name: '4.0', value: '4.0'},
+            {name: '4.5', value: '4.5'},
+            {name: '5.0', value: '5.0'}
         ]);
         self.searchOptions = ko.observableArray([
-            {name: 'lt', value: 'Less than'},
-            {name: 'eq', value: 'Equal'},
-            {name: 'gt', value: 'Greater than'}
+            {name: '-1', value: 'Less'},
+            {name: '', value: 'Equal'},
+            {name: '1', value: 'Greater'}
         ]);
         self.newStudent = {
             firstName: ko.observable(),
@@ -128,15 +139,16 @@ $(document).ready(function(){
         };
         self.studentSubscription = null;
         self.courseSubscription = null;
+        self.gradeSubscription = null;
         self.newCourse = {
             name: ko.observable(),
             lecturer: ko.observable()
         };
         self.studentFilters = {
-            first_name: ko.observable(),
-            last_name: ko.observable(),
-            birth_date: ko.observable(),
-            order: ko.observable()
+            firstName: ko.observable(),
+            lastName: ko.observable(),
+            birthday: ko.observable(),
+            birthdayCompare: ko.observable()
         };
         self.courseFilters = {
             name: ko.observable(),
@@ -144,15 +156,15 @@ $(document).ready(function(){
         };
         self.loaded = false;
         self.gradeFilters = {
-            grade: ko.observable(),
-            order: ko.observable(),
-            course_id: ko.observable()
+            value: ko.observable(),
+            valueCompare: ko.observable(),
+            course: ko.observable()
         };
         self.newGrade = {
-            studentIndex: ko.observable(),
-            courseID: ko.observable(),
+            studentId: ko.observable(),
+            course: ko.observable(),
             date: ko.observable(),
-            grade: ko.observable(),
+            value: ko.observable(),
             student: ko.observable()
         };
         self.removeStudent = function(student) {
@@ -162,7 +174,7 @@ $(document).ready(function(){
             // location.href = "#grades";
             self.grades.removeAll();
             self.newGrade.student(student);
-            self.newGrade.studentIndex(student.index());
+            self.newGrade.studentId(student.index());
 
             loadGrades(self, student);
             self.loaded = true;
@@ -212,6 +224,7 @@ $(document).ready(function(){
                 contentType: "application/json",
                 data: ko.mapping.toJSON(self.newCourse)
             }).done(function(data) {
+
                 self.courses.push(new ObservableObject(data));
                 self.newCourse.name('');
                 self.newCourse.lecturer('');
@@ -227,7 +240,9 @@ $(document).ready(function(){
             }).done(function(data) {
                 self.grades.push(new ObservableObject(data));
                 self.newGrade.date('');
-            });
+                self.newGrade.value('');
+                self.newGrade.course('');
+            })
         };
 
         Object.keys(self.studentFilters).forEach(function (key) {
@@ -263,6 +278,9 @@ $(document).ready(function(){
 
         Object.keys(self.gradeFilters).forEach(function (key) {
             self.gradeFilters[key].subscribe(function (val) {
+                if (self.gradeSubscription) {
+                    self.gradeSubscription.dispose();
+                }
                 if (self.loaded && self.newGrade.student()) {
                     // Clear list of grades
                     self.grades.removeAll();

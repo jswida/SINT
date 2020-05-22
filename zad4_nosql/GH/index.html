@@ -48,14 +48,15 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Index <br> <input type="number" name="index" placeholder="search.."> </th>
-                        <th>First Name <br> <input data-bind="textInput: studentFilters.first_name" type="search" name="first_name" placeholder="search.."></th>
-                        <th>Last Name <br> <input data-bind="textInput: studentFilters.last_name" type="search" name="last_name" placeholder="search.."></th>
-                        <th>Birth Date <br> <input data-bind="textInput: studentFilters.birth_date" type="date" name="birth_date">
+                        <th>Index <br> </th>
+<!--                            <input type="number" name="index" placeholder="search.."> </th>-->
+                        <th>First Name <br> <input data-bind="textInput: studentFilters.firstName" type="search" name="firstName" placeholder="search.."></th>
+                        <th>Last Name <br> <input data-bind="textInput: studentFilters.lastName" type="search" name="lastName" placeholder="search.."></th>
+                        <th>Birth Date <br> <input data-bind="textInput: studentFilters.birthday" type="date" name="birthday">
                             <select>
-                                <option value="lt">Less</option>
-                                <option value="eq">Equal</option>
-                                <option value="gt">Greater</option>
+                                <option value="-1">Less</option>
+                                <option value="">Equal</option>
+                                <option value="1">Greater</option>
                             </select>
                         </th>
                         <th class="table-actions">Actions</th>
@@ -67,13 +68,13 @@
                         <input data-bind="value: index" type="number" name="index" placeholder="Index" readonly>
                     </td>
                     <td>
-                        <input data-bind="value: firstName" type="text" name="firstname" placeholder="First name" required>
+                        <input data-bind="value: firstName" type="text" name="firstName" placeholder="First name" required>
                     </td>
                     <td>
-                        <input data-bind="value: lastName"  type="text" name="lastname" placeholder="Last name" required>
+                        <input data-bind="value: lastName"  type="text" name="lastName" placeholder="Last name" required>
                     </td>
                     <td>
-                        <input data-bind="value: birthday" type="date" name="birthdate" min="1930-01-01" max="2030-01-01" required>
+                        <input data-bind="value: birthday" type="date" name="birthday" min="1930-01-01" max="2030-01-01" required>
                     </td>
                     <td class="td-buttons">
                         <button type="button" class="info"  onclick="location.href='#grades'" data-bind="click: $parent.setGrades"> Grades</button>
@@ -120,15 +121,15 @@
                             <option value="5.0">5.0</option>
                         </select>
                         <select>
-                            <option value="lt">Less</option>
-                            <option value="eq">Equal</option>
-                            <option value="gt">Greater</option>
+                            <option value="-1">Less</option>
+                            <option value="">Equal</option>
+                            <option value="1">Greater</option>
                         </select>
                     </th>
                     <th class="table-actions">Actions</th>
                 </tr>
                 </thead>
-                <tbody data-bind="foreach: { data: grades, as: 'gradeObject' }">
+                <tbody data-bind="foreach: grades">
                     <tr>
                         <td>
                             <select data-bind="options: $parent.courses,
@@ -138,7 +139,7 @@
                             optionsValue: function(item) {
                               return item.id;
                             },
-                            value: gradeObject.courseId">
+                            value: course.id">
                             </select>
                         </td>
                         <td>
@@ -152,7 +153,7 @@
                             optionsValue: function(item) {
                               return item.value;
                             },
-                            value: gradeObject.value">
+                            value: value">
                             </select>
                         </td>
                         <td class="td-buttons">
@@ -166,24 +167,25 @@
                         return item.name;
                       },
                       optionsValue: function(item) {
-                        return item.id;
+                        return item;
                       },
-                      optionsCaption: 'Select course ...',
-                      value: gradeFilters.course_id">
+                      optionsCaption: '- select -',
+                      value: newGrade.course">
                         </select>
                     </td>
                     <td>
                         <input data-bind="value: newGrade.date" type="date" name="date" min="2010-01-01" max="2030-12-31" required>
                     </td>
                     <td>
-                        <select>
-                            <option disabled selected value> -- select -- </option>
-                            <option value="2.0">2.0</option>
-                            <option value="3.0">3.0</option>
-                            <option value="3.5">3.5</option>
-                            <option value="4.0" >4.0</option>
-                            <option value="4.5">4.5</option>
-                            <option value="5.0">5.0</option>
+                        <select data-bind="options: possibleGradeValue,
+                            optionsText: function(item) {
+                              return item.name;
+                            },
+                            optionsValue: function(item) {
+                              return item.value;
+                            },
+                            value: newGrade.value,
+                            optionsCaption: '- select -'">
                         </select>
                     </td>
                     <td class="td-buttons">

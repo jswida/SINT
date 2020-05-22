@@ -128,9 +128,9 @@ $(document).ready(function(){
             {name: '5.0', value: '5.0'}
         ]);
         self.searchOptions = ko.observableArray([
-            {name: '-1', value: 'Less'},
-            {name: '', value: 'Equal'},
-            {name: '1', value: 'Greater'}
+            {name: 'Less', value: '-1'},
+            {name: 'Equal', value: ''},
+            {name: 'Greater', value: '1'}
         ]);
         self.newStudent = {
             firstName: ko.observable(),
@@ -158,7 +158,9 @@ $(document).ready(function(){
         self.gradeFilters = {
             value: ko.observable(),
             valueCompare: ko.observable(),
-            course: ko.observable()
+            course: ko.observable(),
+            date: ko.observable(),
+            dateCompare: ko.observable()
         };
         self.newGrade = {
             studentId: ko.observable(),

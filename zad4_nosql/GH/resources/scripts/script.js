@@ -3,7 +3,7 @@ const SERVER_URL = 'http://localhost:8000';
 
 function loadStudents(model) {
 
-    var jsonData = ko.toJS(model.studentFilters);
+    let jsonData = ko.toJS(model.studentFilters);
     if (jsonData.birth_date === "") {
         delete jsonData.birth_date;
     }
@@ -18,12 +18,11 @@ function loadStudents(model) {
         result.forEach(function (record) {
             model.students.push(new ObservableObject(record));
         });
-        model.studentSubscription = model.students.subscribe(removedObjectCallback, null, 'arrayChange');
     });
 }
 
 function loadCourses(model) {
-    var jsonData = ko.toJS(model.courseFilters);
+    let jsonData = ko.toJS(model.courseFilters);
 
     $.ajax({
         url: SERVER_URL + '/courses',
@@ -35,13 +34,11 @@ function loadCourses(model) {
         result.forEach(function (record) {
             model.courses.push(new ObservableObject(record));
         });
-        model.courseSubscription = model.courses.subscribe(removedObjectCallback, null, 'arrayChange');
     });
 }
 
 function loadGrades(model, student) {
-    console.log("load grades");
-    var jsonData = ko.toJS(model.gradeFilters);
+    let jsonData = ko.toJS(model.gradeFilters);
     // let a = resourceUrl(student, 'grades');
     $.ajax({
         url: resourceUrl(student, 'grades'),
@@ -53,24 +50,7 @@ function loadGrades(model, student) {
         result.forEach(function (record) {
             model.grades.push(new ObservableObject(record));
         });
-        // model.gradeSubscription = model.grades.subscribe(removedObjectCallback, null, 'arrayChange');
     });
-}
-
-function removedObjectCallback(changes) {
-    changes.forEach(function(change) {
-        // Student / Course deleted from database
-        if (change.status === 'deleted') {
-            $.ajax({
-                url: resourceUrl(change.value),
-                type: 'DELETE',
-                dataType : "json",
-                contentType: "application/json"
-            }).done(function() {
-                console.log('Object removed from eStudent service');
-            });
-        }
-    })
 }
 
 function resourceUrl(record, type = 'self') {
@@ -83,13 +63,13 @@ function resourceUrl(record, type = 'self') {
 }
 
 function ObservableObject(data) {
-    var self = this;
+    let self = this;
     ko.mapping.fromJS(data, {}, self);
 
     ko.computed(function() {
         return ko.mapping.toJSON(self);
     }).subscribe(function(res) {
-        var resource = ko.mapping.fromJSON(res);
+        let resource = ko.mapping.fromJSON(res);
         $.ajax({
             url: resourceUrl(resource),
             type: 'PUT',
@@ -97,13 +77,13 @@ function ObservableObject(data) {
             contentType: "application/json",
             data: ko.mapping.toJSON(self)
         }).done(function(data) {
-            console.log('Record updated');
+            console.log('state updated');
         });
     });
 }
 
 function ObservableGrade(data) {
-    var self = this;
+    let self = this;
     ko.mapping.fromJS(data, {}, self);
 
     ko.computed(function() {
@@ -114,8 +94,8 @@ function ObservableGrade(data) {
 
 $(document).ready(function(){
 
-    var StateViewModel = function () {
-        var self = this;
+    let StateViewModel = function () {
+        let self = this;
         self.students = ko.observableArray();
         self.courses = ko.observableArray();
         self.grades = ko.observableArray();
@@ -167,16 +147,28 @@ $(document).ready(function(){
             course: ko.observable(),
             date: ko.observable(),
             value: ko.observable(),
-            student: ko.observable()
+            student: ko.observable(),
+            studentFirstName: ko.observable(),
+            studentLastName: ko.observable()
         };
         self.removeStudent = function(student) {
-            self.students.remove(student)
+            $.ajax({
+                url: resourceUrl(student),
+                type: 'DELETE',
+                dataType : "json",
+                contentType: "application/json"
+            }).done(function() {
+                console.log('deleted');
+                self.students.remove(student);
+            });
         };
         self.setGrades = function(student) {
             // location.href = "#grades";
             self.grades.removeAll();
             self.newGrade.student(student);
             self.newGrade.studentId(student.index());
+            self.newGrade.studentFirstName(student.firstName());
+            self.newGrade.studentLastName(student.lastName());
 
             loadGrades(self, student);
             self.loaded = true;
@@ -190,13 +182,21 @@ $(document).ready(function(){
                 dataType : "json",
                 contentType: "application/json"
             }).done(function() {
-                console.log('Object removed from eStudent service');
+                console.log('deleted');
                 self.grades.remove(grade);
             });
         };
         self.removeCourse = function(course) {
-            self.courses.remove(course);
-            self.grades.removeAll();
+            $.ajax({
+                url: resourceUrl(course),
+                type: 'DELETE',
+                dataType : "json",
+                contentType: "application/json"
+            }).done(function() {
+                console.log('deleted');
+                self.courses.remove(course);
+                self.grades.removeAll();
+            });
         };
         self.saveNewStudent = function() {
             console.log(self.newStudent);
@@ -265,6 +265,7 @@ $(document).ready(function(){
         Object.keys(self.courseFilters).forEach(function (key) {
 
             self.courseFilters[key].subscribe(function (val) {
+
                 // Disable auto delete from database
                 if (self.courseSubscription) {
                     self.courseSubscription.dispose();
@@ -296,9 +297,8 @@ $(document).ready(function(){
 
 
 
-    var model = new StateViewModel();
+    let model = new StateViewModel();
     ko.applyBindings(model);
-    console.log(model);
 
     loadStudents(model);
     loadCourses(model);

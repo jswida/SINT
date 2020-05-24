@@ -7,6 +7,8 @@ import com.bartek.models.Student;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import java.security.SecureRandom;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Storage {
@@ -213,7 +215,11 @@ public class Storage {
     public static Student generateStudent(String name, String surname) {
         Student student = new Student();
 //        student.setIndex(studentID);
-        student.setBirthday(new Date());
+        try {
+            student.setBirthday(new SimpleDateFormat( "yyyyMMdd" ).parse( "20000620" ));
+        } catch (ParseException e) {
+            student.setBirthday(new Date());
+        }
         student.setName(name);
         student.setSurname(surname);
 //        studentID++;

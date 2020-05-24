@@ -3,6 +3,7 @@ package com.bartek.models;
 import com.bartek.nosql.ObjectIdJaxbAdapter;
 import com.bartek.rest.StudentsService;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.bson.types.ObjectId;
 import org.glassfish.jersey.linking.Binding;
 import org.glassfish.jersey.linking.InjectLink;
@@ -21,6 +22,7 @@ import java.util.List;
 @Indexes(
         @Index(fields = {@Field("index")}, options = @IndexOptions(unique = true))
 )
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Student {
     @InjectLinks({
             @InjectLink(

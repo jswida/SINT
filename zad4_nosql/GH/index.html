@@ -119,9 +119,14 @@
         <form id="grades-form" data-bind="submit: saveNewGrade">
             <table>
                 <thead>
-                <tr data-bind="foreach: newGrade">
+                <tr>
                     <th>
-                        <input data-bind="value: student"  type="text" name="student" readonly>
+                        <p>
+                            <span>Grades of </span>
+                            <span data-bind="text: newGrade.studentFirstName"></span>
+                            <span data-bind="text: newGrade.studentLastName"></span>
+                            <span data-bind="text: newGrade.studentId"></span>
+                        </p>
                     </th>
                 </tr>
                 <tr>

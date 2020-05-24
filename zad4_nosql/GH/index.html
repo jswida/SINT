@@ -44,22 +44,26 @@
 
     <article class="article-content" id="students">
         <h2>List of students</h2>
-        <form id="studentsForm" data-bind="submit: saveNewStudent">
+        <form id="studentsForm" data-bind="submit: postStudent">
             <table>
                 <thead>
                     <tr>
                         <th>Index <br> </th>
                         <th>First Name
                             <br>
-                            <input data-bind="textInput: studentFilters.firstName" type="search" name="firstName" placeholder="search..">
+                            <label>
+                                <input data-bind="textInput: searchStudent.firstName" type="search" name="firstName" placeholder="search..">
+                            </label>
                         </th>
                         <th>Last Name
                             <br>
-                            <input data-bind="textInput: studentFilters.lastName" type="search" name="lastName" placeholder="search..">
+                            <label>
+                                <input data-bind="textInput: searchStudent.lastName" type="search" name="lastName" placeholder="search..">
+                            </label>
                         </th>
                         <th>Birth Date
                             <br>
-                            <input data-bind="textInput: studentFilters.birthday" type="date" name="birthday">
+                            <input data-bind="textInput: searchStudent.birthday" type="date" name="birthday">
                             <select data-bind="options: searchOptions,
                             optionsText: function(item) {
                               return item.name;
@@ -68,7 +72,7 @@
                               return item.value;
                              },
                              optionsCaption: '- select -',
-                             value: studentFilters.birthdayCompare">
+                             value: searchStudent.birthdayCompare">
                             </select>
                         </th>
                         <th class="table-actions">Actions</th>
@@ -116,7 +120,7 @@
     <article class="article-content" id="grades" data-bind="if: newGrade.student">
         <h2>List of grades
         </h2>
-        <form id="grades-form" data-bind="submit: saveNewGrade">
+        <form id="grades-form" data-bind="submit: postGrade">
             <table>
                 <thead>
                 <tr>
@@ -142,13 +146,13 @@
                               return item.id;
                             },
                              optionsCaption: '- select -',
-                             value: gradeFilters.course">
+                             value: searchGrade.course">
                         </select>
                     </th>
                     <th>
                         Date
                         <br>
-                        <input data-bind="textInput: gradeFilters.date" type="date" name="date">
+                        <input data-bind="textInput: searchGrade.date" type="date" name="date">
                         <select data-bind="options: searchOptions,
                             optionsText: function(item) {
                               return item.name;
@@ -157,13 +161,13 @@
                               return item.value;
                             },
                              optionsCaption: '- select -',
-                             value: gradeFilters.dateCompare">
+                             value: searchGrade.dateCompare">
                         </select>
                     </th>
                     <th>
                         Value
                         <br>
-                        <select data-bind="options: possibleGradeValue,
+                        <select data-bind="options: gradeOptions,
                             optionsText: function(item) {
                               return item.name;
                             },
@@ -171,7 +175,7 @@
                               return item.value;
                             },
                              optionsCaption: '- select -',
-                             value: gradeFilters.value">
+                             value: searchGrade.value">
                         </select>
                         <select data-bind="options: searchOptions,
                             optionsText: function(item) {
@@ -181,7 +185,7 @@
                               return item.value;
                             },
                              optionsCaption: '- select -',
-                             value: gradeFilters.valueCompare">
+                             value: searchGrade.valueCompare">
                         </select>
                     </th>
                     <th class="table-actions">Actions</th>
@@ -207,7 +211,7 @@
                             <input data-bind="value: date" type="date" name="date" min="2000-01-01" max="2030-12-31" required>
                         </td>
                         <td>
-                            <select data-bind="options: $parent.possibleGradeValue,
+                            <select data-bind="options: $parent.gradeOptions,
                             optionsText: function(item) {
                               return item.name;
                             },
@@ -240,7 +244,7 @@
                         <input data-bind="value: newGrade.date" type="date" name="date" min="2010-01-01" max="2030-12-31" required>
                     </td>
                     <td>
-                        <select data-bind="options: possibleGradeValue,
+                        <select data-bind="options: gradeOptions,
                             optionsText: function(item) {
                               return item.name;
                             },
@@ -262,13 +266,13 @@
 
     <article class="article-content" id="courses">
         <h2>List of courses</h2>
-        <form id="courses-form" data-bind="submit: saveNewCourse">
+        <form id="courses-form" data-bind="submit: postCourse">
             <table>
                 <thead>
                 <tr>
                     <th>ID <br></th>
-                    <th>Name <br> <input data-bind="textInput: courseFilters.name" type="search" name="name" placeholder="search.."></th>
-                    <th>Lecturer<br> <input data-bind="textInput: courseFilters.lecturer" type="search" name="lecturer" placeholder="search.."></th>
+                    <th>Name <br> <input data-bind="textInput: searchCourse.name" type="search" name="name" placeholder="search.."></th>
+                    <th>Lecturer<br> <input data-bind="textInput: searchCourse.lecturer" type="search" name="lecturer" placeholder="search.."></th>
                     <th class="table-actions">Actions</th>
                 </tr>
                 </thead>

@@ -12,6 +12,7 @@ function loadStudents(model) {
     }).done(function(result) {
         result.forEach(function (record) {
             model.students.push(new ObservableObject(record));
+            // model.studentSubscription = model.students.subscribe(removedObjectCallback, null, 'arrayChange');
         });
     }).fail(function(xhr, status, error) {
         console.log('Bad Request');
@@ -30,6 +31,7 @@ function loadCourses(model) {
     }).done(function(result) {
         result.forEach(function (record) {
             model.courses.push(new ObservableObject(record));
+            // model.courseSubscription = model.courses.subscribe(removedObjectCallback, null, 'arrayChange');
         });
     }).fail(function(xhr, status, error) {
         console.log('Bad Request');
@@ -48,6 +50,7 @@ function loadGrades(model, student) {
     }).done(function(result) {
         result.forEach(function (record) {
             model.grades.push(new ObservableObject(record));
+            // model.gradeSubscription = model.grades.subscribe(removedObjectCallback, null, 'arrayChange');
         });
     }).fail(function(xhr, status, error) {
         console.log('Bad Request');
@@ -84,6 +87,23 @@ function ObservableObject(data) {
             console.log('Bad Request');
         });
     });
+}
+
+function removedObjectCallback(changes) {
+    changes.forEach(function(change) {
+        if (change.status === 'deleted') {
+            $.ajax({
+                url: resourceUrl(change.value),
+                type: 'DELETE',
+                dataType : "json",
+                contentType: "application/json"
+            }).done(function() {
+                console.log('deleted');
+            }).fail(function(xhr, status, error) {
+                console.log('Bad Request');
+            });
+        }
+    })
 }
 
 $(document).ready(function(){
@@ -146,6 +166,9 @@ $(document).ready(function(){
             {name: 'Equal', value: ''},
             {name: 'Greater', value: '1'}
         ]);
+        // subscription makes errors, deleted
+        // self.objectSubsribtion = null;
+
         
         // delete
         self.removeStudent = function(student) {
@@ -271,6 +294,9 @@ $(document).ready(function(){
         // filter
         Object.keys(self.searchStudent).forEach(function (key) {
             self.searchStudent[key].subscribe(function (val) {
+                // if (self.objectSubscription) {
+                //     self.objectSubscription.dispose();
+                // }
                 self.students.removeAll();
                 loadStudents(self);
             });
@@ -278,6 +304,9 @@ $(document).ready(function(){
 
         Object.keys(self.searchCourse).forEach(function (key) {
             self.searchCourse[key].subscribe(function (val) {
+                // if (self.objectSubscription) {
+                //     self.objectSubscription.dispose();
+                // }
                 self.courses.removeAll();
                 loadCourses(self);
             });
@@ -285,6 +314,9 @@ $(document).ready(function(){
 
         Object.keys(self.searchGrade).forEach(function (key) {
             self.searchGrade[key].subscribe(function (val) {
+                // if (self.objectSubscription) {
+                //     self.objectSubscription.dispose();
+                // }
                 if (self.loaded && self.newGrade.student()) {
                     self.grades.removeAll();
                     loadGrades(self, self.newGrade.student());

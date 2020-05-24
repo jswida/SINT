@@ -28,7 +28,7 @@ public class Mango {
         final Morphia morphia = new Morphia();
         morphia.mapPackage("models");
 
-        datastore = morphia.createDatastore(new MongoClient("localhost", 8004), "sint-baza18");
+        datastore = morphia.createDatastore(new MongoClient("localhost", 8004), "sint-database-js");
         datastore.enableDocumentValidation();
         datastore.ensureIndexes();
 

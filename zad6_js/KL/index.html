@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- cd snap/mongodb -->
+<!-- bin/mongod --dbpath ./data/db/ --port 8004 -->
+<head>
+    <meta charset="UTF-8">
+    <title>Uni Grade Manager</title>
+    <link rel="stylesheet" href="resources/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bitter&display=swap" rel="stylesheet">
+
+    <script type="text/javascript"
+            src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+            crossorigin="anonymous"></script>
+    <script type='text/javascript' src='resources/scripts/knockout-3.5.1.js'></script>
+
+    <!--    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout-min.js"></script>-->
+    <script type="text/javascript" src="resources/scripts/knockout.mapping-latest.js"></script>
+    <script type="text/javascript" src="resources/scripts/script.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<header>
+    <div>
+        <img src="resources/images/logo_256x256.png" alt="UGM Logo">
+    </div>
+    <div>
+        <h1>University Grade Manager</h1>
+    </div>
+</header>
+
+<div class="content-main">
+    <nav class="content-nav">
+        <h2>Menu</h2>
+        <ul>
+            <li><a class="link-nav" href="#students">Manage students</a></li>
+            <li><a class="link-nav" href="#courses">Manage courses</a></li>
+            <li><a class="link-nav" href="#">Empty view</a></li>
+        </ul>
+    </nav>
+
+    <article class="article-content" id="students">
+        <h2>List of students</h2>
+        <form id="studentsForm" data-bind="submit: postStudent">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Index <br> </th>
+                        <th>First Name
+                            <br>
+                            <label>
+                                <input data-bind="textInput: searchStudent.firstName" type="search" name="firstName" placeholder="search..">
+                            </label>
+                        </th>
+                        <th>Last Name
+                            <br>
+                            <label>
+                                <input data-bind="textInput: searchStudent.lastName" type="search" name="lastName" placeholder="search..">
+                            </label>
+                        </th>
+                        <th>Birth Date
+                            <br>
+                            <input data-bind="textInput: searchStudent.birthday" type="date" name="birthday">
+                            <select data-bind="options: searchOptions,
+                            optionsText: function(item) {
+                              return item.name;
+                            },
+                            optionsValue: function(item) {
+                              return item.value;
+                             },
+                             optionsCaption: '- select -',
+                             value: searchStudent.birthdayCompare">
+                            </select>
+                        </th>
+                        <th class="table-actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: students">
+                <tr>
+                    <td>
+                        <input data-bind="value: index" type="number" name="index" placeholder="Index" readonly>
+                    </td>
+                    <td>
+                        <input data-bind="value: firstName" type="text" name="firstName" placeholder="First name" required>
+                    </td>
+                    <td>
+                        <input data-bind="value: lastName"  type="text" name="lastName" placeholder="Last name" required>
+                    </td>
+                    <td>
+                        <input data-bind="value: birthday" type="date" name="birthday" min="1930-01-01" max="2030-01-01" required>
+                    </td>
+                    <td class="td-buttons">
+                        <button type="button" class="info"  onclick="location.href='#grades'" data-bind="click: $parent.setGrades"> Grades</button>
+                        <button type="button" class="danger" data-bind="click: $parent.removeStudent">Delete</button>
+                    </td>
+                </tr>
+                </tbody>
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                        <input  data-bind="value: newStudent.firstName" type="text" name="firstname" placeholder="First name" required>
+                    </td>
+                    <td>
+                        <input  data-bind="value: newStudent.lastName" type="text" name="lastname" placeholder="Last name" required>
+                    </td>
+                    <td>
+                        <input  data-bind="value: newStudent.birthday" type="date" name="birthdate" min="1930-01-01" max="2030-01-01" required>
+                    </td>
+                    <td class="td-buttons">
+                        <button type="submit" class="success">Add new</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </article>
+    <article class="article-content" id="grades" data-bind="if: newGrade.student">
+        <h2>List of grades
+        </h2>
+        <form id="grades-form" data-bind="submit: postGrade">
+            <table>
+                <thead>
+                <tr>
+                    <th>
+                        <p>
+                            <span>Grades of </span>
+                            <span data-bind="text: newGrade.studentFirstName"></span>
+                            <span data-bind="text: newGrade.studentLastName"></span>
+                            <span data-bind="text: newGrade.studentId"></span>
+                        </p>
+                    </th>
+                </tr>
+                <tr>
+                    <th>ID <br></th>
+                    <th class="table-actions">
+                        Course
+                        <br>
+                        <select data-bind="options: courses,
+                            optionsText: function(item) {
+                              return item.name;
+                            },
+                            optionsValue: function(item) {
+                              return item.id;
+                            },
+                             optionsCaption: '- select -',
+                             value: searchGrade.course">
+                        </select>
+                    </th>
+                    <th>
+                        Date
+                        <br>
+                        <input data-bind="textInput: searchGrade.date" type="date" name="date">
+                        <select data-bind="options: searchOptions,
+                            optionsText: function(item) {
+                              return item.name;
+                            },
+                            optionsValue: function(item) {
+                              return item.value;
+                            },
+                             optionsCaption: '- select -',
+                             value: searchGrade.dateCompare">
+                        </select>
+                    </th>
+                    <th>
+                        Value
+                        <br>
+                        <select data-bind="options: gradeOptions,
+                            optionsText: function(item) {
+                              return item.name;
+                            },
+                            optionsValue: function(item) {
+                              return item.value;
+                            },
+                             optionsCaption: '- select -',
+                             value: searchGrade.value">
+                        </select>
+                        <select data-bind="options: searchOptions,
+                            optionsText: function(item) {
+                              return item.name;
+                            },
+                            optionsValue: function(item) {
+                              return item.value;
+                            },
+                             optionsCaption: '- select -',
+                             value: searchGrade.valueCompare">
+                        </select>
+                    </th>
+                    <th class="table-actions">Actions</th>
+                </tr>
+                </thead>
+                <tbody data-bind="foreach: grades">
+                    <tr>
+                        <td>
+                            <input data-bind="value: id"  type="number" name="ID" readonly>
+                        </td>
+                        <td>
+                            <select data-bind="options: $parent.courses,
+                            optionsText: function(item) {
+                              return item.name;
+                            },
+                            optionsValue: function(item) {
+                              return item.id;
+                            },
+                            value: course.id">
+                            </select>
+                        </td>
+                        <td>
+                            <input data-bind="value: date" type="date" name="date" min="2000-01-01" max="2030-12-31" required>
+                        </td>
+                        <td>
+                            <select data-bind="options: $parent.gradeOptions,
+                            optionsText: function(item) {
+                              return item.name;
+                            },
+                            optionsValue: function(item) {
+                              return item.value;
+                            },
+                            value: value">
+                            </select>
+                        </td>
+                        <td class="td-buttons">
+                            <button type="button" class="danger" data-bind="click: $parent.removeGrade">Delete</button></td>
+                    </tr>
+                </tbody>
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                        <select data-bind="options: courses,
+                      optionsText: function(item) {
+                        return item.name;
+                      },
+                      optionsValue: function(item) {
+                        return item;
+                      },
+                      optionsCaption: '- select -',
+                      value: newGrade.course">
+                        </select>
+                    </td>
+                    <td>
+                        <input data-bind="value: newGrade.date" type="date" name="date" min="2010-01-01" max="2030-12-31" required>
+                    </td>
+                    <td>
+                        <select data-bind="options: gradeOptions,
+                            optionsText: function(item) {
+                              return item.name;
+                            },
+                            optionsValue: function(item) {
+                              return item.value;
+                            },
+                            value: newGrade.value,
+                            optionsCaption: '- select -'">
+                        </select>
+                    </td>
+                    <td class="td-buttons">
+                        <button type="submit" class="success">Add new</button>
+                    </td>
+                </tr>
+
+            </table>
+        </form>
+    </article>
+
+    <article class="article-content" id="courses">
+        <h2>List of courses</h2>
+        <form id="courses-form" data-bind="submit: postCourse">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID <br></th>
+                    <th>Name <br> <input data-bind="textInput: searchCourse.name" type="search" name="name" placeholder="search.."></th>
+                    <th>Lecturer<br> <input data-bind="textInput: searchCourse.lecturer" type="search" name="lecturer" placeholder="search.."></th>
+                    <th class="table-actions">Actions</th>
+                </tr>
+                </thead>
+                <tbody data-bind="foreach: courses">
+                <tr>
+                    <td>
+                        <input data-bind="value: id"  type="number" name="ID" readonly>
+                    </td>
+                    <td>
+                        <input data-bind="value: name" type="text" name="name" required>
+                    </td>
+                    <td>
+                        <input data-bind="value: lecturer" type="text" name="lecturer" required>
+                    </td>
+                    <td class="td-buttons">
+                        <button type="button" class="danger" data-bind="click: $parent.removeCourse">Delete</button>
+                    </td>
+                </tr>
+                </tbody>
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                        <input data-bind="value: newCourse.name" type="text" name="name" placeholder="Course name" required>
+                    </td>
+                    <td>
+                        <input data-bind="value: newCourse.lecturer" type="text" name="lecturer" placeholder="Lecturer name" required>
+                    </td>
+                    <td class="td-buttons">
+                        <button type="submit" class="success">Add new</button>
+                    </td>
+                </tr>
+
+            </table>
+        </form>
+    </article>
+</div>
+
+<footer>
+    <p>&copy; Bartosz Sobkowiak 2020</p>
+    <a href="https://put.poznan.pl/">Poznan University of Technology</a> <br>
+    <a href="https://fc.put.poznan.pl/index.php">Faculty of Computing</a>
+</footer>
+
+</body>
+</html>

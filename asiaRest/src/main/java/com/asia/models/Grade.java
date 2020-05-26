@@ -3,6 +3,8 @@ package com.asia.models;
 import java.util.Date;
 import com.asia.services.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import dev.morphia.annotations.*;
 import org.bson.types.ObjectId;
 import org.glassfish.jersey.linking.Binding;
@@ -17,54 +19,85 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+@Entity
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@Entity(value = "grades")
+@Indexes(
+        @Index(fields = @Field("id"), options = @IndexOptions(unique = true))
+)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Grade {
     @InjectLinks({
-            @InjectLink(resource = GradesService.class, rel = "parent"),
-            @InjectLink(resource = CourseService.class, rel = "course",
-                    bindings = {@Binding(name = "id", value = "${instance.course.id}")}),
-            @InjectLink(value="students/{index}/grades/{id}", rel = "self",
+            @InjectLink(
+                    value="students/{index}/grades/{id}",
+                    rel = "self",
                     bindings={
-                            @Binding(name="index", value="${instance.studentIndex}"),
+                            @Binding(name="index", value="${instance.studentId}"),
                             @Binding(name="id", value="${instance.id}")
                     }),
-            @InjectLink(value="students/{index}", rel = "student",
-                    bindings={@Binding(name="index", value="${instance.studentIndex}")}),
+            @InjectLink(
+                    value="students/{index}",
+                    rel = "student",
+                    bindings={
+                            @Binding(name="index", value="${instance.studentId}")
+                    }),
+            @InjectLink(
+                    resource = GradesService.class,
+                    rel = "parent"
+            ),
+            @InjectLink(
+                    resource = CourseService.class,
+                    rel = "course",
+                    bindings = {@Binding(name = "id", value = "${instance.course.id}")}
+            ),
     })
     @XmlElement(name = "link")
     @XmlElementWrapper(name = "links")
     @XmlJavaTypeAdapter(Link.JaxbAdapter.class)
+    @Transient
     List<Link> links;
 
     @XmlTransient
     @Id
     ObjectId _id;
-    @XmlJavaTypeAdapter(ObjectIdJaxbAdapter.class)
-    public ObjectId get_id() {
-        return _id;
-    }
-    public void set_id(ObjectId id) {
-        this._id = id;
-    }
 
-    @XmlElement
-    @Indexed(options = @IndexOptions(unique = true))
     private Long id;
-    @XmlElement
+
     private double value;
-    @XmlElement
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "CET")
     private Date date;
-    @XmlElement
+
+    @XmlElement(name = "course")
     @Reference
     private Course course;
+
     @XmlTransient
+    @JsonIgnore
+    private long courseId;
+
+    @XmlTransient
+    @JsonIgnore
+//    @Reference
+    private long studentId;
+
+    @JsonIgnore
     @Reference
-    private long studentIndex;
+    @XmlTransient
+    Student student;
 
     public Grade( ) {
+    }
+
+
+    public Grade(Long id, double value, Date date, Course course, long courseId, long studentId, Student student) {
+        this.id = id;
+        this.value = value;
+        this.date = date;
+        this.course = course;
+        this.courseId = courseId;
+        this.studentId = studentId;
+        this.student = student;
     }
 
     public Grade(Long id, double value, Date date, Course course) {
@@ -81,6 +114,7 @@ public class Grade {
     public void setId(Long id) {
         this.id = id;
     }
+
 
     public double getValue() {
         return value;
@@ -106,22 +140,50 @@ public class Grade {
         this.course = course;
     }
 
-    @XmlTransient
-    public long getStudentIndex() {
-        return studentIndex;
+    public long getStudentId() {
+        return studentId;
     }
 
-    public void setStudentIndex(long studentIndex) {
-        this.studentIndex = studentIndex;
+    public void setStudentId(long studentId) {
+        this.studentId = studentId;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    public long getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(long courseId) {
+        this.courseId = courseId;
+    }
+
+    @XmlJavaTypeAdapter(ObjectIdJaxbAdapter.class)
+    public ObjectId get_id() {
+        return _id;
+    }
+
+    public void set_id(ObjectId _id) {
+        this._id = _id;
     }
 
     @Override
     public String toString() {
         return "Grade{" +
-                "id=" + id +
+                "links=" + links +
+                ", _id=" + _id +
+                ", id=" + id +
                 ", value=" + value +
                 ", date=" + date +
                 ", course=" + course +
+                ", studentId=" + studentId +
+                ", student=" + student +
                 '}';
     }
 }

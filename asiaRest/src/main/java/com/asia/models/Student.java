@@ -13,56 +13,59 @@ import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.*;
 
+@Entity
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@Entity(value = "students")
+@Indexes(
+        @Index(fields = {@Field("index")}, options = @IndexOptions(unique = true))
+)
 public class Student {
     @InjectLinks({
-            @InjectLink(resource = StudentsService.class, rel = "parent"),
-            @InjectLink(value="students/{index}", rel="self",
-                    bindings={@Binding(name="index", value="${instance.index}")}),
-            @InjectLink(value="students/{index}/grades", rel = "grades",
-                    bindings={@Binding(name="index", value="${instance.index}")}),
+            @InjectLink(
+                    value="students/{index}",
+                    rel="self",
+                    bindings={
+                        @Binding(name="index", value="${instance.index}")
+            }),
+            @InjectLink(
+                    resource = StudentsService.class,
+                    rel = "parent"
+            ),
+            @InjectLink(
+                    value="students/{index}/grades",
+                    rel = "grades",
+                    bindings={
+                    @Binding(name="index", value="${instance.index}")
+            }),
     })
     @XmlElement(name = "link")
     @XmlElementWrapper(name = "links")
     @XmlJavaTypeAdapter(Link.JaxbAdapter.class)
+    @Transient
     List<Link> links;
 
+    @XmlTransient
     @Id
-    @XmlTransient
-    private ObjectId _id;
-    @XmlJavaTypeAdapter(ObjectIdJaxbAdapter.class)
-    public ObjectId getId() {
-        return _id;
-    }
-    public void setId(ObjectId id) {
-        this._id = id;
-    }
+    ObjectId _id;
 
-    @XmlElement
-    @Indexed(options = @IndexOptions(unique = true))
-    private Long index;
-    @XmlElement
+
+    private Long index; // index
+
     private String firstName;
-    @XmlElement
+
     private String lastName;
-    @XmlElement
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "CET")
+
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="CET")
     private Date birthday;
-    @XmlTransient
-    @Embedded
-    private Set<Grade> grades = new HashSet<>();
 
     public Student() {
     }
 
-    public Student(Long index, String firstName, String lastName, Date birthday, Set<Grade> grades) {
+    public Student(Long index, String firstName, String lastName, Date birthday) {
         this.index = index;
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthday = birthday;
-        this.grades = grades;
     }
 
 
@@ -73,7 +76,6 @@ public class Student {
     public void setIndex(Long index) {
         this.index = index;
     }
-
 
     public String getFirstName() {
         return firstName;
@@ -99,35 +101,32 @@ public class Student {
         this.birthday = birthday;
     }
 
-    @XmlTransient
-    public Set<Grade> getGrades() {
-        return grades;
+    @XmlJavaTypeAdapter(ObjectIdJaxbAdapter.class)
+    public ObjectId get_id() {
+        return _id;
     }
 
-    public void setGrades(Set<Grade> grades) {
-        this.grades = grades;
-        for (Grade grade : this.grades){
-            grade.setStudentIndex(this.index);
-        }
+    public void set_id(ObjectId _id) {
+        this._id = _id;
     }
 
-    public void setGrade(Grade grade) {
-        this.grades.add(grade);
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
     @Override
     public String toString() {
-        return "com.asia.models.Student{" +
-                "index=" + index +
+        return "Student{" +
+                "links=" + links +
+                ", _id=" + _id +
+                ", index=" + index +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", birthday=" + birthday +
-                ", grades=" + grades +
                 '}';
-    }
-
-    public void clearLinks() {
-        this.links = null;
     }
 }

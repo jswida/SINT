@@ -1,10 +1,8 @@
 package com.asia;
 
-import com.asia.models.Model;
+import com.asia.models.Mongo;
 import com.asia.services.*;
 
-import com.mongodb.DB;
-import com.mongodb.client.MongoDatabase;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.linking.DeclarativeLinkingFeature;
@@ -18,7 +16,8 @@ public class Main {
     public static final String BASE_URI = "http://localhost:8000/";
 
     public static void main(String[] args) throws IOException {
-        DataBase data = new DataBase();
+        Mongo mongo = getDatabase();
+
         final HttpServer server = startServer();
         System.out.println(String.format("Jersey app started with WADL available at "
                 + "%sapplication.wadl\nHit enter to stop it...", BASE_URI));
@@ -44,8 +43,8 @@ public class Main {
         return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
     }
 
-    public static Model getDatabase() {
-        return Model.getInstance();
+    public static Mongo getDatabase() {
+        return Mongo.getInstance();
     }
 
 }

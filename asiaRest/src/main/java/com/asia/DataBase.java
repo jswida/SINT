@@ -14,9 +14,9 @@ public class DataBase {
     private static ArrayList<Student> students;
     private static ArrayList<Grade> grades;
     private static ArrayList<Course> courses;
-    private static Long studentIndex = 1L;
-    private static Long gradeId = 1L;
-    private static Long CourseId = 1L;
+    private static Long studentID = 0L;
+    private static Long gradeID = 0L;
+    private static Long CourseID = 0L;
 
     public DataBase() {
         generateSomeObjects();
@@ -24,39 +24,41 @@ public class DataBase {
 
     public static void delete(Class<?> object, Long id) {
 
+        // student
         if (object == Student.class) {
             Student student = students.stream().filter(s -> s.getIndex().equals(id)).findFirst().orElse(null);
-            if (student != null) students.remove(student);
+            if (student != null) {
+                grades.removeIf(g -> g.getStudentId() == student.getIndex());
+                students.remove(student);
+            }
             else throw new NotFoundException();
         }
+        // grade
         else if (object == Grade.class) {
             Grade grade = grades.stream().filter(s -> s.getId().equals(id)).findFirst().orElse(null);
             if (grade != null) {
-                for (Student student : students) {
-                    student.getGrades().remove(grade);
-                }
                 grades.remove(grade);
             } else throw new NotFoundException();
         }
+        // Course
         else if (object == Course.class) {
             Course course = courses.stream().filter(s -> s.getId().equals(id)).findFirst().orElse(null);
             if (course != null) {
                 grades.removeIf(g -> g.getCourse().getId().equals(id));
-                students.forEach(s -> s.getGrades().removeIf(g -> g.getCourse().getId().equals(id)));
                 courses.remove(course);
             } else throw new NotFoundException();
         }
     }
 
-    public static Student addStudent(Student newStudent) {
-        if (newStudent.getFirstName() != null && newStudent.getLastName() != null && newStudent.getBirthday() != null) {
+    public static Student addStudent(Student ns) {
+        if (ns.getFirstName() != null && ns.getLastName() != null && ns.getBirthday() != null) {
             Student student = new Student();
-            student.setIndex(studentIndex);
-            student.setName(newStudent.getFirstName());
-            student.setSurname(newStudent.getLastName());
-            student.setBirthday(newStudent.getBirthday());
-            student.setGrades(new HashSet<>());
-            studentIndex++;
+            student.setIndex(studentID);
+            student.setName(ns.getFirstName());
+            student.setSurname(ns.getLastName());
+            student.setBirthday(ns.getBirthday());
+
+            studentID++;
             students.add(student);
             return student;
         } else throw new BadRequestException();
@@ -66,19 +68,20 @@ public class DataBase {
         if (ng.getValue() != 0 && ng.getDate() != null && ng.getCourse().getId() != null) {
             Course course = courses.stream().filter(s -> s.getId().equals(ng.getCourse().getId())).findFirst().orElse(null);
             if (course != null) {
-                Grade grade = new Grade(gradeId, ng.getValue(), ng.getDate(), ng.getCourse());
-                gradeId++;
+                Grade grade = new Grade(gradeID, ng.getValue(), ng.getDate(), ng.getCourse());
+                gradeID++;
                 grades.add(grade);
                 return grade;
             } else throw new BadRequestException();
         } else throw new BadRequestException();
     }
 
-    public static Grade addGradeToStudent(Grade ng, Long gradeStudentIndex) {
+    public static Grade addGradeToStudent(Grade ng, Long gradeStudentId) {
         Grade grade = addGrade(ng);
-        Student student = students.stream().filter(s -> s.getIndex().equals(gradeStudentIndex)).findFirst().orElse(null);
+        Student student = students.stream().filter(s -> s.getIndex().equals(gradeStudentId)).findFirst().orElse(null);
         if (student != null) {
-            student.getGrades().add(grade);
+            grade.setStudentId(student.getIndex());
+            grade.setStudent(student);
             return grade;
         } else throw new NotFoundException();
 
@@ -86,15 +89,15 @@ public class DataBase {
 
     public static Course addCourse(Course ns) {
         if (ns.getName() != null && ns.getLecturer() != null) {
-            Course course = new Course(CourseId, ns.getName(), ns.getLecturer());
-            CourseId++;
+            Course course = new Course(CourseID, ns.getName(), ns.getLecturer());
+            CourseID++;
             courses.add(course);
             return course;
         } else throw new BadRequestException();
     }
 
-    public static Student updateStudent(Long updatedStudentIndex, Student newStudent){
-        Student student = students.stream().filter(s -> s.getIndex().equals(updatedStudentIndex)).findFirst().orElse(null);
+    public static Student updateStudent(Long updatedStudentId, Student newStudent){
+        Student student = students.stream().filter(s -> s.getIndex().equals(updatedStudentId)).findFirst().orElse(null);
         if (student != null){
 
             if (newStudent.getFirstName() != null && newStudent.getFirstName().length() > 0){
@@ -109,14 +112,6 @@ public class DataBase {
                 student.setBirthday(newStudent.getBirthday());
             }
 
-            if (newStudent.getGrades() != null ){
-                Set<Grade> newGrades = newStudent.getGrades();
-                for (Grade grade : newGrades){
-                    if (grade != null) {
-                        student.getGrades().add(grade);
-                    }
-                }
-            }
             return student;
         }
 
@@ -133,7 +128,10 @@ public class DataBase {
                 grade.setDate(newGrade.getDate());
             }
             if (newGrade.getCourse().getId() != null && newGrade.getCourse().getId() >= 0){
-                courses.stream().filter(s -> s.getId().equals(newGrade.getCourse().getId())).findFirst().ifPresent(grade::setCourse);
+                Course course = courses.stream().filter(s -> s.getId().equals(newGrade.getCourse().getId())).findFirst().orElse(null);
+                if (course != null) {
+                    grade.setCourse(course);
+                }
             }
             return grade;
         } else throw new NotFoundException();
@@ -153,23 +151,26 @@ public class DataBase {
     }
 
     public static void generateSomeObjects() {
-        Course course1 = generateCourse("SINT");
+        Course course1 = generateCourse("QWER");
         Grade grade1 = generateGrade(course1);
 
-        Course course2 = generateCourse("AEM");
+        Course course2 = generateCourse("ASDF");
         Grade grade2 = generateGrade(course2);
 
-        Course course3 = generateCourse("PIRO");
+        Course course3 = generateCourse("ZXCV");
         Grade grade3 = generateGrade(course3);
 
-        Student student1 = generateStudent("Joanna", "Swida");
-        Student student2 = generateStudent("Michał", "Grazikowski");
-        Student student3 = generateStudent("Stanisław", "Szatniak");
+        Student student1 = generateStudent("Jerry", "Arry");
+        Student student2 = generateStudent("Merry", "Berry");
+        Student student3 = generateStudent("Terry", "Cerry");
 
 
-        student1.setGrade(grade1);
-        student2.setGrade(grade2);
-        student3.setGrade(grade3);
+        grade1.setStudent(student1);
+        grade1.setStudentId(student1.getIndex());
+        grade2.setStudent(student2);
+        grade2.setStudentId(student2.getIndex());
+        grade3.setStudent(student3);
+        grade3.setStudentId(student3.getIndex());
 
         students = new ArrayList<>();
         grades = new ArrayList<>();
@@ -191,31 +192,31 @@ public class DataBase {
 
     public static Grade generateGrade(Course course) {
         Grade grade = new Grade();
-        grade.setId(gradeId);
+//        grade.setId(gradeID);
         grade.setValue(randomGradeValue());
         grade.setDate(new Date());
         grade.setCourse(course);
-        grade.setStudentIndex(studentIndex);
-        gradeId++;
+        grade.setCourseId(course.getId());
+//        gradeID++;
         return grade;
     }
 
     public static Course generateCourse(String name) {
         Course course = new Course();
-        course.setId(CourseId);
+//        course.setId(CourseID);
         course.setName(name);
-        course.setLecturer("Mateusz Lango");
-        CourseId++;
+        course.setLecturer("Jan Kowalski");
+//        CourseID++;
         return course;
     }
 
     public static Student generateStudent(String name, String surname) {
         Student student = new Student();
-        student.setIndex(studentIndex);
+//        student.setIndex(studentID);
         student.setBirthday(new Date());
         student.setName(name);
         student.setSurname(surname);
-        studentIndex++;
+//        studentID++;
         return student;
     }
 
@@ -254,27 +255,27 @@ public class DataBase {
         DataBase.courses = courses;
     }
 
-    public static Long getStudentIndex() {
-        return studentIndex;
+    public static Long getStudentID() {
+        return studentID;
     }
 
-    public static void setStudentIndex(Long studentIndex) {
-        DataBase.studentIndex = studentIndex;
+    public static void setStudentID(Long studentID) {
+        DataBase.studentID = studentID;
     }
 
     public static Long getGradeID() {
-        return gradeId;
+        return gradeID;
     }
 
     public static void setGradeID(Long gradeID) {
-        DataBase.gradeId = gradeID;
+        DataBase.gradeID = gradeID;
     }
 
     public static Long getCourseID() {
-        return CourseId;
+        return CourseID;
     }
 
     public static void setCourseID(Long CourseID) {
-        DataBase.CourseId = CourseID;
+        DataBase.CourseID = CourseID;
     }
 }

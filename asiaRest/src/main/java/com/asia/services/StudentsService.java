@@ -12,16 +12,17 @@ public class StudentsService {
 
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Student> getAllStudents() {
-        return Main.getDatabase().getStudents();
+    public List<Student> getAllStudents(@QueryParam("birthday") String date, @QueryParam("birthdayCompare") String compare, @QueryParam("firstName") String firstName, @QueryParam("lastName") String lastName) {
+        Date birthday = new DateParamConverterProvider("yyyy-MM-dd").getConverter(Date.class, Date.class, null).fromString(date);
+        return Main.getDatabase().getStudentsFiltered(firstName, lastName, birthday, compare);
     }
 
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Response postNewStudent(Student newStudent, @Context UriInfo uriInfo) throws BadRequestException {
-        if (newStudent.getFirstName().length() > 0 && newStudent.getLastName().length() > 0 && newStudent.getBirthday().toString().length() > 0) {
-            Student student = Main.getDatabase().addStudent(newStudent);
+    public Response postNewStudent(Student ns, @Context UriInfo uriInfo) throws BadRequestException {
+        if (ns.getFirstName().length() > 0 && ns.getLastName().length() > 0 && ns.getBirthday().toString().length() > 0) {
+            Student student = Main.getDatabase().addStudent(ns);
             UriBuilder builder = uriInfo.getAbsolutePathBuilder();
             builder.path(Long.toString(student.getIndex()));
             return Response.created(builder.build()).entity(student).build();
@@ -29,7 +30,4 @@ public class StudentsService {
             return Response.noContent().status(400).build();
         }
     }
-
-
-
 }

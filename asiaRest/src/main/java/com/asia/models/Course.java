@@ -12,29 +12,39 @@ import org.glassfish.jersey.linking.Binding;
 import org.glassfish.jersey.linking.InjectLink;
 import org.glassfish.jersey.linking.InjectLinks;
 
+@Entity
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@Entity(value = "courses")
+@Indexes(
+        @Index(fields = {@Field("id")}, options = @IndexOptions(unique = true))
+)
 public class Course {
     @InjectLinks({
-            @InjectLink(value="courses/{id}", rel = "self",
-                    bindings={@Binding(name="id", value="${instance.id}")}),
-            @InjectLink(resource = CoursesService.class, rel = "parent"),
+            @InjectLink(
+                    value="courses/{id}",
+                    rel = "self",
+                    bindings={
+                    @Binding(name="id", value="${instance.id}")
+            }),
+            @InjectLink(
+                    resource = CoursesService.class,
+                    rel = "parent"
+            ),
     })
     @XmlElement(name = "link")
     @XmlElementWrapper(name = "links")
     @XmlJavaTypeAdapter(Link.JaxbAdapter.class)
+    @Transient
     List<Link> links;
 
-    @Id
     @XmlTransient
-    private ObjectId _id;
-    @XmlElement
-    @Indexed(options = @IndexOptions(unique = true))
+    @Id
+    ObjectId _id;
+
     private Long id;
-    @XmlElement
+
     private String name;
-    @XmlElement
+
     private String lecturer;
 
     public Course() {
@@ -50,7 +60,9 @@ public class Course {
         return id;
     }
 
-    public void setId(Long id) { this.id = id; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -72,20 +84,19 @@ public class Course {
     public ObjectId get_id() {
         return _id;
     }
-    public void set_id(ObjectId id) {
-        this._id = id;
+
+    public void set_id(ObjectId _id) {
+        this._id = _id;
     }
 
     @Override
     public String toString() {
-        return "com.asia.models.Subject{" +
-                "id=" + id +
+        return "Course{" +
+                "links=" + links +
+                ", _id=" + _id +
+                ", id=" + id +
                 ", name='" + name + '\'' +
                 ", lecturer='" + lecturer + '\'' +
                 '}';
-    }
-
-    public void clearLinks() {
-        this.links = null;
     }
 }
